@@ -16,14 +16,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'format_tabbedtopics', language 'en', branch 'MOODLE_34_STABLE'
+ * Strings for component 'format_topics2', language 'en', branch 'MOODLE_34_STABLE'
  *
- * @package   format_tabbedtopics
- * @copyright 2018 onwards Matthias Opitz  (opitz@qmx.de)
+ * @package   format_topics2
+ * @copyright 2019 onwards Matthias Opitz  (opitz@qmx.de)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Tabbed Topics format';
+$string['pluginname'] = 'Topics2 format';
 
 $string['alttext'] = 'Alt text';
 $string['currentimage'] = 'Current image';
