@@ -1,0 +1,75 @@
+.course-content ul.topics2 {
+    margin: 0;
+    list-style: none;
+}
+
+.course-content ul.topics2 li.section .content {
+    margin: 0 40px;
+}
+
+.course-content ul.topics2 li.section .left,
+.course-content ul.topics2 li.section .right {
+    width: 40px;
+    padding: 0 6px;
+}
+
+.course-content ul.topics2 li.section .left {
+    text-align: right;
+}
+
+.jsenabled .course-content ul.topics2 li.section .left,
+.jsenabled .course-content ul.topics2 li.section .right {
+    width: auto;
+}
+
+.course-content ul.topics2 li.section .left .section-handle img.icon {
+    padding: 0;
+    vertical-align: baseline;
+}
+
+.course-content ul.topics2 li.section .section_action_menu .textmenu,
+.course-content ul.topics2 li.section .section_action_menu .menu-action-text {
+    white-space: nowrap;
+}
+
+.tablink {
+    margin-right: 5px;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: center;
+    border-width: thin;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-color: lightgrey;
+    border-style: solid ;
+    cursor: pointer;
+}
+
+.tablink.active {
+    background-color: #fcfcfc;
+}
+
+.sectionname {
+    padding-top: 10px !important;
+}
+
+li.section.ontop {
+    border-bottom: 0px !important;
+}
+
+.fa-info {
+    padding-left: 5px;
+}
+
+.edit_only {
+    opacity: 0.4;
+}
+
+.tabs {
+    padding-left: 30px;
+}
+
+.toggler {
+    color: grey;
+}
