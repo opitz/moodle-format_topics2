@@ -31,16 +31,13 @@ define(['jquery', 'jqueryui'], function($) {
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
-            // rumdidumdidum
+            // toggle a section content
             var toggleSection = function() { $(".toggler").on('click', function() {
-//                alert('toggler!');
                 if ($(this).hasClass('toggler_closed')) {
-//                    alert('now opening section');
                     $(this).parent().find('.toggler_open').show();
                     $(this).hide();
                     $(this).parent().parent().parent().find('.toggle_area').removeClass('hidden').show();
                 } else {
-//                    alert('now closing section');
                     $(this).parent().find('.toggler_closed').show();
                     $(this).hide();
                     $(this).parent().parent().parent().find('.toggle_area').addClass('hidden').hide();
@@ -50,21 +47,6 @@ define(['jquery', 'jqueryui'], function($) {
                 updateToggleSeq();
             });};
 
-            var toggleSection0 = function() { $(".toggler").on('click', function() {
-                alert('toggler!');
-                if ($(this).parent().parent().find('.toggle_area').hasClass('hidden')) {
-                    $(this).parent().parent().find('.toggle_area').removeClass('hidden').show();
-                    $(this).parent().parent().find('.toggler_closed').hide();
-                    $(this).parent().parent().find('.toggler_open').show();
-                } else {
-                    $(this).parent().parent().find('.toggle_area').addClass('hidden').hide();
-                    $(this).parent().parent().find('.toggler_open').hide();
-                    $(this).parent().parent().find('.toggler_closed').show();
-                }
-
-                // Now get the toggler status of each section
-                updateToggleSeq();
-            });};
 
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -75,10 +57,8 @@ define(['jquery', 'jqueryui'], function($) {
 
 // ---------------------------------------------------------------------------------------------------------------------
             $(document).ready(function() {
-
                 console.log('=================< tabbedtopics/toggle.js >=================');
                 initFunctions();
-
             });
         }
     };
