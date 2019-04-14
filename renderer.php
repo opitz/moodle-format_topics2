@@ -430,7 +430,7 @@ class format_topics2_renderer extends format_topics_renderer {
         $o .= html_writer::end_tag('div'); // ending the sectionhead
 
         // the sectionbody
-        if(isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0') {
+        if($course->toggle && isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0') {
             $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
         } else {
             $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area'));
