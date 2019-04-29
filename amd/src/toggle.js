@@ -18,7 +18,7 @@ define(['jquery', 'jqueryui'], function($) {
                 // Now write the sequence for this course into the user preference
                 var courseid = $('#courseid').attr('courseid');
                 $.ajax({
-                    url: "format/tabbedtopics/ajax/update_toggles.php",
+                    url: "format/topics2/ajax/update_toggles.php",
                     type: "POST",
                     data: {'courseid': courseid, 'toggle_seq': toggle_seq},
                     success: function(result) {
@@ -57,7 +57,7 @@ define(['jquery', 'jqueryui'], function($) {
 
 // ---------------------------------------------------------------------------------------------------------------------
             $(document).ready(function() {
-                console.log('=================< tabbedtopics/toggle.js >=================');
+                console.log('=================< topics2/toggle.js >=================');
                 initFunctions();
             });
         }
