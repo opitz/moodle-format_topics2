@@ -316,7 +316,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
     // Render the sections of a course
     public function render_sections($course, $sections, $format_options, $modinfo, $numsections){
-        $o = '';
+        $o = '<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">';
         foreach ($sections as $section => $thissection) {
             if ($section == 0) {
                 $o .= html_writer::start_tag('div', array('id' => 'inline_area'));
@@ -378,9 +378,9 @@ class format_topics2_renderer extends format_topics_renderer {
      */
     protected function section_header($section, $course, $onsectionpage, $sectionreturn=null) {
         global $PAGE;
+        $o = '';
 
         // Include fontawesome for the toggle icons
-        $o = '<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">';
         $sectionstyle = '';
         $toggle_seq = str_split($this->toggle_seq);
 
