@@ -147,6 +147,9 @@ define(['jquery', 'jqueryui'], function($) {
                                 console.log('Reset name of tab ID ' + tabid + ' to "' + result + '"');
                                 $('[data-itemid=' + result + ']').attr('data-value', genericTitle).
                                 find('.quickeditlink').html(genericTitle);
+
+                                // Re-instantiate the just added DOM elements
+                                initFunctions();
                             }
                         }
                     });
