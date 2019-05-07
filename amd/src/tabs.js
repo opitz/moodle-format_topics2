@@ -139,12 +139,12 @@ define(['jquery', 'jqueryui'], function($) {
                     var courseid = $('#courseid').attr('courseid');
                     var genericTitle = $(this).attr('generic_title');
                     $.ajax({
-                        url: "format/tabbedtopics/ajax/update_tab_name.php",
+                        url: "format/topics2/ajax/update_tab_name.php",
                         type: "POST",
                         data: {'courseid': courseid, 'tabid': tabid, 'tab_name': genericTitle},
                         success: function(result) {
                             if(result !== '') {
-                               console.log('Reset name of tab ID ' + tabid + ' to "' + result + '"');
+                                console.log('Reset name of tab ID ' + tabid + ' to "' + result + '"');
                                 $('[data-itemid=' + result + ']').attr('data-value', genericTitle).
                                 find('.quickeditlink').html(genericTitle);
                             }
