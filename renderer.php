@@ -163,8 +163,36 @@ class format_topics2_renderer extends format_topics_renderer {
             $tab_seq = explode(',',$format_options['tab_seq']);
         }
 
+        // show the tabs in the sequence
+        foreach ($tab_seq as $tabid) {
+            if (isset($this->tabs[$tabid]) && $tab = $this->tabs[$tabid]) {
+                $o .= $this->render_tab($tab);
+            }
+        }
+        // check if there are tabs that are not in the sequence (yet) - and if so display them now
+        // we need to compare the sequence with the keys of the tabs array
+        if($seq_diff = array_diff(array_keys($this->tabs),$tab_seq)){
+            foreach ($seq_diff as $tabid) {
+                if (isset($this->tabs[$tabid]) && $tab = $this->tabs[$tabid]) {
+                    $o .= $this->render_tab($tab);
+                }
+            }
+        }
+
+        $o .= html_writer::end_tag('ul');
+
+        return $o;
+    }
+    public function render_tabs0($format_options) {
+        $o = html_writer::start_tag('ul', array('class'=>'tabs nav nav-tabs row'));
+
+        $tab_seq = array();
+        if ($format_options['tab_seq']) {
+            $tab_seq = explode(',',$format_options['tab_seq']);
+        }
+
         // if a tab sequence is equal to the number of tabs is found use it to arrange the tabs otherwise show them in default order
-        if(sizeof($tab_seq) == sizeof($this->tabs)) {
+        if(array_diff($tab_seq,$this->tabs)) {
             foreach ($tab_seq as $tabid) {
                 if(isset($this->tabs[$tabid]) && $tab = $this->tabs[$tabid] ) {
                     $o .= $this->render_tab($tab);
