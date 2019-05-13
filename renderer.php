@@ -448,17 +448,19 @@ class format_topics2_renderer extends format_topics_renderer {
         $o.= html_writer::start_tag('div', array('class' => 'content'));
 
         // the sectionhead
-        $o.= html_writer::start_tag('div', array('class' => 'sectionhead'));
+        if($section->section !== 0 || $section->name !== '') {
+            $o.= html_writer::start_tag('div', array('class' => 'sectionhead'));
 
-        // the sectionname
-        if(($section->section !== 0 || $section->name != '')) {
-            $o .= html_writer::tag('h' . 3, $this->section_title($section, $course), array('class' => renderer_base::prepare_classes('sectionname')));
+            // the sectionname
+            if(($section->section !== 0 || $section->name != '')) {
+                $o .= html_writer::tag('h' . 3, $this->section_title($section, $course), array('class' => renderer_base::prepare_classes('sectionname')));
+            }
+
+            $o .= html_writer::end_tag('div'); // ending the sectionhead
         }
 
-        $o .= html_writer::end_tag('div'); // ending the sectionhead
-
         // the sectionbody
-        if($course->toggle && isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0') {
+        if($course->toggle && isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0' && ($section->section !== 0 || $section->name !== '')) {
             $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
         } else {
             $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area'));
