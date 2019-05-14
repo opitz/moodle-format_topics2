@@ -407,8 +407,6 @@ class format_topics2_renderer extends format_topics_renderer {
     protected function section_header($section, $course, $onsectionpage, $sectionreturn=null) {
         global $PAGE;
         $o = '';
-
-        // Include fontawesome for the toggle icons
         $sectionstyle = '';
         $toggle_seq = str_split($this->toggle_seq);
 
@@ -455,6 +453,8 @@ class format_topics2_renderer extends format_topics_renderer {
             if(($section->section !== 0 || $section->name != '')) {
                 $o .= html_writer::tag('h' . 3, $this->section_title($section, $course), array('class' => renderer_base::prepare_classes('sectionname')));
             }
+
+            $o .= $this->section_availability($section);
 
             $o .= html_writer::end_tag('div'); // ending the sectionhead
         }
