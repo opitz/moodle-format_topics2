@@ -10,7 +10,7 @@
 require_once('../../../../config.php');
 
 function update_tab_seq($courseid, $tab_seq) {
-    global $DB;
+    global $DB, $COURSE, $PAGE;
 
     if($DB->record_exists('course_format_options', array('courseid'=>$courseid, 'name'=>'tab_seq'))) {
         $tab_seq_record = $DB->get_record('course_format_options', array('courseid'=>$courseid, 'name'=>'tab_seq'));
@@ -19,7 +19,7 @@ function update_tab_seq($courseid, $tab_seq) {
     } else {
         $tab_seq_record = new \stdClass();
         $tab_seq_record->courseid = $courseid;
-        $tab_seq_record->format = 'topics2';
+        $tab_seq_record->format = $_POST['course_format_name'];
         $tab_seq_record->sectionid = 0;
         $tab_seq_record->name = 'tab_seq';
         $tab_seq_record->value = $tab_seq;
@@ -31,7 +31,5 @@ function update_tab_seq($courseid, $tab_seq) {
 if(!isset($_POST['tab_seq']) || sizeof($_POST['tab_seq']) === 0) {
     exit;
 }
-$tab_seq = $_POST['tab_seq'];
-$sectionid = $_POST['sectionid'];
 
 echo update_tab_seq($_POST['courseid'], $_POST['tab_seq']);

@@ -356,6 +356,7 @@ define(['jquery', 'jqueryui'], function($) {
 // ---------------------------------------------------------------------------------------------------------------------
             // what to do if a tab has been dropped onto another
             var handleTabDropEvent = function( event, ui ) {
+                var course_format_name = $(document).find('.course_format_name').html();
                 var draggedTab = ui.draggable.find('.topictab').first();
                 var targetTab = $(this).find('.topictab').first();
 
@@ -393,7 +394,7 @@ define(['jquery', 'jqueryui'], function($) {
                 $.ajax({
                     url: "format/tabbedtopics/ajax/update_tab_seq.php",
                     type: "POST",
-                    data: {'courseid': courseid, 'tab_seq': tabSeq},
+                    data: {'courseid': courseid, 'tab_seq': tabSeq, 'course_format_name': course_format_name},
 //                    success: function() {
                     success: function(result) {
                         console.log('the new tab sequence: ' + result);

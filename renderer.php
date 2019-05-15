@@ -77,6 +77,10 @@ class format_topics2_renderer extends format_topics_renderer {
         // add an invisible div that carries the course ID to be used by JS
         // add class 'single_section_tabs' when option is set so JS can play accordingly
         $class = ($format_options['single_section_tabs'] ? 'single_section_tabs' : '');
+
+        // An invisible tag with the name of the course format to be used in jQuery
+        echo html_writer::div($course->format, 'course_format_name', array('style' => 'display:none;'));
+
         echo html_writer::start_tag('div', array('id' => 'courseid', 'courseid' => $course->id, 'class' => $class));
         echo html_writer::end_tag('div');
 
@@ -117,7 +121,7 @@ class format_topics2_renderer extends format_topics_renderer {
         return $record->value;
     }
 
-    //====================================================< tabs >======================================================
+//=====================================================< tabs >=========================================================
     // Prepare the tabs for rendering
     public function prepare_tabs($course, $format_options, $sections) {
         global $CFG, $DB, $PAGE;
@@ -179,30 +183,6 @@ class format_topics2_renderer extends format_topics_renderer {
             }
         }
 
-        $o .= html_writer::end_tag('ul');
-
-        return $o;
-    }
-    public function render_tabs0($format_options) {
-        $o = html_writer::start_tag('ul', array('class'=>'tabs nav nav-tabs row'));
-
-        $tab_seq = array();
-        if ($format_options['tab_seq']) {
-            $tab_seq = explode(',',$format_options['tab_seq']);
-        }
-
-        // if a tab sequence is equal to the number of tabs is found use it to arrange the tabs otherwise show them in default order
-        if(array_diff($tab_seq,$this->tabs)) {
-            foreach ($tab_seq as $tabid) {
-                if(isset($this->tabs[$tabid]) && $tab = $this->tabs[$tabid] ) {
-                    $o .= $this->render_tab($tab);
-                }
-            }
-        } else {
-            foreach ($this->tabs as $tab) {
-                $o .= $this->render_tab($tab);
-            }
-        }
         $o .= html_writer::end_tag('ul');
 
         return $o;
@@ -322,7 +302,7 @@ class format_topics2_renderer extends format_topics_renderer {
         return $tab_sections;
     }
 
-    //==============================================< sections >========================================================
+//=================================================< sections >=========================================================
     // display section-0 on top of tabs if option is checked
     public function render_section0_ontop($course, $sections, $format_options, $modinfo) {
         global $PAGE;
