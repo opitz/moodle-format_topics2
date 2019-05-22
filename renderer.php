@@ -324,7 +324,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
     // Render the sections of a course
     public function render_sections($course, $sections, $format_options, $modinfo, $numsections){
-        $o = '<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">';
+        $o = '';
         foreach ($sections as $section => $thissection) {
             if ($section == 0) {
                 $o .= html_writer::start_tag('div', array('id' => 'inline_area'));
@@ -459,11 +459,11 @@ class format_topics2_renderer extends format_topics_renderer {
             // prepare the toggle
             $toggle_seq = str_split($this->toggle_seq);
             if(isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '1') {
-                $toggler = '<i class="toggler toggler_open fas fa-chevron-down" style="cursor: pointer;"></i>';
-                $toggler .= '<i class="toggler toggler_closed fas fa-chevron-right" style="cursor: pointer; display: none;"></i>';
+                $toggler = '<i class="toggler toggler_open fa fa-angle-down" style="cursor: pointer;"></i>';
+                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" style="cursor: pointer; display: none;"></i>';
             } else {
-                $toggler = '<i class="toggler toggler_open fas fa-chevron-down" style="cursor: pointer; display: none;"></i>';
-                $toggler .= '<i class="toggler toggler_closed fas fa-chevron-right" style="cursor: pointer;"></i>';
+                $toggler = '<i class="toggler toggler_open fa fa-angle-down" style="cursor: pointer; display: none;"></i>';
+                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" style="cursor: pointer;"></i>';
             }
             $toggler .= ' ';
         } else {
