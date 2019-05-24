@@ -362,14 +362,14 @@ class format_topics2_renderer extends format_topics_renderer {
             // Display section summary only.
             $o .= $this->section_summary($section, $course, null);
         } else {
-            $o .= $this->section_header($section, $course, false, 0);
-
-            // now the course modules for this section
             if ($section->uservisible) {
+                $o .= $this->section_header($section, $course, false, 0);
+
+                // now the course modules for this section
                 $o .= $this->courserenderer->course_section_cm_list($course, $section, 0);
                 $o .= $this->courserenderer->course_section_add_cm_control($course, $section->section, 0);
+                $o .= $this->section_footer();
             }
-            $o .= $this->section_footer();
         }
         return $o;
     }
