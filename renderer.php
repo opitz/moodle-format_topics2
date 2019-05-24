@@ -385,7 +385,6 @@ class format_topics2_renderer extends format_topics_renderer {
      * @return string HTML to output.
      */
     protected function section_header($section, $course, $onsectionpage, $sectionreturn=null) {
-        global $PAGE;
         $o = '';
         $sectionstyle = '';
         $toggle_seq = str_split($this->toggle_seq);
@@ -458,12 +457,13 @@ class format_topics2_renderer extends format_topics_renderer {
         if($course->toggle) {
             // prepare the toggle
             $toggle_seq = str_split($this->toggle_seq);
-            if(isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '1') {
-                $toggler = '<i class="toggler toggler_open fa fa-angle-down" style="cursor: pointer;"></i>';
-                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" style="cursor: pointer; display: none;"></i>';
-            } else {
+
+            if(isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0') {
                 $toggler = '<i class="toggler toggler_open fa fa-angle-down" style="cursor: pointer; display: none;"></i>';
                 $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" style="cursor: pointer;"></i>';
+            } else {
+                $toggler = '<i class="toggler toggler_open fa fa-angle-down" style="cursor: pointer;"></i>';
+                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" style="cursor: pointer; display: none;"></i>';
             }
             $toggler .= ' ';
         } else {
