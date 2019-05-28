@@ -9,10 +9,12 @@ define(['jquery', 'jqueryui'], function($) {
                 $("li.section").each(function() {
                     if ( $(this).find('.toggle_area').hasClass('hidden')) {
                         toggle_seq = toggle_seq + '0';
-                    } else {
+                    } else
+                    if ( $(this).find('.toggle_area').hasClass('showing')) {
                         toggle_seq = toggle_seq + '1';
                     }
-                });
+
+                    });
                 console.log('toggle_seq = ' + toggle_seq);
 
                 // Now write the sequence for this course into the user preference

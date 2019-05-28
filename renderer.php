@@ -442,7 +442,7 @@ class format_topics2_renderer extends format_topics_renderer {
         if($course->toggle && isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0' && ($section->section !== 0 || $section->name !== '')) {
             $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
         } else {
-            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area'));
+            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
         }
         if ($section->uservisible || $section->visible) {
             // Show summary if section is available or has availability restriction information.
