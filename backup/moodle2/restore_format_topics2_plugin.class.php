@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Specialised restore for format_tabbedtopics
+ * Specialised restore for format_topics2
  *
- * @package   format_tabbedtopics
+ * @package   format_topics2
  * @category  backup
  * @copyright 2017 Marina Glancy
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,16 +26,16 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Specialised restore for format_tabbedtopics
+ * Specialised restore for format_topics2
  *
  * Processes 'numsections' from the old backup files and hides sections that used to be "orphaned"
  *
- * @package   format_tabbedtopics
+ * @package   format_topics2
  * @category  backup
  * @copyright 2017 Marina Glancy
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class restore_format_tabbedtopics_plugin extends restore_format_plugin {
+class restore_format_topics2_plugin extends restore_format_plugin {
 
     /** @var int */
     protected $originalnumsections = 0;
@@ -75,10 +75,10 @@ class restore_format_tabbedtopics_plugin extends restore_format_plugin {
         return [new restore_path_element('dummy_course', $this->get_pathfor('/dummycourse'))];
     }
 
-    public function process_format_tabbedtopics() {
+    public function process_format_topics2() {
 
     }
-    public function process_tabbedtopics() {
+    public function process_topics2() {
 
     }
     /**
@@ -103,7 +103,7 @@ class restore_format_tabbedtopics_plugin extends restore_format_plugin {
 
         $data = $this->connectionpoint->get_data();
         $backupinfo = $this->step->get_task()->get_info();
-        if ($backupinfo->original_course_format !== 'tabbedtopics' || !isset($data['tags']['numsections'])) {
+        if ($backupinfo->original_course_format !== 'topics2' || !isset($data['tags']['numsections'])) {
             // Backup from another course format or backup file does not even have 'numsections'.
             return;
         }
