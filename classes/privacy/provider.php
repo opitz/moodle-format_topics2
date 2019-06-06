@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Privacy Subsystem implementation for format_tabbedtopics.
+ * Privacy Subsystem implementation for format_topics2.
  *
- * @package    format_tabbedtopics
+ * @package    format_topics2
  * @copyright  2018 Carlos Escobedo <carlos@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace format_tabbedtopics\privacy;
+namespace format_topics2\privacy;
 defined('MOODLE_INTERNAL') || die();
 /**
- * Privacy Subsystem for format_tabbedtopics implementing null_provider.
+ * Privacy Subsystem for format_topics2 implementing null_provider.
  *
  * @copyright  2018 Carlos Escobedo <carlos@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

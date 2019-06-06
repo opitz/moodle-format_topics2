@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * format_tabbedtopics unit tests for upgradelib
+ * format_topics2 unit tests for upgradelib
  *
- * @package    format_tabbedtopics
+ * @package    format_topics2
  * @copyright  2015 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,16 +26,16 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/course/lib.php');
-require_once($CFG->dirroot . '/course/format/tabbedtopics/db/upgradelib.php');
+require_once($CFG->dirroot . '/course/format/topics2/db/upgradelib.php');
 
 /**
- * format_tabbedtopics unit tests for upgradelib
+ * format_topics2 unit tests for upgradelib
  *
- * @package    format_tabbedtopics
+ * @package    format_topics2
  * @copyright  2017 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class format_tabbedtopics_upgrade_testcase extends advanced_testcase {
+class format_topics2_upgrade_testcase extends advanced_testcase {
 
     /**
      * Test upgrade step to remove orphaned sections.
@@ -45,16 +45,16 @@ class format_tabbedtopics_upgrade_testcase extends advanced_testcase {
 
         $this->resetAfterTest(true);
 
-        $params = array('format' => 'tabbedtopics', 'numsections' => 5, 'startdate' => 1445644800);
+        $params = array('format' => 'topics2', 'numsections' => 5, 'startdate' => 1445644800);
         $course = $this->getDataGenerator()->create_course($params);
         // This test is executed after 'numsections' option was already removed, add it manually.
-        $DB->insert_record('course_format_options', ['courseid' => $course->id, 'format' => 'tabbedtopics',
+        $DB->insert_record('course_format_options', ['courseid' => $course->id, 'format' => 'topics2',
             'sectionid' => 0, 'name' => 'numsections', 'value' => '5']);
 
         // There are 6 sections in the course (0-section and sections 1, ... 5).
         $this->assertEquals(6, $DB->count_records('course_sections', ['course' => $course->id]));
 
-        format_tabbedtopics_upgrade_remove_numsections();
+        format_topics2_upgrade_remove_numsections();
 
         // There are still 6 sections in the course.
         $this->assertEquals(6, $DB->count_records('course_sections', ['course' => $course->id]));
@@ -72,13 +72,13 @@ class format_tabbedtopics_upgrade_testcase extends advanced_testcase {
         // Set default number of sections to 10.
         set_config('numsections', 10, 'moodlecourse');
 
-        $params1 = array('format' => 'tabbedtopics', 'numsections' => 5, 'startdate' => 1445644800);
+        $params1 = array('format' => 'topics2', 'numsections' => 5, 'startdate' => 1445644800);
         $course1 = $this->getDataGenerator()->create_course($params1);
-        $params2 = array('format' => 'tabbedtopics', 'numsections' => 20, 'startdate' => 1445644800);
+        $params2 = array('format' => 'topics2', 'numsections' => 20, 'startdate' => 1445644800);
         $course2 = $this->getDataGenerator()->create_course($params2);
         // This test is executed after 'numsections' option was already removed, add it manually and
         // set it to be 2 less than actual number of sections.
-        $DB->insert_record('course_format_options', ['courseid' => $course1->id, 'format' => 'tabbedtopics',
+        $DB->insert_record('course_format_options', ['courseid' => $course1->id, 'format' => 'topics2',
             'sectionid' => 0, 'name' => 'numsections', 'value' => '3']);
 
         // There are 6 sections in the first course (0-section and sections 1, ... 5).
@@ -86,7 +86,7 @@ class format_tabbedtopics_upgrade_testcase extends advanced_testcase {
         // There are 21 sections in the second course.
         $this->assertEquals(21, $DB->count_records('course_sections', ['course' => $course2->id]));
 
-        format_tabbedtopics_upgrade_remove_numsections();
+        format_topics2_upgrade_remove_numsections();
 
         // Two sections were deleted in the first course.
         $this->assertEquals(4, $DB->count_records('course_sections', ['course' => $course1->id]));
@@ -103,7 +103,7 @@ class format_tabbedtopics_upgrade_testcase extends advanced_testcase {
 
         $this->resetAfterTest(true);
 
-        $params = array('format' => 'tabbedtopics', 'numsections' => 5, 'startdate' => 1445644800);
+        $params = array('format' => 'topics2', 'numsections' => 5, 'startdate' => 1445644800);
         $course = $this->getDataGenerator()->create_course($params);
 
         // Add a module to the second last section.
@@ -111,13 +111,13 @@ class format_tabbedtopics_upgrade_testcase extends advanced_testcase {
 
         // This test is executed after 'numsections' option was already removed, add it manually and
         // set it to be 2 less than actual number of sections.
-        $DB->insert_record('course_format_options', ['courseid' => $course->id, 'format' => 'tabbedtopics',
+        $DB->insert_record('course_format_options', ['courseid' => $course->id, 'format' => 'topics2',
             'sectionid' => 0, 'name' => 'numsections', 'value' => '3']);
 
         // There are 6 sections.
         $this->assertEquals(6, $DB->count_records('course_sections', ['course' => $course->id]));
 
-        format_tabbedtopics_upgrade_remove_numsections();
+        format_topics2_upgrade_remove_numsections();
 
         // One section was deleted and one hidden.
         $this->assertEquals(5, $DB->count_records('course_sections', ['course' => $course->id]));
@@ -134,18 +134,18 @@ class format_tabbedtopics_upgrade_testcase extends advanced_testcase {
 
         $this->resetAfterTest(true);
 
-        $params = array('format' => 'tabbedtopics', 'numsections' => 16, 'startdate' => 1445644800);
+        $params = array('format' => 'topics2', 'numsections' => 16, 'startdate' => 1445644800);
         $course = $this->getDataGenerator()->create_course($params);
 
         // This test is executed after 'numsections' option was already removed.
         // Set the 'numsections' course format value to 18, simulating the scenario in which there are fewer real sections.
-        $DB->insert_record('course_format_options', ['courseid' => $course->id, 'format' => 'tabbedtopics',
+        $DB->insert_record('course_format_options', ['courseid' => $course->id, 'format' => 'topics2',
             'sectionid' => 0, 'name' => 'numsections', 'value' => '18']);
 
         // There are 16 sections.
         $this->assertEquals(17, $DB->count_records('course_sections', ['course' => $course->id]));
 
-        format_tabbedtopics_upgrade_remove_numsections();
+        format_topics2_upgrade_remove_numsections();
 
         // Confirm that the upgrade method added the missing empty sections.
         $this->assertEquals(19, $DB->count_records('course_sections', ['course' => $course->id]));

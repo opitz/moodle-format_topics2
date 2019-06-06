@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Upgrade scripts for course format "Topics"
+ * Upgrade scripts for course format "Topics2"
  *
- * @package    format_tabbedtopics
+ * @package    format_topics2
  * @copyright  2017 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,16 +25,16 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * This method finds all courses in 'tabbedtopics' format that have actual number of sections
+ * This method finds all courses in 'topics2' format that have actual number of sections
  * different than their 'numsections' course format option.
  *
  * For courses where there are more sections than numsections, we call
- * {@link format_tabbedtopics_upgrade_hide_extra_sections()} and
+ * {@link format_topics2_upgrade_hide_extra_sections()} and
  * either delete or hide "orphaned" sections. For courses where there are fewer sections
- * than numsections, we call {@link format_tabbedtopics_upgrade_add_empty_sections()} to add
+ * than numsections, we call {@link format_topics2_upgrade_add_empty_sections()} to add
  * these sections.
  */
-function format_tabbedtopics_upgrade_remove_numsections() {
+function format_topics2_upgrade_remove_numsections() {
     global $DB;
 
     $sql1 = "SELECT c.id, max(cs.section) AS sectionsactual
@@ -48,7 +48,7 @@ function format_tabbedtopics_upgrade_remove_numsections() {
           JOIN {course_format_options} n ON n.courseid = c.id AND n.format = :format1 AND n.name = :numsections AND n.sectionid = 0
           WHERE c.format = :format2";
 
-    $params = ['format1' => 'tabbedtopics', 'format2' => 'tabbedtopics', 'numsections' => 'numsections'];
+    $params = ['format1' => 'topics2', 'format2' => 'topics2', 'numsections' => 'numsections'];
 
     $actual = $DB->get_records_sql_menu($sql1, $params);
     $numsections = $DB->get_records_sql_menu($sql2, $params);
@@ -73,14 +73,14 @@ function format_tabbedtopics_upgrade_remove_numsections() {
     unset($numsections);
 
     foreach ($needfixing as $courseid => $numsections) {
-        format_tabbedtopics_upgrade_hide_extra_sections($courseid, $numsections);
+        format_topics2_upgrade_hide_extra_sections($courseid, $numsections);
     }
 
     foreach ($needsections as $courseid => $numsections) {
-        format_tabbedtopics_upgrade_add_empty_sections($courseid, $numsections);
+        format_topics2_upgrade_add_empty_sections($courseid, $numsections);
     }
 
-    $DB->delete_records('course_format_options', ['format' => 'tabbedtopics', 'sectionid' => 0, 'name' => 'numsections']);
+    $DB->delete_records('course_format_options', ['format' => 'topics2', 'sectionid' => 0, 'name' => 'numsections']);
 }
 
 /**
@@ -93,7 +93,7 @@ function format_tabbedtopics_upgrade_remove_numsections() {
  * @param int $courseid
  * @param int $numsections
  */
-function format_tabbedtopics_upgrade_hide_extra_sections($courseid, $numsections) {
+function format_topics2_upgrade_hide_extra_sections($courseid, $numsections) {
     global $DB;
     $sections = $DB->get_records_sql('SELECT id, name, summary, sequence, visible
         FROM {course_sections}
@@ -134,7 +134,7 @@ function format_tabbedtopics_upgrade_hide_extra_sections($courseid, $numsections
  * @param int $courseid
  * @param int $numsections
  */
-function format_tabbedtopics_upgrade_add_empty_sections($courseid, $numsections) {
+function format_topics2_upgrade_add_empty_sections($courseid, $numsections) {
     global $DB;
     $existingsections = $DB->get_fieldset_sql('SELECT section from {course_sections} WHERE course = ?', [$courseid]);
     $newsections = array_diff(range(0, $numsections), $existingsections);

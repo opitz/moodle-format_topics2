@@ -115,7 +115,7 @@ define(['jquery', 'jqueryui'], function($) {
                     console.log("==> marking hidden tab "+tabid);
                     var self = $(this);
                     require(['core/str'], function(str) {
-                        var getTheString = str.get_string('hidden_tab_hint', 'format_tabbedtopics');
+                        var getTheString = str.get_string('hidden_tab_hint', 'format_topics2');
                         $.when(getTheString).done(function(theString) {
                             self.find('#not-shown-hint-' + tabid).remove();
                             var theAppendix = '<i id="not-shown-hint-'+tabid+'" class="fa fa-info" title="'+theString+'"></i>';
@@ -392,7 +392,7 @@ define(['jquery', 'jqueryui'], function($) {
                 // Finally call php to write the data
                 var courseid = $('#courseid').attr('courseid');
                 $.ajax({
-                    url: "format/tabbedtopics/ajax/update_tab_seq.php",
+                    url: "format/topics2/ajax/update_tab_seq.php",
                     type: "POST",
                     data: {'courseid': courseid, 'tab_seq': tabSeq, 'course_format_name': course_format_name},
 //                    success: function() {
@@ -429,7 +429,7 @@ define(['jquery', 'jqueryui'], function($) {
             $(document).ready(function() {
                 initFunctions();
 
-                console.log('=================< tabbedtopics/tabs.js >=================');
+                console.log('=================< topics2/tabs.js >=================');
                 // Show the edit menu for section-0
                 $("#section-0 .right.side").show();
 
