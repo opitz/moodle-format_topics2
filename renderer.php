@@ -140,9 +140,10 @@ class format_topics2_renderer extends format_topics_renderer {
             if($i > 0) {
                 $tab_sections = str_replace(' ', '', $format_options['tab' . $i]);
                 $tab_section_nums = str_replace(' ', '', $format_options['tab' . $i. '_sectionnums']);
-                $section_ids = explode(',', $tab_sections);
-                $section_nums = explode(',', $tab_section_nums);
-                $tab_sections = $this->check_section_ids($course->id, $sections, $section_ids, $section_nums, $tab_sections, $tab_section_nums,$i);
+//                $section_ids = explode(',', $tab_sections);
+//                $section_nums = explode(',', $tab_section_nums);
+                $tab_sections = $this->check_tab_section_ids($course->id, $sections, $tab_sections, $tab_section_nums,$i);
+//                $tab_sections = $this->check_section_ids($course->id, $sections, $section_ids, $section_nums, $tab_sections, $tab_section_nums,$i);
             }
 
             $tab = new stdClass();
@@ -259,6 +260,31 @@ class format_topics2_renderer extends format_topics_renderer {
     }
 
     // Check section IDs used in tabs and repair them if they have changed - most probably because a course was imported
+    public function check_tab_section_ids($courseid, $sections, $tab_sections, $tab_section_nums, $i) {
+        global $DB;
+        $has_changed = false;
+
+        $new_tab_sections = array();
+        $new_tab_section_nums = array();
+        $tab_format_record = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i));
+
+        foreach($sections as $section) {
+            if(strstr($tab_section_nums, "$section->section")) { // if the section number can be found in the tabsection_nums...
+                $new_tab_sections[] = $section->id;
+                if(!strstr($tab_sections, "$section->id")) { //... but the ID cannot be found ...
+                    $has_changed = true; // ... mark it for changing
+                }
+            }
+        }
+        $tab_sections = implode(',', $new_tab_sections);
+        if($has_changed) {
+            $DB->update_record('course_format_options', array('id' => $tab_format_record->id, 'value' => $tab_sections));
+        } else {
+            // check if the section numbers
+        }
+
+        return $tab_sections;
+    }
     public function check_section_ids($courseid, $sections, $section_ids, $section_nums, $tab_sections, $tab_section_nums, $i) {
         global $DB;
         // check section IDs are valid for this course - and repair them using section numbers if they are not
