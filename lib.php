@@ -45,9 +45,12 @@ class format_topics2 extends format_topics {
             $courseconfig = get_config('moodlecourse');
             $courseformatoptions = array(
                 'maxtabs' => array(
+                    'label' => get_string('maxtabs_label', 'format_topics2'),
+                    'help' => 'maxtabs',
+                    'help_component' => 'format_topics2',
                     'default' => (isset($CFG->max_tabs) ? $CFG->max_tabs : 5),
                     'type' => PARAM_INT,
-                    'element_type' => 'hidden',
+//                    'element_type' => 'hidden',
                 ),
                 'hiddensections' => array(
                     'label' => new lang_string('hiddensections'),

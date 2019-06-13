@@ -55,6 +55,10 @@ $string['toggle'] = 'Enable collapsing sections';
 $string['toggle_label'] = 'Enable collapsing sections';
 $string['toggle_help'] = 'When checked sections may be collapsed/expanded by clicking the toggle icon in front of the title';
 
+$string['maxtabs'] = 'Maximum number of Tabs';
+$string['maxtabs_label'] = 'Maximum number of Tabs';
+$string['maxtabs_help'] = 'Maximum number of tabs available for this course';
+
 $string['section0_label'] = 'Show Topic 0 above all tabs';
 $string['section0_help'] = 'When checked topic 0 is always shown above the tabs.';
 
