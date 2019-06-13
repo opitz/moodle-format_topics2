@@ -34,7 +34,27 @@ define(['jquery', 'jqueryui'], function($) {
 
 // ---------------------------------------------------------------------------------------------------------------------
             // toggle a section content
-            var toggleSection = function() { $(".toggler").on('click', function() {
+            var toggleSection = function() { $(".toggler")
+                .on('click', function() {
+                    $(document).keydown(function(event){
+                       if(event.keyCode === 18) {
+                           alert('Option!');
+                       }
+                    });
+                    if ($(this).hasClass('toggler_closed')) {
+                        $(this).parent().find('.toggler_open').show();
+                        $(this).hide();
+                        $(this).parent().parent().parent().find('.toggle_area').removeClass('hidden').show();
+                    } else {
+                        $(this).parent().find('.toggler_closed').show();
+                        $(this).hide();
+                        $(this).parent().parent().parent().find('.toggle_area').addClass('hidden').hide();
+                    }
+
+                    // Now get the toggler status of each section
+                    updateToggleSeq();
+                });};
+            var toggleSection0 = function() { $(".toggler0").on('click', function() {
                 if ($(this).hasClass('toggler_closed')) {
                     $(this).parent().find('.toggler_open').show();
                     $(this).hide();
@@ -49,12 +69,33 @@ define(['jquery', 'jqueryui'], function($) {
                 updateToggleSeq();
             });};
 
+// ---------------------------------------------------------------------------------------------------------------------
+            // toggle a section content
+            var toggleSectionsOpen = function() { $("#btn_toggle_all_open")
+                .on('click', function() {
+                    $('.toggler_closed').click();
+
+                    // Now get the toggler status of each section
+                    updateToggleSeq();
+                });};
+
+// ---------------------------------------------------------------------------------------------------------------------
+            // toggle a section content
+            var toggleSectionsClose = function() { $("#btn_toggle_all_close")
+                .on('click', function() {
+                    $('.toggler_open').click();
+
+                    // Now get the toggler status of each section
+                    updateToggleSeq();
+                });};
 
 
 // ---------------------------------------------------------------------------------------------------------------------
             var initFunctions = function() {
                 // Load all required functions above
                 toggleSection();
+                toggleSectionsOpen();
+                toggleSectionsClose();
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
