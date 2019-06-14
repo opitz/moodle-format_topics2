@@ -34,13 +34,19 @@ define(['jquery', 'jqueryui'], function($) {
 
 // ---------------------------------------------------------------------------------------------------------------------
             // toggle a section content
-            var toggleSection = function() { $(".toggler")
-                .on('click', function() {
-                    $(document).keydown(function(event){
-                       if(event.keyCode === 18) {
-                           alert('Option!');
-                       }
-                    });
+            var toggleSection = function() { $(".toggler").on('click', function(event) {
+                if (event.altKey) {
+                    console.log('ALT pressed...!');
+                    if ($(this).hasClass('toggler_closed')) {
+                        $('.toggler_open').show();
+                        $('.toggler_closed').hide();
+                        $('.toggle_area').removeClass('hidden').show();
+                    } else {
+                        $('.toggler_open').hide();
+                        $('.toggler_closed').show();
+                        $('.toggle_area').addClass('hidden').hide();
+                    }
+                } else {
                     if ($(this).hasClass('toggler_closed')) {
                         $(this).parent().find('.toggler_open').show();
                         $(this).hide();
@@ -50,19 +56,6 @@ define(['jquery', 'jqueryui'], function($) {
                         $(this).hide();
                         $(this).parent().parent().parent().find('.toggle_area').addClass('hidden').hide();
                     }
-
-                    // Now get the toggler status of each section
-                    updateToggleSeq();
-                });};
-            var toggleSection0 = function() { $(".toggler0").on('click', function() {
-                if ($(this).hasClass('toggler_closed')) {
-                    $(this).parent().find('.toggler_open').show();
-                    $(this).hide();
-                    $(this).parent().parent().parent().find('.toggle_area').removeClass('hidden').show();
-                } else {
-                    $(this).parent().find('.toggler_closed').show();
-                    $(this).hide();
-                    $(this).parent().parent().parent().find('.toggle_area').addClass('hidden').hide();
                 }
 
                 // Now get the toggler status of each section

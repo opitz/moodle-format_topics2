@@ -81,16 +81,6 @@ class format_topics2_renderer extends format_topics_renderer {
         // An invisible tag with the name of the course format to be used in jQuery
         echo html_writer::div($course->format, 'course_format_name', array('style' => 'display:none;'));
 
-//====>
-        // a brute force insert to establish two buttons to toggle ALL sections
-        echo html_writer::start_tag('button', array('id' => 'btn_toggle_all_open', 'class' => 'btn', 'value' => 'Expand all Topics'));
-        echo 'Expand all Topics';
-        echo html_writer::end_tag('button');
-
-        echo html_writer::start_tag('button', array('id' => 'btn_toggle_all_close', 'class' => 'btn', 'value' => 'Collapse all Topics'));
-        echo 'Collapse all Topics';
-        echo html_writer::end_tag('button');
-//<====
         echo html_writer::start_tag('div', array('id' => 'courseid', 'courseid' => $course->id, 'class' => $class));
         echo html_writer::end_tag('div');
 
