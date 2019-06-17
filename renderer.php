@@ -124,10 +124,16 @@ class format_topics2_renderer extends format_topics_renderer {
 //=====================================================< tabs >=========================================================
     // Prepare the tabs for rendering
     public function prepare_tabs($course, $format_options, $sections) {
-        global $CFG, $DB, $PAGE;
+        global $CFG, $DB, $COURSE;
 
         // prepare a maximum of 10 user tabs (0..9)
         $max_tabs = 9;
+        $fo = $DB->get_records('course_format_options', array('courseid' => $COURSE->id));
+        $format_options = array();
+        foreach($fo as $o) {
+            $format_options[$o->name] = $o->value;
+        }
+        $max_tabs = ((isset($format_options['maxtabs']) && $format_options['maxtabs'] > 0) ? $format_options['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
         $tabs = array();
 
         // get the section IDs along with their section numbers
@@ -485,6 +491,25 @@ class format_topics2_renderer extends format_topics_renderer {
         return $o;
     }
 
+    public function numbers2words($string) {
+        $numwords = array(
+            0 => 'zero',
+            1 => 'one',
+            2 => 'two',
+            3 => 'three',
+            4 => 'four',
+            5 => 'five',
+            6 => 'six',
+            7 => 'seven',
+            8 => 'eight',
+            9 => 'nine'
+        );
+        for ($i = 0; $i < 10; $i++) {
+            $string = str_replace($i, $numwords[$i],$string);
+        }
+        return $string;
+    }
+
     /**
      * Generate the edit control items of a section
      *
@@ -512,7 +537,140 @@ class format_topics2_renderer extends format_topics_renderer {
             // allow up to 5 tabs  by default if nothing else is set in the config file
             $max_tabs = (isset($CFG->max_tabs) ? $CFG->max_tabs : 5);
         }
-        $max_tabs = ($max_tabs < 10 ? $max_tabs : 9 ); // Restrict tabs to 10 max (0...9)
+//        $max_tabs = ($max_tabs < 10 ? $max_tabs : 9 ); // Restrict tabs to 10 max (0...9)
+        $coursecontext = context_course::instance($course->id);
+
+        if ($onsectionpage) {
+            $url = course_get_url($course, $section->section);
+        } else {
+            $url = course_get_url($course);
+        }
+        $url->param('sesskey', sesskey());
+
+        $controls = array();
+
+        // add move to/from top for section0 only
+        if ($section->section === 0) {
+            $controls['ontop'] = array(
+                "icon" => 't/up',
+                'name' => 'Show always on top',
+
+                'attr' => array(
+                    'tabnr' => 0,
+                    'class' => 'ontop_mover',
+                    'title' => 'Show always on top',
+                    'data-action' => 'sectionzeroontop'
+                )
+            );
+            $controls['inline'] = array(
+                "icon" => 't/down',
+                'name' => 'Show inline',
+
+                'attr' => array(
+                    'tabnr' => 0,
+                    'class' => 'inline_mover',
+                    'title' => 'Show inline',
+                    'data-action' => 'sectionzeroinline'
+                )
+            );
+        }
+
+        // Insert tab moving menu items
+        $controls['no_tab'] = array(
+            "icon" => 't/left',
+            'name' => 'Remove from Tabs',
+
+            'attr' => array(
+                'tabnr' => 0,
+                'class' => 'tab_mover',
+                'title' => 'Remove from Tabs',
+                'data-action' => 'removefromtabs'
+            )
+        );
+
+        $itemtitle = "Move to Tab ";
+
+        $actions = array('movetotabzero', 'movetotabone', 'movetotabtwo','movetotabthree','movetotabfour','movetotabfive','movetotabsix','movetotabseven','movetotabeight','movetotabnine','movetotabten', 'sectionzeroontop', 'sectionzeroinline');
+        for($i = 1; $i <= $max_tabs; $i++) {
+            $tabname = 'tab'.$i.'_title';
+            $itemname = 'To Tab "'.($course->$tabname ? $course->$tabname : $i).'"';
+
+            $controls['to_tab'.$i] = array(
+                "icon" => 't/right',
+                'name' => $itemname,
+
+                'attr' => array(
+                    'tabnr' => $i,
+                    'class' => 'tab_mover',
+                    'title' => $itemtitle,
+//                    'data-action' => $actions[$i]
+                    'data-action' => $this->numbers2words("movetotab$i")
+                )
+            );
+        }
+
+        if ($section->section && has_capability('moodle/course:setcurrentsection', $coursecontext)) {
+            if ($course->marker == $section->section) {  // Show the "light globe" on/off.
+                $url->param('marker', 0);
+                $markedthistopic = get_string('markedthistopic');
+                $highlightoff = get_string('highlightoff');
+                $controls['highlight'] = array('url' => $url, "icon" => 'i/marked',
+                    'name' => $highlightoff,
+                    'pixattr' => array('class' => '', 'alt' => $markedthistopic),
+                    'attr' => array('class' => 'editing_highlight', 'title' => $markedthistopic,
+                        'data-action' => 'removemarker'));
+            } else {
+                $url->param('marker', $section->section);
+                $markthistopic = get_string('markthistopic');
+                $highlight = get_string('highlight');
+                $controls['highlight'] = array('url' => $url, "icon" => 'i/marker',
+                    'name' => $highlight,
+                    'pixattr' => array('class' => '', 'alt' => $markthistopic),
+                    'attr' => array('class' => 'editing_highlight', 'title' => $markthistopic,
+                        'data-action' => 'setmarker'));
+            }
+        }
+
+        $parentcontrols = parent::section_edit_control_items($course, $section, $onsectionpage);
+
+        // If the edit key exists, we are going to insert our controls after it.
+        if (array_key_exists("edit", $parentcontrols)) {
+            $merged = array();
+            // We can't use splice because we are using associative arrays.
+            // Step through the array and merge the arrays.
+            foreach ($parentcontrols as $key => $action) {
+                $merged[$key] = $action;
+                if ($key == "edit") {
+                    // If we have come to the edit key, merge these controls here.
+                    $merged = array_merge($merged, $controls);
+                }
+            }
+
+            return $merged;
+        } else {
+            return array_merge($controls, $parentcontrols);
+        }
+    }
+    protected function section_edit_control_items0($course, $section, $onsectionpage = false) {
+        global $DB, $CFG, $PAGE;
+
+        if (!$PAGE->user_is_editing()) {
+            return array();
+        }
+
+        $options = $DB->get_records('course_format_options', array('courseid' => $course->id));
+        $format_options=array();
+        foreach($options as $option) {
+            $format_options[$option->name] =$option->value;
+        }
+
+        if(isset($format_options['maxtabs'])){
+            $max_tabs = $format_options['maxtabs'];
+        } else {
+            // allow up to 5 tabs  by default if nothing else is set in the config file
+            $max_tabs = (isset($CFG->max_tabs) ? $CFG->max_tabs : 5);
+        }
+//        $max_tabs = ($max_tabs < 10 ? $max_tabs : 9 ); // Restrict tabs to 10 max (0...9)
         $coursecontext = context_course::instance($course->id);
 
         if ($onsectionpage) {

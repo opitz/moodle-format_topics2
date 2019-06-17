@@ -37,9 +37,15 @@ require_once($CFG->dirroot. '/course/format/topics/lib.php');
 class format_topics2 extends format_topics {
 
     public function course_format_options($foreditform = false) {
-        global $CFG;
+        global $CFG, $COURSE, $DB;
 //        $max_tabs = (isset($CFG->max_tabs) ? $CFG->max_tabs : 5);
         $max_tabs = 9; // Currently there is a maximum of 9 tabs!
+        $fo = $DB->get_records('course_format_options', array('courseid' => $COURSE->id));
+        $format_options = array();
+        foreach($fo as $o) {
+            $format_options[$o->name] = $o->value;
+        }
+        $max_tabs = ((isset($format_options['maxtabs']) && $format_options['maxtabs'] > 0) ? $format_options['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
         static $courseformatoptions = false;
         if ($courseformatoptions === false) {
             $courseconfig = get_config('moodlecourse');
@@ -104,6 +110,7 @@ class format_topics2 extends format_topics {
             // now loop through the tabs but don't show them as we only need the DB records...
             $courseformatoptions['tab0_title'] = array('default' => get_string('tabzero_title', 'format_topics2'),'type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
             $courseformatoptions['tab0'] = array('default' => "",'type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
+
             for ($i = 1; $i <= $max_tabs; $i++) {
                 $courseformatoptions['tab'.$i.'_title'] = array('default' => "Tab ".$i,'type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
                 $courseformatoptions['tab'.$i] = array('default' => "",'type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
@@ -114,7 +121,95 @@ class format_topics2 extends format_topics {
         return $courseformatoptions;
     }
 
+    public function words2numbers($string) {
+        $numwords = array(
+            0 => 'zero',
+            1 => 'one',
+            2 => 'two',
+            3 => 'three',
+            4 => 'four',
+            5 => 'five',
+            6 => 'six',
+            7 => 'seven',
+            8 => 'eight',
+            9 => 'nine'
+        );
+        for ($i = 0; $i < 10; $i++) {
+            $string = str_replace($numwords[$i], $i,$string);
+        }
+        return $string;
+    }
+
     public function section_action($section, $action, $sr) {
+        global $PAGE;
+
+        $tcsettings = $this->get_format_options();
+        if ($section->section && ($action === 'setmarker' || $action === 'removemarker')) {
+            // Format 'topics2' allows to set and remove markers in addition to common section actions.
+            require_capability('moodle/course:setcurrentsection', context_course::instance($this->courseid));
+            course_set_marker($this->courseid, ($action === 'setmarker') ? $section->section : 0);
+            return null;
+        }
+
+        if(strstr($action, 'movetotab')) {
+            $action2 = $this->words2numbers($action);
+            return $this->move2tab((int)str_replace('movetotab', '', $action2), $section, $tcsettings);
+        }
+
+
+/*
+        switch ($action) {
+            case 'movetotabzero':
+                return $this->move2tab(0, $section, $tcsettings);
+                break;
+            case 'movetotabone':
+                return $this->move2tab(1, $section, $tcsettings);
+                break;
+            case 'movetotabtwo':
+                return $this->move2tab(2, $section, $tcsettings);
+                break;
+            case 'movetotabthree':
+                return $this->move2tab(3, $section, $tcsettings);
+                break;
+            case 'movetotabfour':
+                return $this->move2tab(4, $section, $tcsettings);
+                break;
+            case 'movetotabfive':
+                return $this->move2tab(5, $section, $tcsettings);
+                break;
+            case 'movetotabsix':
+                return $this->move2tab(6, $section, $tcsettings);
+                break;
+            case 'movetotabseven':
+                return $this->move2tab(7, $section, $tcsettings);
+                break;
+            case 'movetotabeight':
+                return $this->move2tab(8, $section, $tcsettings);
+                break;
+            case 'movetotabnine':
+                return $this->move2tab(9, $section, $tcsettings);
+                break;
+            case 'movetotabten':
+                return $this->move2tab(10, $section, $tcsettings);
+                break;
+            case 'removefromtabs':
+                return $this->removefromtabs($PAGE->course, $section, $tcsettings);
+                break;
+            case 'sectionzeroontop':
+                return $this->sectionzeroswitch($tcsettings, true);
+                break;
+            case 'sectionzeroinline':
+                return $this->sectionzeroswitch($tcsettings, false);
+                break;
+        }
+*/
+        // For show/hide actions call the parent method and return the new content for .section_availability element.
+        $rv = parent::section_action($section, $action, $sr);
+        $renderer = $PAGE->get_renderer('format_topics2');
+        $rv['section_availability'] = $renderer->section_availability($this->get_section($section));
+        return $rv;
+    }
+    public function section_action0($section, $action, $sr) {
         global $PAGE;
 
         $tcsettings = $this->get_format_options();
