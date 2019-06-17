@@ -10,7 +10,8 @@ define(['jquery', 'jqueryui'], function($) {
                     if ( $(this).find('.toggle_area').hasClass('hidden')) {
                         toggle_seq = toggle_seq + '0';
                     } else
-                    if ( $(this).find('.toggle_area').hasClass('showing')) {
+//                    if ( $(this).find('.toggle_area').hasClass('showing')) {
+                    {
                         toggle_seq = toggle_seq + '1';
                     }
 
