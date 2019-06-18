@@ -39,7 +39,7 @@ class format_topics2 extends format_topics {
     public function course_format_options($foreditform = false) {
         global $CFG, $COURSE, $DB;
 //        $max_tabs = (isset($CFG->max_tabs) ? $CFG->max_tabs : 5);
-        $max_tabs = 9; // Currently there is a maximum of 9 tabs!
+//        $max_tabs = 9; // Currently there is a maximum of 9 tabs!
         $fo = $DB->get_records('course_format_options', array('courseid' => $COURSE->id));
         $format_options = array();
         foreach($fo as $o) {
@@ -154,115 +154,18 @@ class format_topics2 extends format_topics {
         if(strstr($action, 'movetotab')) {
             $action2 = $this->words2numbers($action);
             return $this->move2tab((int)str_replace('movetotab', '', $action2), $section, $tcsettings);
-        }
-
-
-/*
-        switch ($action) {
-            case 'movetotabzero':
-                return $this->move2tab(0, $section, $tcsettings);
-                break;
-            case 'movetotabone':
-                return $this->move2tab(1, $section, $tcsettings);
-                break;
-            case 'movetotabtwo':
-                return $this->move2tab(2, $section, $tcsettings);
-                break;
-            case 'movetotabthree':
-                return $this->move2tab(3, $section, $tcsettings);
-                break;
-            case 'movetotabfour':
-                return $this->move2tab(4, $section, $tcsettings);
-                break;
-            case 'movetotabfive':
-                return $this->move2tab(5, $section, $tcsettings);
-                break;
-            case 'movetotabsix':
-                return $this->move2tab(6, $section, $tcsettings);
-                break;
-            case 'movetotabseven':
-                return $this->move2tab(7, $section, $tcsettings);
-                break;
-            case 'movetotabeight':
-                return $this->move2tab(8, $section, $tcsettings);
-                break;
-            case 'movetotabnine':
-                return $this->move2tab(9, $section, $tcsettings);
-                break;
-            case 'movetotabten':
-                return $this->move2tab(10, $section, $tcsettings);
-                break;
-            case 'removefromtabs':
-                return $this->removefromtabs($PAGE->course, $section, $tcsettings);
-                break;
-            case 'sectionzeroontop':
-                return $this->sectionzeroswitch($tcsettings, true);
-                break;
-            case 'sectionzeroinline':
-                return $this->sectionzeroswitch($tcsettings, false);
-                break;
-        }
-*/
-        // For show/hide actions call the parent method and return the new content for .section_availability element.
-        $rv = parent::section_action($section, $action, $sr);
-        $renderer = $PAGE->get_renderer('format_topics2');
-        $rv['section_availability'] = $renderer->section_availability($this->get_section($section));
-        return $rv;
-    }
-    public function section_action0($section, $action, $sr) {
-        global $PAGE;
-
-        $tcsettings = $this->get_format_options();
-        if ($section->section && ($action === 'setmarker' || $action === 'removemarker')) {
-            // Format 'topics2' allows to set and remove markers in addition to common section actions.
-            require_capability('moodle/course:setcurrentsection', context_course::instance($this->courseid));
-            course_set_marker($this->courseid, ($action === 'setmarker') ? $section->section : 0);
-            return null;
-        }
-
-        switch ($action) {
-            case 'movetotabzero':
-                return $this->move2tab(0, $section, $tcsettings);
-                break;
-            case 'movetotabone':
-                return $this->move2tab(1, $section, $tcsettings);
-                break;
-            case 'movetotabtwo':
-                return $this->move2tab(2, $section, $tcsettings);
-                break;
-            case 'movetotabthree':
-                return $this->move2tab(3, $section, $tcsettings);
-                break;
-            case 'movetotabfour':
-                return $this->move2tab(4, $section, $tcsettings);
-                break;
-            case 'movetotabfive':
-                return $this->move2tab(5, $section, $tcsettings);
-                break;
-            case 'movetotabsix':
-                return $this->move2tab(6, $section, $tcsettings);
-                break;
-            case 'movetotabseven':
-                return $this->move2tab(7, $section, $tcsettings);
-                break;
-            case 'movetotabeight':
-                return $this->move2tab(8, $section, $tcsettings);
-                break;
-            case 'movetotabnine':
-                return $this->move2tab(9, $section, $tcsettings);
-                break;
-            case 'movetotabten':
-                return $this->move2tab(10, $section, $tcsettings);
-                break;
-            case 'removefromtabs':
-                return $this->removefromtabs($PAGE->course, $section, $tcsettings);
-                break;
-            case 'sectionzeroontop':
-                return $this->sectionzeroswitch($tcsettings, true);
-                break;
-            case 'sectionzeroinline':
-                return $this->sectionzeroswitch($tcsettings, false);
-                break;
+        } else {
+            switch ($action) {
+                case 'removefromtabs':
+                    return $this->removefromtabs($PAGE->course, $section, $tcsettings);
+                    break;
+                case 'sectionzeroontop':
+                    return $this->sectionzeroswitch($tcsettings, true);
+                    break;
+                case 'sectionzeroinline':
+                    return $this->sectionzeroswitch($tcsettings, false);
+                    break;
+            }
         }
 
         // For show/hide actions call the parent method and return the new content for .section_availability element.
@@ -296,8 +199,7 @@ class format_topics2 extends format_topics {
         global $CFG;
         global $DB;
 
-//        $max_tabs = (isset($CFG->max_tabs) ? $CFG->max_tabs : 5);
-        $max_tabs = 9;
+        $max_tabs = ((isset($settings['maxtabs']) && $settings['maxtabs'] > 0) ? $settings['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
 
         for($i = 0; $i <= $max_tabs; $i++) {
             if(strstr($settings['tab'.$i], $section2remove->id) > -1) {

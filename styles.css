@@ -73,3 +73,9 @@ li.section.ontop {
 .toggler {
     color: grey;
 }
+
+.dropdown-menu {
+    height: auto;
+    max-height: 500px;
+    overflow-x: hidden;
+}

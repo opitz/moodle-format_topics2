@@ -318,9 +318,17 @@ define(['jquery', 'jqueryui'], function($) {
                     $(this).parent().find('.tab_mover').each(function() {
                         var tabnr = $(this).attr('tabnr');
                         var tabtext = $(this).find('.menu-action-text').html();
-                        console.log(tabnr + ' --> ' + tabtext + ' ==> ' + tabArray[tabnr]);
-                        $(this).find('.menu-action-text').html('To Tab "' + tabArray[tabnr] +
+                        console.log(tabnr + ' --> ' + tabtext.trim() + ' ==> ' + tabArray[tabnr]);
+//                        var newMenuText = 'To Tab "' + tabArray[tabnr] +
+//                            ( (tabArray[tabnr] === 'Tab ' + tabnr || tabnr === '0') ? '"' : '" (Tab ' + tabnr + ')');
+
+                        var newMenuText = 'To Tab ' +
+                            (tabArray[tabnr] === '' || tabArray[tabnr] === 'Tab ' + tabnr ? tabnr : '"' + tabArray[tabnr] +
                             ( (tabArray[tabnr] === 'Tab ' + tabnr || tabnr === '0') ? '"' : '" (Tab ' + tabnr + ')'));
+
+                        $(this).find('.menu-action-text').html(newMenuText);
+//                        $(this).find('.menu-action-text').html('To Tab "' + tabArray[tabnr] +
+//                            ( (tabArray[tabnr] === 'Tab ' + tabnr || tabnr === '0') ? '"' : '" (Tab ' + tabnr + ')'));
                     });
                     if (sectionid === 'section-0') {
                         if ($('#ontop_area.section0_ontop').length === 1) { // If section0 is on top don't show tab options
