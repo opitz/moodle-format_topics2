@@ -46,6 +46,8 @@ define(['jquery', 'jqueryui'], function($) {
                         $('.toggler_open').hide();
                         $('.toggler_closed').show();
                         $('.toggle_area').addClass('hidden').hide();
+                        // Do not hide section 0
+                        $('#section-0').find('.sectionbody').removeClass('hidden').show();
                     }
                 } else {
                     if ($(this).hasClass('toggler_closed')) {
