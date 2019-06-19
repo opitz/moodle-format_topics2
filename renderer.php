@@ -431,7 +431,7 @@ class format_topics2_renderer extends format_topics_renderer {
         $o.= html_writer::start_tag('div', array('class' => 'content'));
 
         // the sectionhead
-        if($section->section !== 0 || $section->name !== '') {
+        if($section->section !== 0 || ($section->name !== '' && $section->name !== null)) {
             $o.= html_writer::start_tag('div', array('class' => 'sectionhead'));
 
             // the sectionname
