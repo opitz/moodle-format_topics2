@@ -59,6 +59,10 @@ $string['maxtabs'] = 'Number of Tabs';
 $string['maxtabs_label'] = 'Number of Tabs';
 $string['maxtabs_help'] = 'Number of tabs available for this course';
 
+$string['limittabname'] = 'Maximum Tabname Characters';
+$string['limittabname_label'] = 'Maximum Tab Name Characters';
+$string['limittabname_help'] = 'Tab names will be abreviated at the given number of characters and will reveal the full name on mouse over. Set to 0 for NO limit.';
+
 $string['section0_label'] = 'Show Topic 0 above all tabs';
 $string['section0_help'] = 'When checked topic 0 is always shown above the tabs.';
 
@@ -71,3 +75,5 @@ $string['tabtitle_edithint'] = 'Edit tab name';
 $string['tabtitle_editlabel'] = 'New value for {a}';
 
 $string['hidden_tab_hint'] = 'This tab contains only hidden topics and will not be shown to students';
+$string['tooltip_open'] = 'Click to collapse. ALT-click to collapse all topics.';
+$string['tooltip_closed'] = 'Click to expand. ALT-click to expand all topics.';

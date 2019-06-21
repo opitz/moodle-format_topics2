@@ -58,6 +58,14 @@ class format_topics2 extends format_topics {
                     'type' => PARAM_INT,
 //                    'element_type' => 'hidden',
                 ),
+                'limittabname' => array(
+                    'label' => get_string('limittabname_label', 'format_topics2'),
+                    'help' => 'limittabname',
+                    'help_component' => 'format_topics2',
+                    'default' => 0,
+                    'type' => PARAM_INT,
+//                    'element_type' => 'hidden',
+                ),
                 'hiddensections' => array(
                     'label' => new lang_string('hiddensections'),
                     'help' => 'hiddensections',

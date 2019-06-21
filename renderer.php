@@ -81,6 +81,11 @@ class format_topics2_renderer extends format_topics_renderer {
         // An invisible tag with the name of the course format to be used in jQuery
         echo html_writer::div($course->format, 'course_format_name', array('style' => 'display:none;'));
 
+        if(isset($format_options['limittabname']) && $format_options['limittabname'] > 0) {
+            // An invisible tag with the name of the course format to be used in jQuery
+            echo html_writer::tag('div','',array('class' => 'limittabname', 'value' => $format_options['limittabname'], 'style' => 'display: hidden;'));
+        }
+
         echo html_writer::start_tag('div', array('id' => 'courseid', 'courseid' => $course->id, 'class' => $class));
         echo html_writer::end_tag('div');
 
@@ -464,12 +469,14 @@ class format_topics2_renderer extends format_topics_renderer {
             // prepare the toggle
             $toggle_seq = str_split($this->toggle_seq);
 
+            $tooltip_open = get_string('tooltip_open','format_topics2');
+            $tooltip_closed = get_string('tooltip_closed','format_topics2');
             if(isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0') {
-                $toggler = '<i class="toggler toggler_open fa fa-angle-down" style="cursor: pointer; display: none;"></i>';
-                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" style="cursor: pointer;"></i>';
+                $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltip_open.'" style="cursor: pointer; display: none;"></i>';
+                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'.$tooltip_closed.'" style="cursor: pointer;"></i>';
             } else {
-                $toggler = '<i class="toggler toggler_open fa fa-angle-down" style="cursor: pointer;"></i>';
-                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" style="cursor: pointer; display: none;"></i>';
+                $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltip_open.'" style="cursor: pointer;"></i>';
+                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'.$tooltip_closed.'" style="cursor: pointer; display: none;"></i>';
             }
             $toggler .= ' ';
         } else {

@@ -3,9 +3,108 @@ define(['jquery', 'jqueryui'], function($) {
     return {
         init: function() {
 // ---------------------------------------------------------------------------------------------------------------------
+            // When a limit for the tabname is set truncate the name of the given tab to limit
+            var truncate_tabname = function(tab) {
+
+                if ($('.limittabname').length > 0) {
+                    var x = $('.limittabname').attr('value');
+                    var orig_tab_title = tab.attr('tab_title');
+                    // console.log('truncate => orig = ' + orig_tab_title);
+                    if (orig_tab_title.length > x) {
+                        var short_tab_title = orig_tab_title.substr(0,x) + String.fromCharCode(8230);
+                        // console.log('         => short = ' + short_tab_title);
+                        if (tab.hasClass('tabsectionname')) { // A sectionname as tabname
+                            tab.html(short_tab_title);
+                        } else {
+                            if ($('.inplaceeditingon').length === 0) { // Don't do this while editing the tab name
+                                if ($('.inplaceeditable').length > 0) { // we are in edit mode...
+//                                    var targ = $('#' + tab.attr('id')).find('a');
+//                                    targ.html(targ.html().replace(orig_tab_title, short_tab_title));
+                                    tab.find('a').html(tab.find('a').html().replace(orig_tab_title, short_tab_title));
+                                } else {
+                                    tab.html(tab.html().replace(orig_tab_title, short_tab_title));
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+// ---------------------------------------------------------------------------------------------------------------------
+            // When a limit for the tabname is set expand the name of the given tab to the original
+            var expand_tabname = function(tab) {
+
+                if ($('.limittabname').length > 0) {
+                    var x = $('.limittabname').attr('value');
+                    var orig_tab_title = tab.attr('tab_title');
+                    //console.log('expand => orig = ' + orig_tab_title);
+
+                    if (orig_tab_title.length > x) {
+                        var short_tab_title = orig_tab_title.substr(0,x) + String.fromCharCode(8230);
+                        //console.log('       => short = ' + short_tab_title);
+                        if (tab.hasClass('tabsectionname')) { // A sectionname as tabname
+                            tab.html(orig_tab_title);
+                        } else {
+                            if ($('.inplaceeditingon').length === 0) { // Don't do this while editing the tab name
+                                if ($('.inplaceeditable').length > 0) { // we are in edit mode...
+
+                                    // Make sure that tab-tile matches data-value after the tab title was edited
+                                    var dataValue = tab.find('.inplaceeditable').attr('data-value');
+                                    if (orig_tab_title !== dataValue) { // They do NOT match so make them
+                                        tab.attr('tab_title', dataValue);
+                                        orig_tab_title = dataValue;
+                                        short_tab_title = orig_tab_title.substr(0,x) + String.fromCharCode(8230);
+                                    }
+
+                                    tab.find('a').html(tab.find('a').html().replace(short_tab_title, orig_tab_title));
+                                } else {
+                                    tab.html(tab.html().replace(short_tab_title, orig_tab_title));
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+// ---------------------------------------------------------------------------------------------------------------------
+            // Expand the tab the mouse hovers over and truncate it again when the mouse leaves
+            var hover_tabname = function() {
+                if ($('.limittabname').length > 0) {
+                    $('.tablink').hover(function() {
+                        expand_tabname($(this));
+                    }, function() {
+                        truncate_tabname($(this));
+                    });
+                }
+            };
+
+// ---------------------------------------------------------------------------------------------------------------------
             // When a single section is shown under a tab use the section name as tab name
             var changeTab = function(tab, target) {
-                 console.log('single section in tab: using section name as tab name');
+                console.log('single section in tab: using section name as tab name');
+
+                // Replace the tab name with the section name
+                var origSectionname = target.find('.sectionname:not(.hidden)');
+                if ($('.tabname_backup:visible').length > -1) {
+                    var theSectionname = target.attr('aria-label');
+                    tab.parent().append(tab.clone().addClass('tabname_backup').hide()); // Create a hidden clone of tab name
+                    tab.html(theSectionname).addClass('tabsectionname');
+                    tab.attr('tab_title', theSectionname);
+                    // Hide the original sectionname when not in edit mode
+                    if ($('.inplaceeditable').length === 0) {
+                        origSectionname.hide();
+                        target.find('.sectionhead').hide();
+                    } else {
+                        origSectionname.addClass('edit_only');
+                        target.find('.hidden.sectionname').hide();
+                        target.find('.section-handle').hide();
+                    }
+                }
+                // truncate tabname
+                truncate_tabname(tab);
+            };
+            var changeTab00 = function(tab, target) {
+                console.log('single section in tab: using section name as tab name');
 
                 // Replace the tab name with the section name
                 var origSectionname = target.find('.sectionname:not(.hidden)');
@@ -156,6 +255,7 @@ define(['jquery', 'jqueryui'], function($) {
                 } else {
                     console.log('tab with visible sections - showing it');
                     $(this).parent().show();
+//                    truncate_tabname($(this));
                 }
 
                 // If option is set and when a tab other than tab 0 shows a single section perform some visual tricks
@@ -359,6 +459,7 @@ define(['jquery', 'jqueryui'], function($) {
                 moveOntop();
                 moveInline();
                 dropdownToggle();
+                hover_tabname();
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -440,6 +541,13 @@ define(['jquery', 'jqueryui'], function($) {
                 console.log('=================< topics2/tabs.js >=================');
                 // Show the edit menu for section-0
                 $("#section-0 .right.side").show();
+
+                // Truncate tab names when option is set
+                if ($('.limittabname').length > 0) {
+                    $('.tablink').each(function() {
+                        truncate_tabname($(this));
+                    });
+                }
 
                 // Make tabs draggable when in edit mode (the pencil class is present)
                 if ($('.inplaceeditable').length > 0) {
