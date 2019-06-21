@@ -81,8 +81,8 @@ class format_topics2_renderer extends format_topics_renderer {
         // An invisible tag with the name of the course format to be used in jQuery
         echo html_writer::div($course->format, 'course_format_name', array('style' => 'display:none;'));
 
+        // An invisible tag with the value of the tab name limit to be used in jQuery
         if(isset($format_options['limittabname']) && $format_options['limittabname'] > 0) {
-            // An invisible tag with the name of the course format to be used in jQuery
             echo html_writer::tag('div','',array('class' => 'limittabname', 'value' => $format_options['limittabname'], 'style' => 'display: hidden;'));
         }
 
