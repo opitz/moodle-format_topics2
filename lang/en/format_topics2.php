@@ -55,6 +55,10 @@ $string['toggle'] = 'Enable collapsing sections';
 $string['toggle_label'] = 'Enable collapsing sections';
 $string['toggle_help'] = 'When checked sections may be collapsed/expanded by clicking the toggle icon in front of the title';
 
+$string['toggle_all'] = 'Enable "Toggle all" floating menu';
+$string['toggle_all_label'] = 'Enable "Toggle all" floating menu';
+$string['toggle_all_help'] = 'When checked a floating menu with 2 toggle buttons to collapse or expand all topics will be shown at the right side of the screen.<br>Only effective while collapsing sections are enabled';
+
 $string['maxtabs'] = 'Number of Tabs';
 $string['maxtabs_label'] = 'Number of Tabs';
 $string['maxtabs_help'] = 'Number of tabs available for this course';

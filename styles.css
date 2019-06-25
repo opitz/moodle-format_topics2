@@ -84,5 +84,5 @@ li.section.ontop {
     position: fixed;
     z-index: 1000;
     top: 320px;
-    left: 300px;
+    left: 0px;
 }

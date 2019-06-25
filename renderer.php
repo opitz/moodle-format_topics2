@@ -86,8 +86,10 @@ class format_topics2_renderer extends format_topics_renderer {
             echo html_writer::tag('div','',array('class' => 'limittabname', 'value' => $format_options['limittabname'], 'style' => 'display: hidden;'));
         }
 
-        // The toggle all buttons
-        echo $this->render_toggle_all($format_options);
+        // show fixed toggle all buttons if toggling sections is enabled
+        if(isset($format_options['toggle']) && $format_options['toggle'] && isset($format_options['toggle_all']) && $format_options['toggle_all']) {
+            echo $this->render_toggle_all($format_options);
+        }
 
         echo html_writer::start_tag('div', array('id' => 'courseid', 'courseid' => $course->id, 'class' => $class));
         echo html_writer::end_tag('div');
@@ -320,19 +322,20 @@ class format_topics2_renderer extends format_topics_renderer {
         $styles = "
             position: fixed;
             z-index: 1000;
-            top: 320px;
-            left: 300px;
+            top: 220px;
+            right: 0px;
         ";
+        $o = html_writer::start_tag('div', array('id' => 'toggle_all0', 'style' => $styles));
 
-        $o = html_writer::start_tag('divl', array('id' => 'toggle_all'));
+        $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
+        $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
 
-        $tooltip_open_all = 'Open all topics';
-        $tooltip_close_all = 'Close all topics';
-//        $tooltip_open_all = get_string('tooltip_open','format_topics2');
-//        $tooltip_close_all = get_string('tooltip_closed','format_topics2');
-        $btn_open = '<i id="btn_open_all" class="fa fa-angle-down" title="'.$tooltip_open_all.'" style="cursor: pointer;"></i><br>';
-        $btn_open .= '<i id="btn_close_all" class="fa fa-angle-right" title="'.$tooltip_close_all.'" style="cursor: pointer;"></i>';
-        $o .= html_writer::tag('button', $btn_open, array('id' => 'btn_expand_all', 'class' => 'small'));
+        $btn_content = '';
+        $btn_content .= '<i id="btn_close_all" class="fa fa-angle-right" title="'.$tooltip_close_all.'" style="cursor: pointer;"></i>';
+        $btn_content .= '<br>';
+        $btn_content .= '<i id="btn_open_all" class="fa fa-angle-down" title="'.$tooltip_open_all.'" style="cursor: pointer;"></i>';
+        $o .= html_writer::tag('button', $btn_content, array('id' => 'btn_expand_all', 'class' => 'small'));
+
         $o .= html_writer::end_tag('div');
 
         return $o;
