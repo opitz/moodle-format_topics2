@@ -18,8 +18,6 @@ define(['jquery', 'jqueryui'], function($) {
                         } else {
                             if ($('.inplaceeditingon').length === 0) { // Don't do this while editing the tab name
                                 if ($('.inplaceeditable').length > 0) { // we are in edit mode...
-//                                    var targ = $('#' + tab.attr('id')).find('a');
-//                                    targ.html(targ.html().replace(orig_tab_title, short_tab_title));
                                     tab.find('a').html(tab.find('a').html().replace(orig_tab_title, short_tab_title));
                                 } else {
                                     tab.html(tab.html().replace(orig_tab_title, short_tab_title));

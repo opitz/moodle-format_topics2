@@ -87,11 +87,28 @@ define(['jquery', 'jqueryui'], function($) {
 
 
 // ---------------------------------------------------------------------------------------------------------------------
+            var toggle_all = function() {
+                $('#btn_open_all').on('click', function() {
+                    $('.toggler_open').show();
+                    $('.toggler_closed').hide();
+                    $('.toggle_area').removeClass('hidden').show();
+                });
+                $('#btn_close_all').on('click', function() {
+                    $('.toggler_open').hide();
+                    $('.toggler_closed').show();
+                    $('.toggle_area').addClass('hidden').hide();
+                    // Do not hide section 0
+                    $('#section-0').find('.sectionbody').removeClass('hidden').show();
+                });
+            };
+
+// ---------------------------------------------------------------------------------------------------------------------
             var initFunctions = function() {
                 // Load all required functions above
                 toggleSection();
                 toggleSectionsOpen();
                 toggleSectionsClose();
+                toggle_all();
             };
 
 // ---------------------------------------------------------------------------------------------------------------------

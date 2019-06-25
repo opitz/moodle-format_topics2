@@ -77,3 +77,5 @@ $string['tabtitle_editlabel'] = 'New value for {a}';
 $string['hidden_tab_hint'] = 'This tab contains only hidden topics and will not be shown to students';
 $string['tooltip_open'] = 'Click to collapse. ALT-click to collapse all topics.';
 $string['tooltip_closed'] = 'Click to expand. ALT-click to expand all topics.';
+$string['tooltip_open_all'] = 'Expand all topics';
+$string['tooltip_close_all'] = 'Collapse all topics';

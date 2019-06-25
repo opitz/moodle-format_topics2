@@ -79,3 +79,10 @@ li.section.ontop {
     max-height: 500px;
     overflow-x: hidden;
 }
+
+#toggle_all {
+    position: fixed;
+    z-index: 1000;
+    top: 320px;
+    left: 300px;
+}
