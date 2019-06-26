@@ -319,6 +319,7 @@ class format_topics2_renderer extends format_topics_renderer {
     }
 
     public function render_toggle_all($format_options) {
+/*
         $styles = "
             position: fixed;
             z-index: 1000;
@@ -326,6 +327,8 @@ class format_topics2_renderer extends format_topics_renderer {
             right: 0px;
         ";
         $o = html_writer::start_tag('div', array('id' => 'toggle_all0', 'style' => $styles));
+*/
+        $o = html_writer::start_tag('div', array('id' => 'toggle_all0'));
 
         $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
         $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
