@@ -328,7 +328,7 @@ class format_topics2_renderer extends format_topics_renderer {
         ";
         $o = html_writer::start_tag('div', array('id' => 'toggle_all0', 'style' => $styles));
 */
-        $o = html_writer::start_tag('div', array('id' => 'toggle_all0'));
+        $o = html_writer::start_tag('div', array('id' => 'toggle_all'));
 
         $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
         $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
