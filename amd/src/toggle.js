@@ -92,6 +92,7 @@ define(['jquery', 'jqueryui'], function($) {
                     $('.toggler_open').show();
                     $('.toggler_closed').hide();
                     $('.toggle_area').removeClass('hidden').show();
+                    updateToggleSeq();
                 });
                 $('#btn_close_all').on('click', function() {
                     $('.toggler_open').hide();
@@ -99,6 +100,7 @@ define(['jquery', 'jqueryui'], function($) {
                     $('.toggle_area').addClass('hidden').hide();
                     // Do not hide section 0
                     $('#section-0').find('.sectionbody').removeClass('hidden').show();
+                    updateToggleSeq();
                 });
             };
 

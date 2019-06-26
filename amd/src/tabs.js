@@ -29,6 +29,15 @@ define(['jquery', 'jqueryui'], function($) {
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
+            var truncate_all_tabnames = function() {
+                if ($('.limittabname').length > 0) {
+                    $('.tablink').each(function() {
+                        truncate_tabname($(this));
+                    });
+                }
+            }
+
+// ---------------------------------------------------------------------------------------------------------------------
             // When a limit for the tabname is set expand the name of the given tab to the original
             var expand_tabname = function(tab) {
 
@@ -98,29 +107,6 @@ define(['jquery', 'jqueryui'], function($) {
                         target.find('.section-handle').hide();
                     }
                 }
-                // truncate tabname
-                truncate_tabname(tab);
-            };
-            var changeTab00 = function(tab, target) {
-                console.log('single section in tab: using section name as tab name');
-
-                // Replace the tab name with the section name
-                var origSectionname = target.find('.sectionname:not(.hidden)');
-                if ($('.tabname_backup:visible').length > -1) {
-                    var theSectionname = target.attr('aria-label');
-                    tab.parent().append(tab.clone().addClass('tabname_backup').hide()); // Create a hidden clone of tab name
-                    tab.html(theSectionname).addClass('tabsectionname');
-
-                    // Hide the original sectionname when not in edit mode
-                    if ($('.inplaceeditable').length === 0) {
-                        origSectionname.hide();
-                        target.find('.sectionhead').hide();
-                    } else {
-                        origSectionname.addClass('edit_only');
-                        target.find('.hidden.sectionname').hide();
-                        target.find('.section-handle').hide();
-                    }
-                }
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -155,11 +141,12 @@ define(['jquery', 'jqueryui'], function($) {
                 var sections = $(this).attr('sections');
                 var sectionArray = sections.split(",");
 
-                console.log('----');
-
                 // Make this an active tab
                 $(".tablink.active").removeClass("active"); // First remove any active class from tabs
                 $(this).addClass('active'); // Then add the active class to the clicked tab
+
+                truncate_all_tabnames();
+                expand_tabname($(this));
 
                 var clickedTabName;
                 if ($(this).find('.inplaceeditable-text')) {
@@ -168,7 +155,7 @@ define(['jquery', 'jqueryui'], function($) {
                 if (typeof clickedTabName == 'undefined') {
                     clickedTabName = $(this).html();
                 }
-                 console.log('Clicked tab "'+clickedTabName+'":');
+                 console.log('=====> Clicked tab "'+clickedTabName+'":');
 
                 if (tabid === 'tab0') { // Show all sections - then hide each section shown in other tabs
                     $("#changenumsections").show();
@@ -253,7 +240,6 @@ define(['jquery', 'jqueryui'], function($) {
                 } else {
                     console.log('tab with visible sections - showing it');
                     $(this).parent().show();
-//                    truncate_tabname($(this));
                 }
 
                 // If option is set and when a tab other than tab 0 shows a single section perform some visual tricks
@@ -265,9 +251,9 @@ define(['jquery', 'jqueryui'], function($) {
                     }
                     var firstSectionId = target.attr('id');
 
-                    if (visibleSections - hiddenSections <= 1 && firstSectionId !== 'section-0'
-//                        && !$('li.section:visible').first().hasClass('hidden')
-//                        && !$('li.section:visible').first().hasClass('stealth')
+                    if (visibleSections - hiddenSections <= 1
+                        && firstSectionId !== 'section-0'
+                        && $(this).attr('generic_title').indexOf('Tab') >= 0 // Do this only for original tabs
                     ) {
                         changeTab($(this), target);
                         // Make sure the content is un-hidden
@@ -457,7 +443,7 @@ define(['jquery', 'jqueryui'], function($) {
                 moveOntop();
                 moveInline();
                 dropdownToggle();
-                hover_tabname();
+//                hover_tabname();
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -541,11 +527,7 @@ define(['jquery', 'jqueryui'], function($) {
                 $("#section-0 .right.side").show();
 
                 // Truncate tab names when option is set
-                if ($('.limittabname').length > 0) {
-                    $('.tablink').each(function() {
-                        truncate_tabname($(this));
-                    });
-                }
+                truncate_all_tabnames();
 
                 // Make tabs draggable when in edit mode (the pencil class is present)
                 if ($('.inplaceeditable').length > 0) {
