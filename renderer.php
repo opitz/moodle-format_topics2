@@ -243,9 +243,12 @@ class format_topics2_renderer extends format_topics_renderer {
             // get the format option record for the given tab - we need the id
             // if the record does not exist, create it first
             if(!$DB->record_exists('course_format_options', array('courseid' => $PAGE->course->id, 'name' => $tab->id.'_title'))) {
+                $format = course_get_format($PAGE->course);
+                $format = $format->get_format();
+
                 $record = new stdClass();
                 $record->courseid = $PAGE->course->id;
-                $record->format = 'topics2';
+                $record->format = $format;
                 $record->section = 0;
                 $record->name = $tab->id.'_title';
                 $record->value = ($tab->id == 'tab0' ? get_string('tabzero_title', 'format_topics2') :'Tab '.substr($tab->id,3));
@@ -319,15 +322,41 @@ class format_topics2_renderer extends format_topics_renderer {
     }
 
     public function render_toggle_all($format_options) {
-/*
-        $styles = "
-            position: fixed;
-            z-index: 1000;
-            top: 220px;
-            right: 0px;
-        ";
-        $o = html_writer::start_tag('div', array('id' => 'toggle_all0', 'style' => $styles));
-*/
+        /*
+                $styles = "
+                    position: fixed;
+                    z-index: 1000;
+                    top: 220px;
+                    right: 0px;
+                ";
+                $o = html_writer::start_tag('div', array('id' => 'toggle_all0', 'style' => $styles));
+        */
+        $o = html_writer::start_tag('div', array('id' => 'toggle_all'));
+
+        $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
+        $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
+
+        $btn_content = '';
+        $btn_close = '<i id="btn_close_all" class="fa fa-angle-right" title="'.$tooltip_close_all.'" style="cursor: pointer;"></i>';
+        $btn_open = '<i id="btn_open_all" class="fa fa-angle-down" title="'.$tooltip_open_all.'" style="cursor: pointer;"></i>';
+        $o .= html_writer::tag('button', $btn_close, array('id' => 'btn_expand_all', 'class' => 'toggle_button small', 'style' => 'width: 25px;'));
+        $o .= '<br>';
+        $o .= html_writer::tag('button', $btn_open, array('id' => 'btn_expand_all', 'class' => 'toggle_button small', 'style' => 'width: 25px;'));
+
+        $o .= html_writer::end_tag('div');
+
+        return $o;
+    }
+    public function render_toggle_all0($format_options) {
+        /*
+                $styles = "
+                    position: fixed;
+                    z-index: 1000;
+                    top: 220px;
+                    right: 0px;
+                ";
+                $o = html_writer::start_tag('div', array('id' => 'toggle_all0', 'style' => $styles));
+        */
         $o = html_writer::start_tag('div', array('id' => 'toggle_all'));
 
         $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
@@ -343,6 +372,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
         return $o;
     }
+
 //=================================================< sections >=========================================================
     // display section-0 on top of tabs if option is checked
     public function render_section0_ontop($course, $sections, $format_options, $modinfo) {

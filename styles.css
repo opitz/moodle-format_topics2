@@ -63,7 +63,7 @@ li.section.ontop {
 }
 
 .edit_only {
-    opacity: 0.4;
+    background-color: #FAFAFA;
 }
 
 .tabs {
@@ -85,4 +85,8 @@ li.section.ontop {
     z-index: 1000;
     top: 220px;
     right: 0px;
+}
+
+.toggle_button {
+    width: 25px;
 }

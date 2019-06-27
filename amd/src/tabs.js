@@ -97,15 +97,16 @@ define(['jquery', 'jqueryui'], function($) {
                     tab.parent().append(tab.clone().addClass('tabname_backup').hide()); // Create a hidden clone of tab name
                     tab.html(theSectionname).addClass('tabsectionname');
                     tab.attr('tab_title', theSectionname);
+
                     // Hide the original sectionname when not in edit mode
                     if ($('.inplaceeditable').length === 0) {
                         origSectionname.hide();
                         target.find('.sectionhead').hide();
                     } else {
+                        target.find('.toggler').addClass('toggler_edit_only').hide();
                         origSectionname.addClass('edit_only');
-                        target.find('.hidden.sectionname').hide();
-                        target.find('.section-handle').hide();
                     }
+
                 }
             };
 
@@ -128,8 +129,11 @@ define(['jquery', 'jqueryui'], function($) {
 
                 // Reveal the original sectionname
                 $('.sectionname').removeClass('edit_only').show();
+
                 $('.hidden.sectionname').show();
                 $('.section-handle').show();
+//                $('.sectionname').find('.toggler').show();
+                $('.toggler_edit_only').removeClass('toggler_edit_only').show();
 
                  console.log('--> restoring section headline ');
             };
