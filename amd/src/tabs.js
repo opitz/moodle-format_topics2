@@ -2,25 +2,37 @@ define(['jquery', 'jqueryui'], function($) {
     /*eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
     return {
         init: function() {
+
+// ---------------------------------------------------------------------------------------------------------------------
+            var escapeHtml = function(text) {
+                var map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+
+                return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+            }
+
 // ---------------------------------------------------------------------------------------------------------------------
             // When a limit for the tabname is set truncate the name of the given tab to limit
-            var truncate_tabname = function(tab) {
+            var truncateTabname = function(tab) {
 
                 if ($('.limittabname').length > 0) {
                     var x = $('.limittabname').attr('value');
                     var orig_tab_title = tab.attr('tab_title');
-                    // console.log('truncate => orig = ' + orig_tab_title);
                     if (orig_tab_title.length > x) {
                         var short_tab_title = orig_tab_title.substr(0,x) + String.fromCharCode(8230);
-                        // console.log('         => short = ' + short_tab_title);
                         if (tab.hasClass('tabsectionname')) { // A sectionname as tabname
                             tab.html(short_tab_title);
                         } else {
                             if ($('.inplaceeditingon').length === 0) { // Don't do this while editing the tab name
                                 if ($('.inplaceeditable').length > 0) { // we are in edit mode...
-                                    tab.find('a').html(tab.find('a').html().replace(orig_tab_title, short_tab_title));
+                                    tab.find('a').html(tab.find('a').html().replace(escapeHtml(orig_tab_title), short_tab_title));
                                 } else {
-                                    tab.html(tab.html().replace(orig_tab_title, short_tab_title));
+                                    tab.html(tab.html().replace(escapeHtml(orig_tab_title), short_tab_title));
                                 }
                             }
                         }
@@ -29,17 +41,17 @@ define(['jquery', 'jqueryui'], function($) {
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
-            var truncate_all_tabnames = function() {
+            var truncateAllTabnames = function() {
                 if ($('.limittabname').length > 0) {
                     $('.tablink').each(function() {
-                        truncate_tabname($(this));
+                        truncateTabname($(this));
                     });
                 }
             }
 
 // ---------------------------------------------------------------------------------------------------------------------
             // When a limit for the tabname is set expand the name of the given tab to the original
-            var expand_tabname = function(tab) {
+            var expandTabname = function(tab) {
 
                 if ($('.limittabname').length > 0) {
                     var x = $('.limittabname').attr('value');
@@ -63,25 +75,13 @@ define(['jquery', 'jqueryui'], function($) {
                                         short_tab_title = orig_tab_title.substr(0,x) + String.fromCharCode(8230);
                                     }
 
-                                    tab.find('a').html(tab.find('a').html().replace(short_tab_title, orig_tab_title));
+                                    tab.find('a').html(tab.find('a').html().replace(escapeHtml(short_tab_title), orig_tab_title));
                                 } else {
-                                    tab.html(tab.html().replace(short_tab_title, orig_tab_title));
+                                    tab.html(tab.html().replace(escapeHtml(short_tab_title), orig_tab_title));
                                 }
                             }
                         }
                     }
-                }
-            };
-
-// ---------------------------------------------------------------------------------------------------------------------
-            // Expand the tab the mouse hovers over and truncate it again when the mouse leaves
-            var hover_tabname = function() {
-                if ($('.limittabname').length > 0) {
-                    $('.tablink').hover(function() {
-                        expand_tabname($(this));
-                    }, function() {
-                        truncate_tabname($(this));
-                    });
                 }
             };
 
@@ -149,8 +149,8 @@ define(['jquery', 'jqueryui'], function($) {
                 $(".tablink.active").removeClass("active"); // First remove any active class from tabs
                 $(this).addClass('active'); // Then add the active class to the clicked tab
 
-                truncate_all_tabnames();
-                expand_tabname($(this));
+                truncateAllTabnames();
+                expandTabname($(this));
 
                 var clickedTabName;
                 if ($(this).find('.inplaceeditable-text')) {
@@ -524,14 +524,14 @@ define(['jquery', 'jqueryui'], function($) {
 
 // ---------------------------------------------------------------------------------------------------------------------
             $(document).ready(function() {
+                console.log('=================< topics2/tabs.js >=================');
                 initFunctions();
 
-                console.log('=================< topics2/tabs.js >=================');
                 // Show the edit menu for section-0
                 $("#section-0 .right.side").show();
 
                 // Truncate tab names when option is set
-                truncate_all_tabnames();
+                truncateAllTabnames();
 
                 // Make tabs draggable when in edit mode (the pencil class is present)
                 if ($('.inplaceeditable').length > 0) {

@@ -86,10 +86,8 @@ class format_topics2_renderer extends format_topics_renderer {
             echo html_writer::tag('div','',array('class' => 'limittabname', 'value' => $format_options['limittabname'], 'style' => 'display: hidden;'));
         }
 
-        // show fixed toggle all buttons if toggling sections is enabled
-        if(isset($format_options['toggle']) && $format_options['toggle'] && isset($format_options['toggle_all']) && $format_options['toggle_all']) {
-            echo $this->render_toggle_all($format_options);
-        }
+        // render a fixed tool menu
+        echo $this->render_fixed_tool_menu($format_options);
 
         echo html_writer::start_tag('div', array('id' => 'courseid', 'courseid' => $course->id, 'class' => $class));
         echo html_writer::end_tag('div');
@@ -121,6 +119,7 @@ class format_topics2_renderer extends format_topics_renderer {
     public function require_js() {
         $this->page->requires->js_call_amd('format_topics2/tabs', 'init', array());
         $this->page->requires->js_call_amd('format_topics2/toggle', 'init', array());
+        $this->page->requires->js_call_amd('format_topics2/toolmenu', 'init', array());
     }
 
     // Get the toggle sequence of a given course for the current user
@@ -321,59 +320,126 @@ class format_topics2_renderer extends format_topics_renderer {
         return $tab_section_ids;
     }
 
-    public function render_toggle_all($format_options) {
-        /*
-                $styles = "
-                    position: fixed;
-                    z-index: 1000;
-                    top: 220px;
-                    right: 0px;
-                ";
-                $o = html_writer::start_tag('div', array('id' => 'toggle_all0', 'style' => $styles));
-        */
-        $o = html_writer::start_tag('div', array('id' => 'toggle_all'));
+    public function render_fixed_tool_menu($format_options) {
+        $o = '';
+        if(!isset($format_options['show_tool_menu']) || $format_options['show_tool_menu'] === 0 || $format_options['show_tool_menu'] == '0') {
+            return $o;
+        }
 
+        if($format_options['show_tool_menu'] == '1') {
+            $o .= html_writer::start_tag('div', array('id' => 'reveal_tool_menu_area')); // a toggle area
+            $o .= html_writer::start_tag('div', array('id' => 'fixed_tool_menu', 'style' => 'width: 0;'));
+        }
+        // render a toggle area where a mouseover will reveal the tool menu
+        if($format_options['show_tool_menu'] == '2') {
+            $o .= html_writer::start_tag('div');
+            $o .= html_writer::start_tag('div', array('id' => 'permanent_fixed_tool_menu'));
+        }
+
+        // Prepare an array of button objects for the tool menu
+        $buttons = array();
+
+        $tooltip_goto_top = get_string('tooltip_goto_top','format_topics2');
         $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
         $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
+//        $btn_top = '<i class="fa fa-angle-up" title="'.$tooltip_goto_top.'"></i>';
+//        $btn_open = '<i class="fa fa-angle-down" title="'.$tooltip_open_all.'"></i>';
+//        $btn_close = '<i class="fa fa-angle-right" title="'.$tooltip_close_all.'"></i>';
+//        $btn_top = '<i class="fa fa-angle-up"></i>';
+        $btn_top = '<i class="fa fa-chevron-circle-up"></i>';
+        $btn_open = '<i class="fa fa-angle-down"></i>';
+        $btn_close = '<i class="fa fa-angle-right"></i>';
+//        $btn_top = '<div title="'.$tooltip_goto_top.'">T</div>';
+//        $btn_open = '<div title="'.$tooltip_open_all.'">E</div>';
+//        $btn_close = '<div title="'.$tooltip_close_all.'">C</div>';
+//        $btn_top = 'T';
+//        $btn_open = 'E';
+//        $btn_close = 'C';
 
-        $btn_content = '';
-        $btn_close = '<i id="btn_close_all" class="fa fa-angle-right" title="'.$tooltip_close_all.'" style="cursor: pointer;"></i>';
-        $btn_open = '<i id="btn_open_all" class="fa fa-angle-down" title="'.$tooltip_open_all.'" style="cursor: pointer;"></i>';
-        $o .= html_writer::tag('button', $btn_close, array('id' => 'btn_expand_all', 'class' => 'toggle_button small', 'style' => 'width: 25px;'));
-        $o .= '<br>';
-        $o .= html_writer::tag('button', $btn_open, array('id' => 'btn_expand_all', 'class' => 'toggle_button small', 'style' => 'width: 25px;'));
+        $buttons[] = (object) array('id' => 'btn_top', 'contents' => $btn_top, 'title' => $tooltip_goto_top);
+        if(isset($format_options['toggle']) && $format_options['toggle'] == '1') {
+            $buttons[] = (object) array('id' => 'btn_open_all', 'contents' => $btn_open, 'title' => $tooltip_open_all);
+            $buttons[] = (object) array('id' => 'btn_close_all', 'contents' => $btn_close, 'title' => $tooltip_close_all);
+        }
+        // A help button
+        $buttons[] = (object) array('id' => 'btn_help', 'contents' => '?', 'style' => 'background-color: #FA6;');
+
+
+        // A test and a reset button for - ahem - testing purposes - commented out during normal operation
+//        $buttons[] = (object) array('id' => 'btn_test', 'contents' => 'T', 'style' => 'background-color: #FAA;');
+//        $buttons[] = (object) array('id' => 'btn_reset', 'contents' => 'R', 'style' => 'background-color: #AFA;');
+
+        foreach($buttons as $button) {
+            $o .= html_writer::tag('button', $button->contents, array(
+                'id' => $button->id,
+                'class' => 'tool_menu_button button small',
+                'style' => 'width: 25px; cursor: pointer; '.(isset($button->style) ? $button->style : ''),
+                'title' => (isset($button->title) ? $button->title : '')
+            )).'<br>';
+        }
+
+        $o .= html_writer::end_tag('div');
+        $o .= html_writer::end_tag('div');
+
+        return $o;
+    }
+    public function render_fixed_tool_menu0() {
+        $o = '';
+        // 1st render a toggle area where a mouseover will reveal the tool menu
+        $styles = "
+            position: fixed;
+            z-index: 999;
+            top: 0px;
+            right: 0px;
+            width: 25px;
+            height: 100%;
+        ";
+        $o .= html_writer::tag('div', '', array('id' => 'reveal_tool_menu_area', 'class' => 'reveal_tool_menu', 'style' => $styles));
+
+
+
+        $styles = "
+            position: fixed;
+            z-index: 1000;
+            top: 220px;
+            right: 0px;
+            display: none;
+        ";
+        $o .= html_writer::start_tag('div', array('id' => 'fixed_tool_menu', 'class' => 'reveal_tool_menu2', 'style' => $styles));
+
+        $buttons = array();
+
+        $tooltip_goto_top = "Go to top of page";
+        $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
+        $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
+        $btn_top = '<i class="fa fa-angle-up" title="'.$tooltip_goto_top.'"></i>';
+        $btn_open = '<i class="fa fa-angle-down" title="'.$tooltip_open_all.'"></i>';
+        $btn_close = '<i class="fa fa-angle-right" title="'.$tooltip_close_all.'"></i>';
+
+        $buttons[] = (object) array('id' => 'btn_top', 'contents' => $btn_top);;
+        $button = array('id' => 'btn_open_all', 'contents' => $btn_open);
+        $buttons[] = (object) $button;
+        $button = array('id' => 'btn_close_all', 'contents' => $btn_close);
+        $buttons[] = (object) $button;
+
+        $button = array('id' => 'btn_test', 'contents' => 'T', 'style' => 'background-color: #FAA;');
+        $buttons[] = (object) $button;
+        $button = array('id' => 'btn_reset', 'contents' => 'R', 'style' => 'background-color: #AFA;');
+        $buttons[] = (object) $button;
+
+        foreach($buttons as $button) {
+            $o .= html_writer::tag('button', $button->contents, array('id' => $button->id, 'class' => 'button small', 'style' => 'width: 25px; cursor: pointer; '.
+                    (isset($button->style) ? $button->style : ''))).'<br>';
+        }
+//        $o .= html_writer::tag('button', 'T', array('id' => 'btn_test', 'class' => 'button small', 'style' => 'width: 25px; background-color: #FAA;'));
+//        $o .= html_writer::tag('button', 'R', array('id' => 'btn_reset', 'class' => 'button small', 'style' => 'width: 25px; background-color: #AFA;'));
 
         $o .= html_writer::end_tag('div');
 
         return $o;
     }
-    public function render_toggle_all0($format_options) {
-        /*
-                $styles = "
-                    position: fixed;
-                    z-index: 1000;
-                    top: 220px;
-                    right: 0px;
-                ";
-                $o = html_writer::start_tag('div', array('id' => 'toggle_all0', 'style' => $styles));
-        */
-        $o = html_writer::start_tag('div', array('id' => 'toggle_all'));
 
-        $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
-        $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
-
-        $btn_content = '';
-        $btn_content .= '<i id="btn_close_all" class="fa fa-angle-right" title="'.$tooltip_close_all.'" style="cursor: pointer;"></i>';
-        $btn_content .= '<br>';
-        $btn_content .= '<i id="btn_open_all" class="fa fa-angle-down" title="'.$tooltip_open_all.'" style="cursor: pointer;"></i>';
-        $o .= html_writer::tag('button', $btn_content, array('id' => 'btn_expand_all', 'class' => 'small'));
-
-        $o .= html_writer::end_tag('div');
-
-        return $o;
-    }
-
-//=================================================< sections >=========================================================
+    //=================================================< sections >=========================================================
     // display section-0 on top of tabs if option is checked
     public function render_section0_ontop($course, $sections, $format_options, $modinfo) {
         global $PAGE;

@@ -66,6 +66,21 @@ class format_topics2 extends format_topics {
                     'type' => PARAM_INT,
 //                    'element_type' => 'hidden',
                 ),
+                'show_tool_menu' => array(
+                    'label' => get_string('tool_menu_label', 'format_topics2'),
+                    'help' => 'tool_menu',
+                    'help_component' => 'format_topics2',
+                    'element_type' => 'select',
+                    'default' => 1,
+                    'element_attributes' => array(
+                        array(
+                            0 => get_string('tool_menu_option0', 'format_topics2'),
+                            1 => get_string('tool_menu_option1', 'format_topics2'),
+                            2 => get_string('tool_menu_option2', 'format_topics2')
+                        )
+                    )
+                ),
+
                 'hiddensections' => array(
                     'label' => new lang_string('hiddensections'),
                     'help' => 'hiddensections',
@@ -96,12 +111,13 @@ class format_topics2 extends format_topics {
                     'help' => 'toggle',
                     'help_component' => 'format_topics2',
                 ),
-                'toggle_all' => array(
-                    'label' => get_string('toggle_all_label', 'format_topics2'),
-                    'element_type' => 'advcheckbox',
-                    'help' => 'toggle_all',
-                    'help_component' => 'format_topics2',
-                ),
+//                'toggle_all' => array(
+//                    'label' => get_string('toggle_all_label', 'format_topics2'),
+//                    'element_type' => 'advcheckbox',
+//                    'help' => 'toggle_all',
+//                    'help_component' => 'format_topics2',
+//                ),
+
                 'section0_ontop' => array(
                     'label' => get_string('section0_label', 'format_topics2'),
                     'element_type' => 'advcheckbox',
