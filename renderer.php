@@ -320,127 +320,8 @@ class format_topics2_renderer extends format_topics_renderer {
         return $tab_section_ids;
     }
 
-    public function render_fixed_tool_menu($format_options) {
-        $o = '';
-        if(!isset($format_options['show_tool_menu']) || $format_options['show_tool_menu'] === 0 || $format_options['show_tool_menu'] == '0') {
-            return $o;
-        }
-
-        if($format_options['show_tool_menu'] == '1') {
-            $o .= html_writer::start_tag('div', array('id' => 'reveal_tool_menu_area')); // a toggle area
-            $o .= html_writer::start_tag('div', array('id' => 'fixed_tool_menu', 'style' => 'width: 0;'));
-        }
-        // render a toggle area where a mouseover will reveal the tool menu
-        if($format_options['show_tool_menu'] == '2') {
-            $o .= html_writer::start_tag('div');
-            $o .= html_writer::start_tag('div', array('id' => 'permanent_fixed_tool_menu'));
-        }
-
-        // Prepare an array of button objects for the tool menu
-        $buttons = array();
-
-        $tooltip_goto_top = get_string('tooltip_goto_top','format_topics2');
-        $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
-        $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
-//        $btn_top = '<i class="fa fa-angle-up" title="'.$tooltip_goto_top.'"></i>';
-//        $btn_open = '<i class="fa fa-angle-down" title="'.$tooltip_open_all.'"></i>';
-//        $btn_close = '<i class="fa fa-angle-right" title="'.$tooltip_close_all.'"></i>';
-//        $btn_top = '<i class="fa fa-angle-up"></i>';
-        $btn_top = '<i class="fa fa-chevron-circle-up"></i>';
-        $btn_open = '<i class="fa fa-angle-down"></i>';
-        $btn_close = '<i class="fa fa-angle-right"></i>';
-//        $btn_top = '<div title="'.$tooltip_goto_top.'">T</div>';
-//        $btn_open = '<div title="'.$tooltip_open_all.'">E</div>';
-//        $btn_close = '<div title="'.$tooltip_close_all.'">C</div>';
-//        $btn_top = 'T';
-//        $btn_open = 'E';
-//        $btn_close = 'C';
-
-        $buttons[] = (object) array('id' => 'btn_top', 'contents' => $btn_top, 'title' => $tooltip_goto_top);
-        if(isset($format_options['toggle']) && $format_options['toggle'] == '1') {
-            $buttons[] = (object) array('id' => 'btn_open_all', 'contents' => $btn_open, 'title' => $tooltip_open_all);
-            $buttons[] = (object) array('id' => 'btn_close_all', 'contents' => $btn_close, 'title' => $tooltip_close_all);
-        }
-        // A help button
-        $buttons[] = (object) array('id' => 'btn_help', 'contents' => '?', 'style' => 'background-color: #FA6;');
-
-
-        // A test and a reset button for - ahem - testing purposes - commented out during normal operation
-//        $buttons[] = (object) array('id' => 'btn_test', 'contents' => 'T', 'style' => 'background-color: #FAA;');
-//        $buttons[] = (object) array('id' => 'btn_reset', 'contents' => 'R', 'style' => 'background-color: #AFA;');
-
-        foreach($buttons as $button) {
-            $o .= html_writer::tag('button', $button->contents, array(
-                'id' => $button->id,
-                'class' => 'tool_menu_button button small',
-                'style' => 'width: 25px; cursor: pointer; '.(isset($button->style) ? $button->style : ''),
-                'title' => (isset($button->title) ? $button->title : '')
-            )).'<br>';
-        }
-
-        $o .= html_writer::end_tag('div');
-        $o .= html_writer::end_tag('div');
-
-        return $o;
-    }
-    public function render_fixed_tool_menu0() {
-        $o = '';
-        // 1st render a toggle area where a mouseover will reveal the tool menu
-        $styles = "
-            position: fixed;
-            z-index: 999;
-            top: 0px;
-            right: 0px;
-            width: 25px;
-            height: 100%;
-        ";
-        $o .= html_writer::tag('div', '', array('id' => 'reveal_tool_menu_area', 'class' => 'reveal_tool_menu', 'style' => $styles));
-
-
-
-        $styles = "
-            position: fixed;
-            z-index: 1000;
-            top: 220px;
-            right: 0px;
-            display: none;
-        ";
-        $o .= html_writer::start_tag('div', array('id' => 'fixed_tool_menu', 'class' => 'reveal_tool_menu2', 'style' => $styles));
-
-        $buttons = array();
-
-        $tooltip_goto_top = "Go to top of page";
-        $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
-        $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
-        $btn_top = '<i class="fa fa-angle-up" title="'.$tooltip_goto_top.'"></i>';
-        $btn_open = '<i class="fa fa-angle-down" title="'.$tooltip_open_all.'"></i>';
-        $btn_close = '<i class="fa fa-angle-right" title="'.$tooltip_close_all.'"></i>';
-
-        $buttons[] = (object) array('id' => 'btn_top', 'contents' => $btn_top);;
-        $button = array('id' => 'btn_open_all', 'contents' => $btn_open);
-        $buttons[] = (object) $button;
-        $button = array('id' => 'btn_close_all', 'contents' => $btn_close);
-        $buttons[] = (object) $button;
-
-        $button = array('id' => 'btn_test', 'contents' => 'T', 'style' => 'background-color: #FAA;');
-        $buttons[] = (object) $button;
-        $button = array('id' => 'btn_reset', 'contents' => 'R', 'style' => 'background-color: #AFA;');
-        $buttons[] = (object) $button;
-
-        foreach($buttons as $button) {
-            $o .= html_writer::tag('button', $button->contents, array('id' => $button->id, 'class' => 'button small', 'style' => 'width: 25px; cursor: pointer; '.
-                    (isset($button->style) ? $button->style : ''))).'<br>';
-        }
-//        $o .= html_writer::tag('button', 'T', array('id' => 'btn_test', 'class' => 'button small', 'style' => 'width: 25px; background-color: #FAA;'));
-//        $o .= html_writer::tag('button', 'R', array('id' => 'btn_reset', 'class' => 'button small', 'style' => 'width: 25px; background-color: #AFA;'));
-
-        $o .= html_writer::end_tag('div');
-
-        return $o;
-    }
-
-    //=================================================< sections >=========================================================
-    // display section-0 on top of tabs if option is checked
+//=================================================< sections >=========================================================
+    // display section-0 on top of tabs if option has been checked
     public function render_section0_ontop($course, $sections, $format_options, $modinfo) {
         global $PAGE;
         $o = '';
@@ -799,4 +680,145 @@ class format_topics2_renderer extends format_topics_renderer {
         return $o;
     }
 
+//=================================================< tool menu >========================================================
+    // Render a fixed tool menu
+    public function render_fixed_tool_menu($format_options) {
+        $tool_menu_width = '40px';
+        $o = '';
+        // If the option is not existing or set to '0' do not render a tool manu at all
+        if(!isset($format_options['show_tool_menu']) || $format_options['show_tool_menu'] === 0 || $format_options['show_tool_menu'] == '0') {
+            return $o;
+        }
+
+        if($format_options['show_tool_menu'] == '1') {
+            // create an area where a mouseover will reveal the tool menu
+            $o .= html_writer::start_tag('div', array('id' => 'reveal_tool_menu_area', 'style' => 'width: '.$tool_menu_width));
+            $o .= html_writer::start_tag('div', array('id' => 'fixed_tool_menu', 'style' => 'width: 0;')); // initially not shown due to lack of width
+        }
+        // render a permanent tool menu if the option is set
+        if($format_options['show_tool_menu'] == '2') {
+            $o .= html_writer::start_tag('div');
+            $o .= html_writer::start_tag('div', array('id' => 'permanent_fixed_tool_menu'));
+        }
+
+        $buttons = $this->prepare_tool_menu_buttons($format_options);
+        // Render the button objects
+        foreach($buttons as $button) {
+            $o .= html_writer::tag('button', $button->contents, array(
+                    'id' => $button->id,
+                    'class' => 'tool_menu_button button btn btn-sm',
+                    'style' => 'width: '.$tool_menu_width.'; cursor: pointer; '.(isset($button->style) ? $button->style : ''),
+                    'title' => (isset($button->title) ? $button->title : '')
+                )).'<br>'; // the break after each button creates a vertical menu
+        }
+
+        $o .= html_writer::end_tag('div');
+        $o .= html_writer::end_tag('div');
+
+        return $o;
+    }
+
+    // Prepare the buttons to appear in the tool menu
+    public function prepare_tool_menu_buttons($format_options) {
+        // Prepare an array of button objects for the tool menu
+        // a button is defined as an object with id, class and optional style and title (for tooltip and help)
+
+        // get the tooltip and help texts
+        $tooltip_goto_top = get_string('tooltip_goto_top','format_topics2');
+        $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
+        $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
+
+        // define the content of the buttons
+        $btn_top = '<i class="fa fa-chevron-circle-up"></i>';
+        $btn_open = '<i class="fa fa-angle-down"></i>';
+        $btn_close = '<i class="fa fa-angle-right"></i>';
+
+        // create an array of button objects - the order of which is reflected later in the menu
+        $buttons = array();
+
+        // A button to scroll to the top of the page
+        $buttons[] = (object) array('id' => 'btn_top', 'contents' => $btn_top, 'title' => $tooltip_goto_top);
+        if(isset($format_options['toggle']) && $format_options['toggle'] == '1') { // if the format supports toggling section content
+            // A button to expand all sections
+            $buttons[] = (object) array('id' => 'btn_open_all', 'contents' => $btn_open, 'title' => $tooltip_open_all);
+            // A button to collapse all sections
+            $buttons[] = (object) array('id' => 'btn_close_all', 'contents' => $btn_close, 'title' => $tooltip_close_all);
+        }
+        // A help button
+        $buttons[] = (object) array('id' => 'btn_help', 'contents' => '?', 'style' => 'background-color: #FA6;'); // A button to show some help
+
+
+        // A test and a reset button for - ahem - testing purposes - commented out during normal operation
+//        $buttons[] = (object) array('id' => 'btn_test', 'contents' => 'T', 'style' => 'background-color: #FAA;');
+//        $buttons[] = (object) array('id' => 'btn_reset', 'contents' => 'R', 'style' => 'background-color: #AFA;');
+        return $buttons;
+    }
+
+
+
+    public function render_fixed_tool_menu0($format_options) {
+        $tool_menu_width = '40px';
+        $o = '';
+        // If the option is not existing or set to '0' do not render a tool manu at all
+        if(!isset($format_options['show_tool_menu']) || $format_options['show_tool_menu'] === 0 || $format_options['show_tool_menu'] == '0') {
+            return $o;
+        }
+
+        if($format_options['show_tool_menu'] == '1') {
+            // create an area where a mouseover will reveal the tool menu
+            $o .= html_writer::start_tag('div', array('id' => 'reveal_tool_menu_area', 'style' => 'width: '.$tool_menu_width));
+            $o .= html_writer::start_tag('div', array('id' => 'fixed_tool_menu', 'style' => 'width: 0;')); // initially not shown due to lack of width
+        }
+        // render a permanent tool menu if the option is set
+        if($format_options['show_tool_menu'] == '2') {
+            $o .= html_writer::start_tag('div');
+            $o .= html_writer::start_tag('div', array('id' => 'permanent_fixed_tool_menu'));
+        }
+
+        // Prepare an array of button objects for the tool menu
+        // a button is defined as an object with id, class and optional style and title
+
+        // get the tooltip and help texts
+        $tooltip_goto_top = get_string('tooltip_goto_top','format_topics2');
+        $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
+        $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
+
+        $btn_top = '<i class="fa fa-chevron-circle-up"></i>';
+        $btn_open = '<i class="fa fa-angle-down"></i>';
+        $btn_close = '<i class="fa fa-angle-right"></i>';
+
+        // create an array of button objects
+        $buttons = array();
+        $buttons[] = (object) array('id' => 'btn_top', 'contents' => $btn_top, 'title' => $tooltip_goto_top); // A button to scroll to the top of the page
+        if(isset($format_options['toggle']) && $format_options['toggle'] == '1') {
+            $buttons[] = (object) array('id' => 'btn_open_all', 'contents' => $btn_open, 'title' => $tooltip_open_all); // A button to expand all sections
+            $buttons[] = (object) array('id' => 'btn_close_all', 'contents' => $btn_close, 'title' => $tooltip_close_all); // A button to collapse all sections
+        }
+        // A help button
+        $buttons[] = (object) array('id' => 'btn_help', 'contents' => '?', 'style' => 'background-color: #FA6;'); // A button to show some help
+
+
+        // A test and a reset button for - ahem - testing purposes - commented out during normal operation
+//        $buttons[] = (object) array('id' => 'btn_test', 'contents' => 'T', 'style' => 'background-color: #FAA;');
+//        $buttons[] = (object) array('id' => 'btn_reset', 'contents' => 'R', 'style' => 'background-color: #AFA;');
+
+        // now render the button objects
+        foreach($buttons as $button) {
+            $o .= html_writer::tag('button', $button->contents, array(
+                    'id' => $button->id,
+                    'class' => 'tool_menu_button btn',
+                    'style' => 'width: '.$tool_menu_width.'; cursor: pointer; '.(isset($button->style) ? $button->style : ''),
+                    'title' => (isset($button->title) ? $button->title : '')
+                )).'<br>'; // the break after each button creates a vertical menu
+        }
+
+        $o .= html_writer::end_tag('div');
+        $o .= html_writer::end_tag('div');
+
+        return $o;
+    }
+
+
+
 }
+
