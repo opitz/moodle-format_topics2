@@ -501,7 +501,7 @@ define(['jquery', 'jqueryui'], function($) {
 // ---------------------------------------------------------------------------------------------------------------------
             // A link to an URL is clicked - check if there is a section ID in it and if so reveal the corresponding tab
             $("a").click(function() {
-                if ($(this).attr('href') !== '#') {
+                if ($(this).attr('href') !== '#' && typeof $(this).attr('href') !== 'undefined') {
                     var sectionid = $(this).attr('href').split('#')[1];
                     // If the link contains a section ID (e.g. is NOT undefined) click the corresponding tab
                     if (typeof sectionid !== 'undefined') {
