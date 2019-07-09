@@ -38,10 +38,13 @@ define(['jquery', 'core/modal_factory', 'core/modal_events'], function($, ModalF
 // ---------------------------------------------------------------------------------------------------------------------
             // Toggle the tool menu
             var toggleToolMenu = function() {
+                var passiveWidth = $('#reveal_tool_menu_area').css('width');
+                var activeWidth = $('#reveal_tool_menu_area').attr('tool_menu_width');
                 $('#reveal_tool_menu_area').hover(function() {
-                    var menuWidth = $('#reveal_tool_menu_area').width();
-                    $('#fixed_tool_menu').animate({width: menuWidth});
+                    $('#reveal_tool_menu_area').css('width', activeWidth);
+                    $('#fixed_tool_menu').animate({width: activeWidth});
                 }, function() {
+                    $('#reveal_tool_menu_area').css('width', passiveWidth);
                     $('#fixed_tool_menu').delay(500).animate({width: 0});
                 });
             };

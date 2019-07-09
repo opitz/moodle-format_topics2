@@ -683,7 +683,18 @@ class format_topics2_renderer extends format_topics_renderer {
 //=================================================< tool menu >========================================================
     // Render a fixed tool menu
     public function render_fixed_tool_menu($format_options) {
-        $tool_menu_width = '40px';
+
+        $tool_menu_area_width = get_config('format_topics2', 'toolmenupassivewidth');
+        $tool_menu_width = get_config('format_topics2', 'toolmenuactivewidth');
+
+        if(!$tool_menu_area_width || $tool_menu_area_width == ''){
+            $tool_menu_area_width = '10px';
+        }
+        if(!$tool_menu_width || $tool_menu_width == ''){
+            $tool_menu_width = '40px';
+        }
+
+
         $o = '';
         // If the option is not existing or set to '0' do not render a tool manu at all
         if(!isset($format_options['show_tool_menu']) || $format_options['show_tool_menu'] === 0 || $format_options['show_tool_menu'] == '0') {
@@ -692,7 +703,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
         if($format_options['show_tool_menu'] == '1') {
             // create an area where a mouseover will reveal the tool menu
-            $o .= html_writer::start_tag('div', array('id' => 'reveal_tool_menu_area', 'style' => 'width: '.$tool_menu_width));
+            $o .= html_writer::start_tag('div', array('id' => 'reveal_tool_menu_area', 'style' => 'width: '.$tool_menu_area_width, 'tool_menu_width' => $tool_menu_width));
             $o .= html_writer::start_tag('div', array('id' => 'fixed_tool_menu', 'style' => 'width: 0;')); // initially not shown due to lack of width
         }
         // render a permanent tool menu if the option is set

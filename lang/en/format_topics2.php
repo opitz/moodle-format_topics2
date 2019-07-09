@@ -90,5 +90,10 @@ $string['tool_menu_help'] = 'Select the way the tool menu is shown for this cour
 $string['tool_menu_option0'] = 'Do not show the tool menu at all';
 $string['tool_menu_option1'] = 'Show tool menu on mouseover';
 $string['tool_menu_option2'] = 'Show tool menu always';
+
+$string['toolmenupassivewidth'] = 'Width of Tool Menu Acive Area';
+$string['toolmenupassivewidth_desc'] = 'Width of the active area that triggers the tool menu';
+$string['toolmenuactivewidth'] = 'Width of Tool Menu';
+$string['toolmenuactivewidth_desc'] = 'Width of the tool menu when shown';
 $string['gnupf'] = 'gnupf';
 
