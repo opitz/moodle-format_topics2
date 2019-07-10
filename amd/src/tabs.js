@@ -35,7 +35,7 @@ define(['jquery', 'jqueryui'], function($) {
                         truncate_tabname($(this));
                     });
                 }
-            }
+            };
 
 // ---------------------------------------------------------------------------------------------------------------------
             // When a limit for the tabname is set expand the name of the given tab to the original
@@ -70,18 +70,6 @@ define(['jquery', 'jqueryui'], function($) {
                             }
                         }
                     }
-                }
-            };
-
-// ---------------------------------------------------------------------------------------------------------------------
-            // Expand the tab the mouse hovers over and truncate it again when the mouse leaves
-            var hover_tabname = function() {
-                if ($('.limittabname').length > 0) {
-                    $('.tablink').hover(function() {
-                        expand_tabname($(this));
-                    }, function() {
-                        truncate_tabname($(this));
-                    });
                 }
             };
 
