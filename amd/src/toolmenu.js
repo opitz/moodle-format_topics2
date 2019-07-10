@@ -1,4 +1,5 @@
 define(['jquery', 'core/modal_factory', 'core/modal_events'], function($, ModalFactory, ModalEvents) {
+    /* eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
     return {
         init: function() {
 
@@ -52,19 +53,12 @@ define(['jquery', 'core/modal_factory', 'core/modal_events'], function($, ModalF
 // ---------------------------------------------------------------------------------------------------------------------
             var test = function() {
                 $('#btn_test').on('click', function() {
-                    var needle = 'long & winding'
-                    var shortString = "awesome";
-                    var target = $('#test_area').html();
-                    console.log('target => ' + target);
-                    console.log('needle => ' + needle);
-                    $('#test_area').html($('#test_area').html().replace(escapeHtml(needle), shortString));
+                    console.log('==> btn_test was pressed! ');
 
                 });
 
-                $('#btn_reset').on('click', function() {
-                    var theString = 'This is a very very long & winding road my friend...!'
-                    $('#test_area').html(theString);
-
+                $('#btn_test_reset').on('click', function() {
+                    console.log('==> btn_test_reset was pressed! ');
                 });
 
             };
