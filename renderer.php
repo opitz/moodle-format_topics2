@@ -42,7 +42,7 @@ class format_topics2_renderer extends format_topics_renderer {
      * @return string HTML to output.
      */
     protected function start_section_list() {
-        return html_writer::start_tag('ul', array('class' => 'topics2'));
+        return html_writer::start_tag('ul', array('class' => 'topics topics2'));
     }
 
     /**
@@ -401,11 +401,11 @@ class format_topics2_renderer extends format_topics_renderer {
         if($format_options['section0_ontop']) {
             $thissection = $sections[0];
             $o .= html_writer::start_tag('div', array('id' => 'ontop_area', 'class' => 'section0_ontop'));
-            $o .= html_writer::start_tag('ul', array('id' => 'ontop_area', 'class' => 'topics'));
+            $o .= html_writer::start_tag('ul', array('id' => 'ontop_area', 'class' => 'topics2'));
             $o .= $this->render_section($course, $thissection, $format_options);
         } else {
             $o .= html_writer::start_tag('div', array('id' => 'ontop_area'));
-            $o .= html_writer::start_tag('ul', array('id' => 'ontop_area', 'class' => 'topics'));
+            $o .= html_writer::start_tag('ul', array('id' => 'ontop_area', 'class' => 'topics2'));
         }
 
 //        $o .= $this->end_section_list();
@@ -517,7 +517,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
         // the sectionhead
         if($section->section !== 0 || ($section->name !== '' && $section->name !== null)) {
-            $o.= html_writer::start_tag('div', array('class' => 'sectionhead'));
+            //$o.= html_writer::start_tag('div', array('class' => 'sectionhead'));
 
             // the sectionname
             if(($section->section !== 0 || $section->name != '')) {
@@ -526,7 +526,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
             $o .= $this->section_availability($section);
 
-            $o .= html_writer::end_tag('div'); // ending the sectionhead
+            //$o .= html_writer::end_tag('div'); // ending the sectionhead
         }
 
         // the sectionbody
