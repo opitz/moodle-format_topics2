@@ -38,6 +38,14 @@ require_once($CFG->dirroot.'/course/format/topics/renderer.php');
 class format_topics2_renderer extends format_topics_renderer {
 
     /**
+     * Generate the starting container html for a list of sections
+     * @return string HTML to output.
+     */
+    protected function start_section_list() {
+        return html_writer::start_tag('ul', array('class' => 'topics2'));
+    }
+
+    /**
      * Output the html for a multiple section page
      *
      * @param stdClass $course The course entry from DB
@@ -47,6 +55,71 @@ class format_topics2_renderer extends format_topics_renderer {
      * @param array $modnamesused (argument not used)
      */
     public function print_multiple_section_page($course, $sections, $mods, $modnames, $modnamesused) {
+        global $CFG, $DB, $PAGE;
+
+        // Include the required JS files
+        $this->require_js();
+
+        $this->toggle_seq = $this->get_toggle_seq($course); // the toggle sequence for this user and course
+        $modinfo = get_fast_modinfo($course);
+        $course = course_get_format($course)->get_course();
+        $options = $DB->get_records('course_format_options', array('courseid' => $course->id));
+        $format_options=array();
+        foreach($options as $option) {
+            $format_options[$option->name] =$option->value;
+        }
+
+        $context = context_course::instance($course->id);
+        // Title with completion help icon.
+        $completioninfo = new completion_info($course);
+        echo $completioninfo->display_help_icon();
+        echo $this->output->heading($this->page_title(), 2, 'accesshide');
+
+        // Copy activity clipboard..
+        echo $this->course_activity_clipboard($course, 0);
+
+        // Now on to the main stage..
+        $numsections = course_get_format($course)->get_last_section_number();
+        $sections = $modinfo->get_section_info_all();
+
+        // add an invisible div that carries the course ID to be used by JS
+        // add class 'single_section_tabs' when option is set so JS can play accordingly
+        $class = ($format_options['single_section_tabs'] ? 'single_section_tabs' : '');
+
+        // the sections
+        echo $this->start_section_list();
+
+        // An invisible tag with the name of the course format to be used in jQuery
+//        echo html_writer::div($course->format, 'course_format_name', array('style' => 'display:none;'));
+
+        // An invisible tag with the value of the tab name limit to be used in jQuery
+        if(isset($format_options['limittabname']) && $format_options['limittabname'] > 0) {
+            echo html_writer::tag('div','',array('class' => 'limittabname', 'value' => $format_options['limittabname'], 'style' => 'display: hidden;'));
+        }
+
+        echo html_writer::start_tag('div', array('id' => 'courseid', 'courseid' => $course->id, 'class' => $class));
+        echo html_writer::end_tag('div');
+
+        // display section-0 on top of tabs if option is checked
+        echo $this->render_section0_ontop($course, $sections, $format_options, $modinfo);
+
+        // the tab navigation
+        $tabs = $this->prepare_tabs($course, $format_options, $sections);
+
+        // rendering the tab navigation
+        $rentabs = $this->render_tabs($format_options);
+        echo $rentabs;
+
+        // Render the sections
+        echo $this->render_sections($course, $sections, $format_options, $modinfo, $numsections);
+
+        // Show hidden sections to users with update abilities only
+        echo $this->render_hidden_sections($course, $sections, $context, $modinfo, $numsections);
+
+        echo $this->end_section_list();
+
+    }
+    public function print_multiple_section_page0($course, $sections, $mods, $modnames, $modnamesused) {
         global $CFG, $DB, $PAGE;
 
         // Include the required JS files
@@ -679,156 +752,6 @@ class format_topics2_renderer extends format_topics_renderer {
 
         return $o;
     }
-
-//=================================================< tool menu >========================================================
-    // Render a fixed tool menu
-    public function render_fixed_tool_menu($format_options) {
-
-        $tool_menu_area_width = get_config('format_topics2', 'toolmenupassivewidth');
-        $tool_menu_width = get_config('format_topics2', 'toolmenuactivewidth');
-
-        if(!$tool_menu_area_width || $tool_menu_area_width == ''){
-            $tool_menu_area_width = '10px';
-        }
-        if(!$tool_menu_width || $tool_menu_width == ''){
-            $tool_menu_width = '40px';
-        }
-
-
-        $o = '';
-        // If the option is not existing or set to '0' do not render a tool manu at all
-        if(!isset($format_options['show_tool_menu']) || $format_options['show_tool_menu'] === 0 || $format_options['show_tool_menu'] == '0') {
-            return $o;
-        }
-
-        if($format_options['show_tool_menu'] == '1') {
-            // create an area where a mouseover will reveal the tool menu
-            $o .= html_writer::start_tag('div', array('id' => 'reveal_tool_menu_area', 'style' => 'width: '.$tool_menu_area_width, 'tool_menu_width' => $tool_menu_width));
-            $o .= html_writer::start_tag('div', array('id' => 'fixed_tool_menu', 'style' => 'width: 0;')); // initially not shown due to lack of width
-        }
-        // render a permanent tool menu if the option is set
-        if($format_options['show_tool_menu'] == '2') {
-            $o .= html_writer::start_tag('div');
-            $o .= html_writer::start_tag('div', array('id' => 'permanent_fixed_tool_menu'));
-        }
-
-        $buttons = $this->prepare_tool_menu_buttons($format_options);
-        // Render the button objects
-        foreach($buttons as $button) {
-            $o .= html_writer::tag('button', $button->contents, array(
-                    'id' => $button->id,
-                    'class' => 'tool_menu_button button btn btn-sm',
-                    'style' => 'width: '.$tool_menu_width.'; cursor: pointer; '.(isset($button->style) ? $button->style : ''),
-                    'title' => (isset($button->title) ? $button->title : '')
-                )).'<br>'; // the break after each button creates a vertical menu
-        }
-
-        $o .= html_writer::end_tag('div');
-        $o .= html_writer::end_tag('div');
-
-        return $o;
-    }
-
-    // Prepare the buttons to appear in the tool menu
-    public function prepare_tool_menu_buttons($format_options) {
-        // Prepare an array of button objects for the tool menu
-        // a button is defined as an object with id, class and optional style and title (for tooltip and help)
-
-        // get the tooltip and help texts
-        $tooltip_goto_top = get_string('tooltip_goto_top','format_topics2');
-        $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
-        $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
-
-        // define the content of the buttons
-        $btn_top = '<i class="fa fa-chevron-circle-up"></i>';
-        $btn_open = '<i class="fa fa-angle-down"></i>';
-        $btn_close = '<i class="fa fa-angle-right"></i>';
-
-        // create an array of button objects - the order of which is reflected later in the menu
-        $buttons = array();
-
-        // A button to scroll to the top of the page
-        $buttons[] = (object) array('id' => 'btn_top', 'contents' => $btn_top, 'title' => $tooltip_goto_top);
-        if(isset($format_options['toggle']) && $format_options['toggle'] == '1') { // if the format supports toggling section content
-            // A button to expand all sections
-            $buttons[] = (object) array('id' => 'btn_open_all', 'contents' => $btn_open, 'title' => $tooltip_open_all);
-            // A button to collapse all sections
-            $buttons[] = (object) array('id' => 'btn_close_all', 'contents' => $btn_close, 'title' => $tooltip_close_all);
-        }
-        // A help button
-        $buttons[] = (object) array('id' => 'btn_help', 'contents' => '?', 'style' => 'background-color: #FA6;'); // A button to show some help
-
-
-        // A test and a reset button for - ahem - testing purposes - commented out during normal operation
-//        $buttons[] = (object) array('id' => 'btn_test', 'contents' => 'T', 'style' => 'background-color: #FAA;');
-//        $buttons[] = (object) array('id' => 'btn_reset', 'contents' => 'R', 'style' => 'background-color: #AFA;');
-        return $buttons;
-    }
-
-
-
-    public function render_fixed_tool_menu0($format_options) {
-        $tool_menu_width = '40px';
-        $o = '';
-        // If the option is not existing or set to '0' do not render a tool manu at all
-        if(!isset($format_options['show_tool_menu']) || $format_options['show_tool_menu'] === 0 || $format_options['show_tool_menu'] == '0') {
-            return $o;
-        }
-
-        if($format_options['show_tool_menu'] == '1') {
-            // create an area where a mouseover will reveal the tool menu
-            $o .= html_writer::start_tag('div', array('id' => 'reveal_tool_menu_area', 'style' => 'width: '.$tool_menu_width));
-            $o .= html_writer::start_tag('div', array('id' => 'fixed_tool_menu', 'style' => 'width: 0;')); // initially not shown due to lack of width
-        }
-        // render a permanent tool menu if the option is set
-        if($format_options['show_tool_menu'] == '2') {
-            $o .= html_writer::start_tag('div');
-            $o .= html_writer::start_tag('div', array('id' => 'permanent_fixed_tool_menu'));
-        }
-
-        // Prepare an array of button objects for the tool menu
-        // a button is defined as an object with id, class and optional style and title
-
-        // get the tooltip and help texts
-        $tooltip_goto_top = get_string('tooltip_goto_top','format_topics2');
-        $tooltip_open_all = get_string('tooltip_open_all','format_topics2');
-        $tooltip_close_all = get_string('tooltip_close_all','format_topics2');
-
-        $btn_top = '<i class="fa fa-chevron-circle-up"></i>';
-        $btn_open = '<i class="fa fa-angle-down"></i>';
-        $btn_close = '<i class="fa fa-angle-right"></i>';
-
-        // create an array of button objects
-        $buttons = array();
-        $buttons[] = (object) array('id' => 'btn_top', 'contents' => $btn_top, 'title' => $tooltip_goto_top); // A button to scroll to the top of the page
-        if(isset($format_options['toggle']) && $format_options['toggle'] == '1') {
-            $buttons[] = (object) array('id' => 'btn_open_all', 'contents' => $btn_open, 'title' => $tooltip_open_all); // A button to expand all sections
-            $buttons[] = (object) array('id' => 'btn_close_all', 'contents' => $btn_close, 'title' => $tooltip_close_all); // A button to collapse all sections
-        }
-        // A help button
-        $buttons[] = (object) array('id' => 'btn_help', 'contents' => '?', 'style' => 'background-color: #FA6;'); // A button to show some help
-
-
-        // A test and a reset button for - ahem - testing purposes - commented out during normal operation
-//        $buttons[] = (object) array('id' => 'btn_test', 'contents' => 'T', 'style' => 'background-color: #FAA;');
-//        $buttons[] = (object) array('id' => 'btn_reset', 'contents' => 'R', 'style' => 'background-color: #AFA;');
-
-        // now render the button objects
-        foreach($buttons as $button) {
-            $o .= html_writer::tag('button', $button->contents, array(
-                    'id' => $button->id,
-                    'class' => 'tool_menu_button btn',
-                    'style' => 'width: '.$tool_menu_width.'; cursor: pointer; '.(isset($button->style) ? $button->style : ''),
-                    'title' => (isset($button->title) ? $button->title : '')
-                )).'<br>'; // the break after each button creates a vertical menu
-        }
-
-        $o .= html_writer::end_tag('div');
-        $o .= html_writer::end_tag('div');
-
-        return $o;
-    }
-
 
 
 }

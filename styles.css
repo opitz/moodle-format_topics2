@@ -32,7 +32,7 @@
     white-space: nowrap;
 }
 
-.tablink {
+.course-content ul.topics2 .tablink0000 {
     margin-right: 5px;
     padding-top: 5px;
     padding-left: 10px;
@@ -46,59 +46,36 @@
     cursor: pointer;
 }
 
-.tablink.active {
-    background-color: #fcfcfc;
+.course-content ul.topics2 .tablink.active {
+    background-color: #eeeeee !important;
 }
 
-.sectionname {
+.course-content ul.topics2 li.section .sectionname {
     padding-top: 10px !important;
 }
 
-li.section.ontop {
+.course-content ul.topics2 li.section.ontop {
     border-bottom: 0px !important;
 }
 
-.fa-info {
+.course-content ul.topics2 li.section .fa-info {
     padding-left: 5px;
 }
 
-.edit_only {
+.course-content ul.topics2 li.section .edit_only {
     background-color: #FAFAFA;
 }
 
-.tabs {
+.course-content ul.topics2 li.section .tabs {
     padding-left: 30px;
 }
 
-.toggler {
+.course-content ul.topics2 li.section .toggler {
     color: grey;
 }
 
-.dropdown-menu {
+.course-content ul.topics2 li.section .dropdown-menu {
     height: auto;
     max-height: 500px;
     overflow-x: hidden;
-}
-
-#reveal_tool_menu_area {
-    position: fixed;
-    z-index: 999;
-    top: 0px;
-    right: 0px;
-    height: 100%;
-}
-
-#fixed_tool_menu {
-    position: fixed;
-    z-index: 1000;
-    top: 220px;
-    right: 0px;
-    width: 0;
-}
-
-#permanent_fixed_tool_menu {
-    position: fixed;
-    z-index: 1000;
-    top: 220px;
-    right: 0px;
 }
