@@ -192,7 +192,6 @@ class format_topics2_renderer extends format_topics_renderer {
     public function require_js() {
         $this->page->requires->js_call_amd('format_topics2/tabs', 'init', array());
         $this->page->requires->js_call_amd('format_topics2/toggle', 'init', array());
-        $this->page->requires->js_call_amd('format_topics2/toolmenu', 'init', array());
     }
 
     // Get the toggle sequence of a given course for the current user

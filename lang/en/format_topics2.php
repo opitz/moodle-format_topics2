@@ -85,15 +85,5 @@ $string['tooltip_open_all'] = 'Expand all topics';
 $string['tooltip_close_all'] = 'Collapse all topics';
 $string['tooltip_goto_top'] = 'Go to the top of the page';
 
-$string['tool_menu_label'] = 'How to show the tool menu:';
-$string['tool_menu_help'] = 'Select the way the tool menu is shown for this course.<br>"On mouseover" will reveal the tool menu when the mouse is moved to the far right of the browser window';
-$string['tool_menu_option0'] = 'Do not show the tool menu at all';
-$string['tool_menu_option1'] = 'Show tool menu on mouseover';
-$string['tool_menu_option2'] = 'Show tool menu always';
-
-$string['toolmenupassivewidth'] = 'Width of Tool Menu Acive Area';
-$string['toolmenupassivewidth_desc'] = 'Width of the active area that triggers the tool menu';
-$string['toolmenuactivewidth'] = 'Width of Tool Menu';
-$string['toolmenuactivewidth_desc'] = 'Width of the tool menu when shown';
-$string['gnupf'] = 'gnupf';
+$string['gnupf'] = 'Gnupf';
 
