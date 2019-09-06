@@ -12,12 +12,16 @@ function update_tab_name($courseid, $tabid, $tab_name)
 {
     global $COURSE, $DB, $PAGE;
 
-    $format_options = $DB->get_records('course_format_options', array('courseid' => $courseid));
-    foreach($format_options as $option) {
-        if($option->name == $tabid.'_title' && $option->value !== $tab_name) {
-            $option->value = $tab_name;
-            $DB->update_record('course_format_options', $option);
-            return $option->id;
+    $context = context_course::instance($courseid);
+
+    if (has_capability('moodle/course:update', $context)) {
+        $format_options = $DB->get_records('course_format_options', array('courseid' => $courseid));
+        foreach ($format_options as $option) {
+            if ($option->name == $tabid . '_title' && $option->value !== $tab_name) {
+                $option->value = $tab_name;
+                $DB->update_record('course_format_options', $option);
+                return $option->id;
+            }
         }
     }
     return '';
