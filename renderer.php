@@ -119,73 +119,91 @@ class format_topics2_renderer extends format_topics_renderer {
         echo $this->end_section_list();
 
     }
-    public function print_multiple_section_page0($course, $sections, $mods, $modnames, $modnamesused) {
-        global $CFG, $DB, $PAGE;
 
-        // Include the required JS files
-        $this->require_js();
+    /**
+     * Output the html for a single section page .
+     *
+     * @param stdClass $course The course entry from DB
+     * @param array $sections (argument not used)
+     * @param array $mods (argument not used)
+     * @param array $modnames (argument not used)
+     * @param array $modnamesused (argument not used)
+     * @param int $displaysection The section number in the course which is being displayed
+     */
+    public function print_single_section_page0($course, $sections, $mods, $modnames, $modnamesused, $displaysection) {
+        global $PAGE;
 
-        $this->toggle_seq = $this->get_toggle_seq($course); // the toggle sequence for this user and course
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
-        $options = $DB->get_records('course_format_options', array('courseid' => $course->id));
-        $format_options=array();
-        foreach($options as $option) {
-            $format_options[$option->name] =$option->value;
-        }
 
-        $context = context_course::instance($course->id);
-        // Title with completion help icon.
-        $completioninfo = new completion_info($course);
-        echo $completioninfo->display_help_icon();
-        echo $this->output->heading($this->page_title(), 2, 'accesshide');
+        // Can we view the section in question?
+        if (!($sectioninfo = $modinfo->get_section_info($displaysection)) || !$sectioninfo->uservisible) {
+            // This section doesn't exist or is not available for the user.
+            // We actually already check this in course/view.php but just in case exit from this function as well.
+            print_error('unknowncoursesection', 'error', course_get_url($course),
+                format_string($course->fullname));
+        }
 
         // Copy activity clipboard..
-        echo $this->course_activity_clipboard($course, 0);
-
-        // Now on to the main stage..
-        $numsections = course_get_format($course)->get_last_section_number();
-        $sections = $modinfo->get_section_info_all();
-
-        // add an invisible div that carries the course ID to be used by JS
-        // add class 'single_section_tabs' when option is set so JS can play accordingly
-        $class = ($format_options['single_section_tabs'] ? 'single_section_tabs' : '');
-
-        // An invisible tag with the name of the course format to be used in jQuery
-        echo html_writer::div($course->format, 'course_format_name', array('style' => 'display:none;'));
-
-        // An invisible tag with the value of the tab name limit to be used in jQuery
-        if(isset($format_options['limittabname']) && $format_options['limittabname'] > 0) {
-            echo html_writer::tag('div','',array('class' => 'limittabname', 'value' => $format_options['limittabname'], 'style' => 'display: hidden;'));
+        echo $this->course_activity_clipboard($course, $displaysection);
+        $thissection = $modinfo->get_section_info(0);
+        if ($thissection->summary or !empty($modinfo->sections[0]) or $PAGE->user_is_editing()) {
+            echo $this->start_section_list();
+            echo $this->section_header($thissection, $course, true, $displaysection);
+            echo $this->courserenderer->course_section_cm_list($course, $thissection, $displaysection);
+            echo $this->courserenderer->course_section_add_cm_control($course, 0, $displaysection);
+            echo $this->section_footer();
+            echo $this->end_section_list();
         }
 
-        // render a fixed tool menu
-        echo $this->render_fixed_tool_menu($format_options);
+        // Start single-section div
+        echo html_writer::start_tag('div', array('class' => 'single-section'));
 
-        echo html_writer::start_tag('div', array('id' => 'courseid', 'courseid' => $course->id, 'class' => $class));
-        echo html_writer::end_tag('div');
+        // The requested section page.
+        $thissection = $modinfo->get_section_info($displaysection);
 
-        // display section-0 on top of tabs if option is checked
-        echo $this->render_section0_ontop($course, $sections, $format_options, $modinfo);
+        // Title with section navigation links.
+        $sectionnavlinks = $this->get_nav_links($course, $modinfo->get_section_info_all(), $displaysection);
+        $sectiontitle = '';
+//        $sectiontitle .= html_writer::start_tag('div', array('class' => 'section-navigation navigationtitle'));
+//        $sectiontitle .= html_writer::tag('span', $sectionnavlinks['previous'], array('class' => 'mdl-left'));
+//        $sectiontitle .= html_writer::tag('span', $sectionnavlinks['next'], array('class' => 'mdl-right'));
+        // Title attributes
+        $classes = 'sectionname';
+        if (!$thissection->visible) {
+            $classes .= ' dimmed_text';
+        }
+//        $sectionname = html_writer::tag('span', $this->section_title_without_link($thissection, $course));
+//        $sectiontitle .= $this->output->heading($sectionname, 3, $classes);
 
-        // the tab navigation
-        $tabs = $this->prepare_tabs($course, $format_options, $sections);
+//        $sectiontitle .= html_writer::end_tag('div');
+        echo $sectiontitle;
 
-        // rendering the tab navigation
-        $rentabs = $this->render_tabs($format_options);
-        echo $rentabs;
-
-        // the sections
+        // Now the list of sections..
         echo $this->start_section_list();
 
-        // Render the sections
-        echo $this->render_sections($course, $sections, $format_options, $modinfo, $numsections);
+//        echo $this->section_header($thissection, $course, true, $displaysection);
+        // Show completion help icon.
+        $completioninfo = new completion_info($course);
+        echo $completioninfo->display_help_icon();
 
-        // Show hidden sections to users with update abilities only
-        echo $this->render_hidden_sections($course, $sections, $context, $modinfo, $numsections);
-
+        echo $this->courserenderer->course_section_cm_list($course, $thissection, $displaysection);
+        echo $this->courserenderer->course_section_add_cm_control($course, $displaysection, $displaysection);
+        echo $this->section_footer();
         echo $this->end_section_list();
 
+        // Display section bottom navigation.
+        $sectionbottomnav = '';
+        $sectionbottomnav .= html_writer::start_tag('div', array('class' => 'section-navigation mdl-bottom'));
+        $sectionbottomnav .= html_writer::tag('span', $sectionnavlinks['previous'], array('class' => 'mdl-left'));
+        $sectionbottomnav .= html_writer::tag('span', $sectionnavlinks['next'], array('class' => 'mdl-right'));
+        $sectionbottomnav .= html_writer::tag('div', $this->section_nav_selection($course, $sections, $displaysection),
+            array('class' => 'mdl-align'));
+        $sectionbottomnav .= html_writer::end_tag('div');
+        echo $sectionbottomnav;
+
+        // Close single-section div.
+        echo html_writer::end_tag('div');
     }
 
     // Require the jQuery file for this class
@@ -477,7 +495,11 @@ class format_topics2_renderer extends format_topics_renderer {
     protected function section_header($section, $course, $onsectionpage, $sectionreturn=null) {
         $o = '';
         $sectionstyle = '';
-        $toggle_seq = str_split($this->toggle_seq);
+        if(isset($this->toggle_seq)) {
+            $toggle_seq = str_split($this->toggle_seq);
+        } else {
+            $toggle_seq = '';
+        }
 
         if ($section->section != 0) {
             // Only in the non-general sections.
@@ -515,7 +537,7 @@ class format_topics2_renderer extends format_topics_renderer {
         $o.= html_writer::start_tag('div', array('class' => 'content'));
 
         // the sectionhead
-        if($section->section !== 0 || ($section->name !== '' && $section->name !== null)) {
+        if(($section->section !== 0 || ($section->name !== '' && $section->name !== null)) && !$onsectionpage) {
             //$o.= html_writer::start_tag('div', array('class' => 'sectionhead'));
 
             // the sectionname
@@ -546,7 +568,11 @@ class format_topics2_renderer extends format_topics_renderer {
     public function section_title($section, $course) {
         if($course->toggle) {
             // prepare the toggle
-            $toggle_seq = str_split($this->toggle_seq);
+            if(isset($this->toggle_seq)) {
+                $toggle_seq = str_split($this->toggle_seq);
+            } else {
+                $toggle_seq = '';
+            }
 
             $tooltip_open = get_string('tooltip_open','format_topics2');
             $tooltip_closed = get_string('tooltip_closed','format_topics2');
