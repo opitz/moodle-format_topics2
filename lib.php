@@ -24,6 +24,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+define('COURSE_DISPLAY_COLLAPSE', 2);
 require_once($CFG->dirroot. '/course/format/topics/lib.php');
 
 /**
@@ -45,6 +46,14 @@ class format_topics2 extends format_topics {
         foreach($fo as $o) {
             $format_options[$o->name] = $o->value;
         }
+
+        // check for legacy 'toggle' format_option and change 'coursedisplay' accordingly where needed
+        if(isset($format_options['toggle']) && $format_options['toggle'] && $format_options['coursedisplay'] == COURSE_DISPLAY_SINGLEPAGE) {
+            $rec = $DB->get_record('course_format_options', array('courseid' => $COURSE->id, 'name' => 'coursedisplay'));
+            $rec->value = COURSE_DISPLAY_COLLAPSE;
+            $DB->update_record('course_format_options', $rec);
+        }
+
         $max_tabs = ((isset($format_options['maxtabs']) && $format_options['maxtabs'] > 0) ? $format_options['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
         static $courseformatoptions = false;
         if ($courseformatoptions === false) {
@@ -85,18 +94,19 @@ class format_topics2 extends format_topics {
                     'element_attributes' => array(
                         array(
                             COURSE_DISPLAY_SINGLEPAGE => new lang_string('coursedisplay_single'),
+                            COURSE_DISPLAY_COLLAPSE => get_string('coursedisplay_collapse', 'format_topics2'),
                             COURSE_DISPLAY_MULTIPAGE => new lang_string('coursedisplay_multi')
                         )
                     ),
                     'help' => 'coursedisplay',
                     'help_component' => 'moodle',
                 ),
-                'toggle' => array(
-                    'label' => get_string('toggle_label', 'format_topics2'),
-                    'element_type' => 'advcheckbox',
-                    'help' => 'toggle',
-                    'help_component' => 'format_topics2',
-                ),
+//                'toggle' => array(
+//                    'label' => get_string('toggle_label', 'format_topics2'),
+//                    'element_type' => 'advcheckbox',
+//                    'help' => 'toggle',
+//                    'help_component' => 'format_topics2',
+//                ),
 //                'toggle_all' => array(
 //                    'label' => get_string('toggle_all_label', 'format_topics2'),
 //                    'element_type' => 'advcheckbox',
