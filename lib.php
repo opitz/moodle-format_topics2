@@ -47,13 +47,6 @@ class format_topics2 extends format_topics {
             $format_options[$o->name] = $o->value;
         }
 
-        // check for legacy 'toggle' format_option and change 'coursedisplay' accordingly where needed
-        if(isset($format_options['toggle']) && $format_options['toggle'] && $format_options['coursedisplay'] == COURSE_DISPLAY_SINGLEPAGE) {
-            $rec = $DB->get_record('course_format_options', array('courseid' => $COURSE->id, 'name' => 'coursedisplay'));
-            $rec->value = COURSE_DISPLAY_COLLAPSE;
-            $DB->update_record('course_format_options', $rec);
-        }
-
         $max_tabs = ((isset($format_options['maxtabs']) && $format_options['maxtabs'] > 0) ? $format_options['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
         static $courseformatoptions = false;
         if ($courseformatoptions === false) {
