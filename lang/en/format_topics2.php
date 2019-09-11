@@ -67,9 +67,11 @@ $string['limittabname'] = 'Maximum Tabname Characters';
 $string['limittabname_label'] = 'Maximum Tab Name Characters';
 $string['limittabname_help'] = 'Tab names will be abreviated at the given number of characters and will reveal the full name on mouse over. Set to 0 for NO limit.';
 
+$string['section0'] = 'First Topic';
 $string['section0_label'] = 'Show Topic 0 above all tabs';
 $string['section0_help'] = 'When checked topic 0 is always shown above the tabs.';
 
+$string['single_section_tabs'] = 'Use section name as tab name for single sections';
 $string['single_section_tabs_label'] = 'Use topic name as tab name for single topics';
 $string['single_section_tabs_help'] = 'When checked tabs with a single topic will use the topic name as tab name.';
 
