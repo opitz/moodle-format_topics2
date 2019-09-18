@@ -65,7 +65,7 @@ $string['maxtabs_help'] = 'Number of tabs available for this course';
 
 $string['limittabname'] = 'Maximum Tabname Characters';
 $string['limittabname_label'] = 'Maximum Tab Name Characters';
-$string['limittabname_help'] = 'Tab names will be abreviated at the given number of characters and will reveal the full name on mouse over. Set to 0 for NO limit.';
+$string['limittabname_help'] = 'Tab names will be abbreviated at the given number of characters and will reveal the full name when the tab is clicked.<br>Set to 0 for <b>no</b> limit.';
 
 $string['section0'] = 'First Topic';
 $string['section0_label'] = 'Show Topic 0 above all tabs';
