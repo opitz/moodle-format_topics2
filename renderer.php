@@ -169,14 +169,16 @@ class format_topics2_renderer extends format_topics_renderer {
 //                $tab_sections = $this->check_section_ids($course->id, $sections, $section_ids, $section_nums, $tab_sections, $tab_section_nums,$i);
             }
 
-            $tab = new stdClass();
-            $tab->id = "tab" . $i;
-            $tab->name = "tab" . $i;
-            $tab->generic_title = ($i === 0 ? get_string('tab0_generic_name', 'format_topics2'):'Tab '.$i);
-            $tab->title = (isset($format_options['tab' . $i . '_title']) && $format_options['tab' . $i . '_title'] != '' ? $format_options['tab' . $i . '_title'] : $tab->generic_title);
-            $tab->sections = $tab_sections;
-            $tab->section_nums = $tab_section_nums;
-            $tabs[$tab->id] = $tab;
+            $tab = (object) new stdClass();
+            if (isset($tab)) {
+                $tab->id = "tab" . $i;
+                $tab->name = "tab" . $i;
+                $tab->generic_title = ($i === 0 ? get_string('tab0_generic_name', 'format_topics2'):'Tab '.$i);
+                $tab->title = (isset($format_options['tab' . $i . '_title']) && $format_options['tab' . $i . '_title'] != '' ? $format_options['tab' . $i . '_title'] : $tab->generic_title);
+                $tab->sections = $tab_sections;
+                $tab->section_nums = $tab_section_nums;
+                $tabs[$tab->id] = $tab;
+            }
         }
         $this->tabs = $tabs;
 
