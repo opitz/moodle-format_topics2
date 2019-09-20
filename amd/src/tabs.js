@@ -4,6 +4,70 @@ define(['jquery', 'jqueryui'], function($) {
         init: function() {
 
 // ---------------------------------------------------------------------------------------------------------------------
+            function add2tab(tabnum, sectionid, sectionnum) {
+                // Remove the section id and section number from any tab
+                $(".tablink").each(function() {
+                    $(this).attr('sections', $(this).attr('sections').replace("," + sectionid, ""));
+                    $(this).attr('sections', $(this).attr('sections').replace(sectionid + ",", ""));
+                    $(this).attr('sections', $(this).attr('sections').replace(sectionid, ""));
+
+                    $(this).attr('section_nums', $(this).attr('section_nums').replace("," + sectionnum, ""));
+                    $(this).attr('section_nums', $(this).attr('section_nums').replace(sectionnum + ",", ""));
+                    $(this).attr('section_nums', $(this).attr('section_nums').replace(sectionnum, ""));
+                });
+                // Add the sectionid to the new tab
+                if (tabnum > 0) { // No need to store section ids for tab 0
+                    if ($("#tab" + tabnum).attr('sections').length === 0) {
+                        $("#tab" + tabnum).attr('sections', $("#tab" + tabnum).attr('sections') + sectionid);
+                    } else {
+                        $("#tab" + tabnum).attr('sections', $("#tab" + tabnum).attr('sections') + "," + sectionid);
+                    }
+                    if ($("#tab" + tabnum).attr('section_nums').length === 0) {
+                        $("#tab" + tabnum).attr('section_nums', $("#tab" + tabnum).attr('section_nums') + sectionnum);
+                    } else {
+                        $("#tab" + tabnum).attr('section_nums', $("#tab" + tabnum).attr('section_nums') + "," + sectionnum);
+                        // X console.log('---> section_nums: '+$("#tab"+tabnum).attr('section_nums'));
+                    }
+                }
+            }
+
+// ---------------------------------------------------------------------------------------------------------------------
+            function save2tab(tabid) {
+                // save the new tab data to the database
+                var courseid = $('#courseid').attr('courseid');
+                $.ajax({
+                    url: "format/topics2/ajax/update_tab_settings.php",
+                    type: "POST",
+                    data: {
+                        'courseid': courseid,
+                        'tabid': tabid,
+                        'sections': $("#" + tabid).attr('sections'),
+                        'sectionnums': $("#" + tabid).attr('section_nums')
+                    },
+                    success: function(result) {
+                        if (result !== '') {
+                            console.log('Es ist vollbracht...!');
+                        }
+                    }
+                });
+            }
+
+// ---------------------------------------------------------------------------------------------------------------------
+            var set_tab_cookie = function() {
+                $('#changenumsections').on('click', function(){
+//                    var tabid = $(this).attr('id');
+//                    console.log('tabid = ' + tabid);
+                    // store the ID of the active tab in a cookie
+                    var tabid = $('.tablink.active').attr('id');
+                    sessionStorage.setItem('tabid', tabid);
+
+                    // store the number of current sections in a cookie - so we know how many have been added later
+                    var numSections = $('.section.main').length;
+                    sessionStorage.setItem('numSections', numSections);
+                });
+            };
+
+// ---------------------------------------------------------------------------------------------------------------------
             var escapeHtml = function(text) {
                 var map = {
                     '&': '&amp;',
@@ -14,8 +78,8 @@ define(['jquery', 'jqueryui'], function($) {
                 };
 
                 return text.replace(/[&<>"']/g, function(m) {
- return map[m];
-});
+                    return map[m];
+                });
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -279,71 +343,112 @@ define(['jquery', 'jqueryui'], function($) {
             });
 };
 
+
 // ---------------------------------------------------------------------------------------------------------------------
             // Moving a section to a tab by menu
             var tabMove = function() {
- $(".tab_mover").on('click', function() {
-                var tabnum = $(this).attr('tabnr'); // This is the tab number where the section is moved to
-                var sectionid = $(this).closest('li.section').attr('section-id');
-                var sectionnum = $(this).closest('li.section').attr('id').substring(8);
+                $(".tab_mover").on('click', function() {
+                    var tabnum = $(this).attr('tabnr'); // This is the tab number where the section is moved to
+                    var sectionid = $(this).closest('li.section').attr('section-id');
+                    var sectionnum = $(this).closest('li.section').attr('id').substring(8);
 
-                // X console.log('--> found section num: '+sectionnum);
-                var activeTabId = $('.topictab.active').first().attr('id');
+                    // X console.log('--> found section num: '+sectionnum);
+                    var activeTabId = $('.topictab.active').first().attr('id');
 
-                if (typeof activeTabId == 'undefined') {
-                    activeTabId = 'tab0';
-                }
-                // X console.log('----');
-                // X console.log('moving section '+sectionid+' from tab "'+activeTabId+'" to tab nr '+tabnum);
-
-                // Remove the section id and section number from any tab
-                $(".tablink").each(function() {
-                    $(this).attr('sections', $(this).attr('sections').replace("," + sectionid, ""));
-                    $(this).attr('sections', $(this).attr('sections').replace(sectionid + ",", ""));
-                    $(this).attr('sections', $(this).attr('sections').replace(sectionid, ""));
-
-                    $(this).attr('section_nums', $(this).attr('section_nums').replace("," + sectionnum, ""));
-                    $(this).attr('section_nums', $(this).attr('section_nums').replace(sectionnum + ",", ""));
-                    $(this).attr('section_nums', $(this).attr('section_nums').replace(sectionnum, ""));
-                });
-                // Add the sectionid to the new tab
-                if (tabnum > 0) { // No need to store section ids for tab 0
-                    if ($("#tab" + tabnum).attr('sections').length === 0) {
-                        $("#tab" + tabnum).attr('sections', $("#tab" + tabnum).attr('sections') + sectionid);
-                    } else {
-                        $("#tab" + tabnum).attr('sections', $("#tab" + tabnum).attr('sections') + "," + sectionid);
+                    if (typeof activeTabId == 'undefined') {
+                        activeTabId = 'tab0';
                     }
-                    if ($("#tab" + tabnum).attr('section_nums').length === 0) {
-                        $("#tab" + tabnum).attr('section_nums', $("#tab" + tabnum).attr('section_nums') + sectionnum);
-                    } else {
-                        $("#tab" + tabnum).attr('section_nums', $("#tab" + tabnum).attr('section_nums') + "," + sectionnum);
-                        // X console.log('---> section_nums: '+$("#tab"+tabnum).attr('section_nums'));
-                    }
-                }
-                $("#tab" + tabnum).click();
-                $('#' + activeTabId).click();
+                    // X console.log('----');
+                    // X console.log('moving section '+sectionid+' from tab "'+activeTabId+'" to tab nr '+tabnum);
+                    add2tab(tabnum, sectionid, sectionnum);
 
-                // Restore the section before moving it in case it was a single
-                restoreTab($('#tab' + tabnum));
-
-                // If the last section of a tab was moved click the target tab
-                // otherwise click the active tab to refresh it
-                var countableSections = $('li.section:visible').length - ($("#ontop_area").hasClass('section0_ontop') ? 1 : 0);
-                // X console.log('---> visible sections = '+$('li.section:visible').length);
-                // X console.log('---> countableSections = '+countableSections);
-                if (countableSections > 0 && $('li.section:visible').length >= countableSections) {
-                    // X console.log('staying with the current tab (id = '+activeTabId+
-                    // X   ') as there are still '+$('li.section:visible').length+' sections left');
                     $("#tab" + tabnum).click();
                     $('#' + activeTabId).click();
-                } else {
-                    // X console.log('no section in active tab id '+
-                    // X   activeTabId+' left - hiding it and following section to new tab nr '+tabnum);
+
+                    // Restore the section before moving it in case it was a single
+                    restoreTab($('#tab' + tabnum));
+
+                    // If the last section of a tab was moved click the target tab
+                    // otherwise click the active tab to refresh it
+                    var countableSections = $('li.section:visible').length - ($("#ontop_area").hasClass('section0_ontop') ? 1 : 0);
+                    // X console.log('---> visible sections = '+$('li.section:visible').length);
+                    // X console.log('---> countableSections = '+countableSections);
+                    if (countableSections > 0 && $('li.section:visible').length >= countableSections) {
+                        // X console.log('staying with the current tab (id = '+activeTabId+
+                        // X   ') as there are still '+$('li.section:visible').length+' sections left');
+                        $("#tab" + tabnum).click();
+                        $('#' + activeTabId).click();
+                    } else {
+                        // X console.log('no section in active tab id '+
+                        // X   activeTabId+' left - hiding it and following section to new tab nr '+tabnum);
+                        $("#tab" + tabnum).click();
+                        $('#' + activeTabId).parent().hide();
+                    }
+                });
+            };
+            var tabMove0 = function() {
+                $(".tab_mover").on('click', function() {
+                    var tabnum = $(this).attr('tabnr'); // This is the tab number where the section is moved to
+                    var sectionid = $(this).closest('li.section').attr('section-id');
+                    var sectionnum = $(this).closest('li.section').attr('id').substring(8);
+
+                    // X console.log('--> found section num: '+sectionnum);
+                    var activeTabId = $('.topictab.active').first().attr('id');
+
+                    if (typeof activeTabId == 'undefined') {
+                        activeTabId = 'tab0';
+                    }
+                    // X console.log('----');
+                    // X console.log('moving section '+sectionid+' from tab "'+activeTabId+'" to tab nr '+tabnum);
+
+                    // Remove the section id and section number from any tab
+                    $(".tablink").each(function() {
+                        $(this).attr('sections', $(this).attr('sections').replace("," + sectionid, ""));
+                        $(this).attr('sections', $(this).attr('sections').replace(sectionid + ",", ""));
+                        $(this).attr('sections', $(this).attr('sections').replace(sectionid, ""));
+
+                        $(this).attr('section_nums', $(this).attr('section_nums').replace("," + sectionnum, ""));
+                        $(this).attr('section_nums', $(this).attr('section_nums').replace(sectionnum + ",", ""));
+                        $(this).attr('section_nums', $(this).attr('section_nums').replace(sectionnum, ""));
+                    });
+                    // Add the sectionid to the new tab
+                    if (tabnum > 0) { // No need to store section ids for tab 0
+                        if ($("#tab" + tabnum).attr('sections').length === 0) {
+                            $("#tab" + tabnum).attr('sections', $("#tab" + tabnum).attr('sections') + sectionid);
+                        } else {
+                            $("#tab" + tabnum).attr('sections', $("#tab" + tabnum).attr('sections') + "," + sectionid);
+                        }
+                        if ($("#tab" + tabnum).attr('section_nums').length === 0) {
+                            $("#tab" + tabnum).attr('section_nums', $("#tab" + tabnum).attr('section_nums') + sectionnum);
+                        } else {
+                            $("#tab" + tabnum).attr('section_nums', $("#tab" + tabnum).attr('section_nums') + "," + sectionnum);
+                            // X console.log('---> section_nums: '+$("#tab"+tabnum).attr('section_nums'));
+                        }
+                    }
                     $("#tab" + tabnum).click();
-                    $('#' + activeTabId).parent().hide();
-                }
-            });
-};
+                    $('#' + activeTabId).click();
+
+                    // Restore the section before moving it in case it was a single
+                    restoreTab($('#tab' + tabnum));
+
+                    // If the last section of a tab was moved click the target tab
+                    // otherwise click the active tab to refresh it
+                    var countableSections = $('li.section:visible').length - ($("#ontop_area").hasClass('section0_ontop') ? 1 : 0);
+                    // X console.log('---> visible sections = '+$('li.section:visible').length);
+                    // X console.log('---> countableSections = '+countableSections);
+                    if (countableSections > 0 && $('li.section:visible').length >= countableSections) {
+                        // X console.log('staying with the current tab (id = '+activeTabId+
+                        // X   ') as there are still '+$('li.section:visible').length+' sections left');
+                        $("#tab" + tabnum).click();
+                        $('#' + activeTabId).click();
+                    } else {
+                        // X console.log('no section in active tab id '+
+                        // X   activeTabId+' left - hiding it and following section to new tab nr '+tabnum);
+                        $("#tab" + tabnum).click();
+                        $('#' + activeTabId).parent().hide();
+                    }
+                });
+            };
 
 // ---------------------------------------------------------------------------------------------------------------------
             // Moving section0 to the ontop area
@@ -456,6 +561,7 @@ define(['jquery', 'jqueryui'], function($) {
                 moveOntop();
                 moveInline();
                 dropdownToggle();
+                set_tab_cookie();
 //                Hover_tabname();
             };
 
@@ -562,8 +668,40 @@ define(['jquery', 'jqueryui'], function($) {
                     $('#tab0').click();
                     // Click ALL tabs once
                     $('.tablink:visible').click();
-                    // Click the 1st visible tab by default
-                    $('.tablink:visible').first().click();
+
+                    // check for a tab cookie
+                    var tabid = sessionStorage.getItem('tabid');
+                    sessionStorage.removeItem('tabid'); // remove the cookie
+                    if(tabid != null && tabid != 'tab0') {
+                        console.log('Found tabid = ' + tabid);
+                        // if a 'tabid' cookie is set the changenumsections url has been clicked
+                        // while the particular tab was active and we have returned here
+                        // if the tabid is other than tab0 move the newly added sections to that tab and finally click it
+
+                        //get the number of sections before new ones were added from another cookie
+                        var numSections = sessionStorage.getItem('numSections');
+                        sessionStorage.removeItem('numSections');
+
+                        // attach all new sections to the given tab
+                        var i = 0;
+                        $('.section.main').each(function(){
+                            i = i + 1;
+                            if (i > numSections) {
+                                console.log('new section id = ' + $(this).attr('id'));
+                                var tabnum = tabid.substring(3); // This is the tab number(!) where the section is moved to
+                                var sectionid = $(this).attr('section-id');
+                                var sectionnum = $(this).attr('id').substring(8);
+                                add2tab(tabnum, sectionid, sectionnum);
+                            }
+                        });
+                        save2tab(tabid);
+                        
+                        // click the tab
+                        $('#' + tabid).click();
+                    } else {
+                        // Click the 1st visible tab by default
+                        $('.tablink:visible').first().click();
+                    }
                 }
 
                 // If section0 is on top restrict section menu - restore otherwise
