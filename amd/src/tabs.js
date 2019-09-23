@@ -46,22 +46,16 @@ define(['jquery', 'jqueryui'], function($) {
                     },
                     success: function(result) {
                         if (result !== '') {
-                            console.log('Es ist vollbracht...!');
+                            // X console.log(result);
                         }
                     }
                 });
             }
 
 // ---------------------------------------------------------------------------------------------------------------------
-            var set_tab_cookie = function() {
+            var set_numsections_cookie = function() {
                 $('#changenumsections').on('click', function(){
-//                    var tabid = $(this).attr('id');
-//                    console.log('tabid = ' + tabid);
-                    // store the ID of the active tab in a cookie
-                    var tabid = $('.tablink.active').attr('id');
-                    sessionStorage.setItem('tabid', tabid);
-
-                    // store the number of current sections in a cookie - so we know how many have been added later
+                   // store the number of current sections in a cookie - so we know how many have been added later
                     var numSections = $('.section.main').length;
                     sessionStorage.setItem('numSections', numSections);
                 });
@@ -154,7 +148,7 @@ define(['jquery', 'jqueryui'], function($) {
 // ---------------------------------------------------------------------------------------------------------------------
             // When a single section is shown under a tab use the section name as tab name
             var changeTab = function(tab, target) {
-                console.log('single section in tab: using section name as tab name');
+                // X console.log('single section in tab: using section name as tab name');
 
                 // Replace the tab name with the section name
                 var origSectionname = target.find('.sectionname:not(.hidden)');
@@ -201,13 +195,13 @@ define(['jquery', 'jqueryui'], function($) {
 //                $('.sectionname').find('.toggler').show();
                 $('.toggler_edit_only').removeClass('toggler_edit_only').show();
 
-                 console.log('--> restoring section headline ');
+                 // X console.log('--> restoring section headline ');
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
             // react to a clicked tab
             var tabClick = function() {
- $(".tablink").on('click', function() {
+                $(".tablink").on('click', function() {
                 var tabid = $(this).attr('id');
                 var sections = $(this).attr('sections');
                 var sectionArray = sections.split(",");
@@ -215,6 +209,9 @@ define(['jquery', 'jqueryui'], function($) {
                 // Make this an active tab
                 $(".tablink.active").removeClass("active"); // First remove any active class from tabs
                 $(this).addClass('active'); // Then add the active class to the clicked tab
+
+                // store the ID of the active tab in a cookie
+                sessionStorage.setItem('tabid', tabid);
 
                 truncateAllTabnames();
                 expandTabname($(this));
@@ -226,7 +223,7 @@ define(['jquery', 'jqueryui'], function($) {
                 if (typeof clickedTabName == 'undefined') {
                     clickedTabName = $(this).html();
                 }
-                 console.log('=====> Clicked tab "' + clickedTabName + '":');
+                 // X console.log('=====> Clicked tab "' + clickedTabName + '":');
 
                 if (tabid === 'tab0') { // Show all sections - then hide each section shown in other tabs
                     $("#changenumsections").show();
@@ -237,7 +234,7 @@ define(['jquery', 'jqueryui'], function($) {
                             $.each($(this).attr('sections').split(","), function(index, value) {
                                 var target = $(".section[section-id='" + value + "']");
                                 target.hide();
-                                 console.log("--> hiding section " + value);
+                                 // X console.log("--> hiding section " + value);
                             });
                         }
                     });
@@ -247,7 +244,7 @@ define(['jquery', 'jqueryui'], function($) {
                     $.each(sectionArray, function(index, value) {
                         var target = $(".section[section-id='" + value + "']");
                         target.show();
-                        console.log("--> showing section " + value);
+                        // X console.log("--> showing section " + value);
                     });
                 }
 
@@ -257,17 +254,17 @@ define(['jquery', 'jqueryui'], function($) {
                 var visibleSections = $('li.section:visible').length;
                 var hiddenSections = $('li.section.hidden:visible').length;
                 if ($('.section0_ontop').length > 0) {
-                   console.log('section0 is on top - so reducing the number of visible sections for this tab by 1');
+                   // X console.log('section0 is on top - so reducing the number of visible sections for this tab by 1');
                     visibleSections--;
                 }
-                console.log('number of visible sections: ' + visibleSections);
-                console.log('number of hidden sections: ' + hiddenSections);
+                // X console.log('number of visible sections: ' + visibleSections);
+                // X console.log('number of hidden sections: ' + hiddenSections);
 
                 // If all visible sections are hidden for students the tab is hidden for them as well
                 // in this case mark the tab for admins so they are aware
                 if (visibleSections <= hiddenSections) {
                     $(this).addClass('hidden-tab');
-                    console.log("==> marking hidden tab " + tabid);
+                    // X console.log("==> marking hidden tab " + tabid);
                     var self = $(this);
                     require(['core/str'], function(str) {
                         var getTheString = str.get_string('hidden_tab_hint', 'format_topics2');
@@ -288,7 +285,7 @@ define(['jquery', 'jqueryui'], function($) {
                 }
 
                 if (visibleSections < 1) {
-                    console.log('tab with no visible sections - hiding it');
+                    // X console.log('tab with no visible sections - hiding it');
                     $(this).parent().hide();
 
                     // Restoring generic tab name
@@ -300,7 +297,7 @@ define(['jquery', 'jqueryui'], function($) {
                         data: {'courseid': courseid, 'tabid': tabid, 'tab_name': genericTitle},
                         success: function(result) {
                             if (result !== '') {
-                                console.log('Reset name of tab ID ' + tabid + ' to "' + result + '"');
+                                // X console.log('Reset name of tab ID ' + tabid + ' to "' + result + '"');
                                 $('[data-itemid=' + result + ']').attr('data-value', genericTitle).
                                 find('.quickeditlink').html(genericTitle);
 
@@ -310,7 +307,7 @@ define(['jquery', 'jqueryui'], function($) {
                         }
                     });
                 } else {
-                    console.log('tab with visible sections - showing it');
+                    // X console.log('tab with visible sections - showing it');
                     $(this).parent().show();
                 }
 
@@ -341,7 +338,7 @@ define(['jquery', 'jqueryui'], function($) {
                     $('.tabitem').hide();
                 }
             });
-};
+            };
 
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -519,7 +516,7 @@ define(['jquery', 'jqueryui'], function($) {
                     $(this).parent().find('.tab_mover').each(function() {
                         var tabnr = $(this).attr('tabnr');
                         var tabtext = $(this).find('.menu-action-text').html();
-                        console.log(tabnr + ' --> ' + tabtext.trim() + ' ==> ' + tabArray[tabnr]);
+                        // X console.log(tabnr + ' --> ' + tabtext.trim() + ' ==> ' + tabArray[tabnr]);
 //                        Var newMenuText = 'To Tab "' + tabArray[tabnr] +
 //                            ( (tabArray[tabnr] === 'Tab ' + tabnr || tabnr === '0') ? '"' : '" (Tab ' + tabnr + ')');
 
@@ -561,7 +558,7 @@ define(['jquery', 'jqueryui'], function($) {
                 moveOntop();
                 moveInline();
                 dropdownToggle();
-                set_tab_cookie();
+                set_numsections_cookie();
 //                Hover_tabname();
             };
 
@@ -575,7 +572,7 @@ define(['jquery', 'jqueryui'], function($) {
 // For development purposes only - not used in production environments
                 var draggedTab_id = draggedTab.attr('id');
                 var targetTab_id = targetTab.attr('id');
-                console.log('The tab with ID "' + draggedTab_id + '" was dropped onto tab with the ID "' + targetTab_id + '"');
+                // X console.log('The tab with ID "' + draggedTab_id + '" was dropped onto tab with the ID "' + targetTab_id + '"');
 
                 // Swap both tabs
                 var zwischenspeicher = draggedTab.parent().html();
@@ -609,7 +606,7 @@ define(['jquery', 'jqueryui'], function($) {
                     data: {'courseid': courseid, 'tab_seq': tabSeq, 'course_format_name': course_format_name},
 //                    Success: function() {
                     success: function(result) {
-                        console.log('the new tab sequence: ' + result);
+                        // X console.log('the new tab sequence: ' + result);
                     }});
             };
 
@@ -639,7 +636,7 @@ define(['jquery', 'jqueryui'], function($) {
 
 // ---------------------------------------------------------------------------------------------------------------------
             $(document).ready(function() {
-                console.log('=================< topics2/tabs.js >=================');
+                // X console.log('=================< topics2/tabs.js >=================');
                 initFunctions();
 
                 // Show the edit menu for section-0
@@ -663,40 +660,42 @@ define(['jquery', 'jqueryui'], function($) {
                     });
                 }
 
+                // check for a tab cookie
+                var tabid = sessionStorage.getItem('tabid');
+
                 // If there are visible tabs click them all once to potentially reveal any section names as tab names
                 if ($(".topictab:visible").length > 0) {
                     $('#tab0').click();
                     // Click ALL tabs once
                     $('.tablink:visible').click();
 
-                    // check for a tab cookie
-                    var tabid = sessionStorage.getItem('tabid');
-                    sessionStorage.removeItem('tabid'); // remove the cookie
                     if(tabid != null && tabid != 'tab0') {
-                        console.log('Found tabid = ' + tabid);
-                        // if a 'tabid' cookie is set the changenumsections url has been clicked
+//                        console.log('Found tabid = ' + tabid);
+
+                        // if a 'numSections' cookie is set the changenumsections url has been clicked
                         // while the particular tab was active and we have returned here
-                        // if the tabid is other than tab0 move the newly added sections to that tab and finally click it
+                        // if the tabid is other than tab0 move the newly added sections to that tab
 
                         //get the number of sections before new ones were added from another cookie
                         var numSections = sessionStorage.getItem('numSections');
                         sessionStorage.removeItem('numSections');
+                        if(numSections != null) {
+                            // attach all new sections to the given tab
+                            var tabnum = tabid.substring(3); // This is the tab number(!) where the section is moved to
+                            var i = 0;
+                            $('.section.main').each(function(){
+                                i = i + 1;
+                                if (i > numSections) {
+                                    // X console.log('new section id = ' + $(this).attr('id'));
+                                    var sectionid = $(this).attr('section-id');
+                                    var sectionnum = $(this).attr('id').substring(8);
+                                    add2tab(tabnum, sectionid, sectionnum);
+                                }
+                            });
+                            save2tab(tabid);
+                        }
 
-                        // attach all new sections to the given tab
-                        var i = 0;
-                        $('.section.main').each(function(){
-                            i = i + 1;
-                            if (i > numSections) {
-                                console.log('new section id = ' + $(this).attr('id'));
-                                var tabnum = tabid.substring(3); // This is the tab number(!) where the section is moved to
-                                var sectionid = $(this).attr('section-id');
-                                var sectionnum = $(this).attr('id').substring(8);
-                                add2tab(tabnum, sectionid, sectionnum);
-                            }
-                        });
-                        save2tab(tabid);
-                        
-                        // click the tab
+                        // click the tab with the found tab ID
                         $('#' + tabid).click();
                     } else {
                         // Click the 1st visible tab by default
