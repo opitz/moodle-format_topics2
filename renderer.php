@@ -84,7 +84,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
         // add an invisible div that carries the course ID to be used by JS
         // add class 'single_section_tabs' when option is set so JS can play accordingly
-        $class = ($format_options['single_section_tabs'] ? 'single_section_tabs' : '');
+        $class = (isset($format_options['single_section_tabs']) && $format_options['single_section_tabs'] ? 'single_section_tabs' : '');
 
         // the sections
         echo $this->start_section_list();
