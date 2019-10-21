@@ -1,7 +1,42 @@
-define(['jquery', 'jqueryui'], function($) {
+define(['jquery', 'jqueryui', 'core/str'], function($, str) {
     /* eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
     return {
         init: function() {
+
+// ---------------------------------------------------------------------------------------------------------------------
+            function sandbox() {
+            }
+
+// ---------------------------------------------------------------------------------------------------------------------
+            function insertTabIndex() {
+                // Inserts the tabindex from any active tab to its sections to make sure tey will follow after the tab
+                // when navigating using the keyboard only
+                var tabtabindex = $('.tablink.active').attr('tabindex');
+                $('.section.main:visible').each( function() {
+                    $(this).attr('tabindex',tabtabindex);
+                });
+            }
+
+// ---------------------------------------------------------------------------------------------------------------------
+            function tabnav() {
+                // Supporting navigation using the keyboard
+                $(document).keyup(function(e) {
+                    var code = e.keyCode || e.which;
+                    var focused = $(':focus');
+                    // When using the TAB key to navigate the page actually click a tab when in focus to reveal its sections
+                    if (code == '9') { // TAB key pressed
+                        if ( typeof focused.attr('id') !== 'undefined' && focused.attr('id').indexOf("tab") > -1) {
+                            focused.click();
+                        }
+                    }
+                    // Toggle the focused section by pressing ENTER
+                    if (code == 13) { // ENTER key pressed
+                        if ( typeof focused.attr('id') !== 'undefined' && focused.attr('id').indexOf("section") > -1) {
+                            focused.find('.toggler:visible').click();
+                        }
+                    }
+                });
+            }
 
 // ---------------------------------------------------------------------------------------------------------------------
             function add2tab(tabnum, sectionid, sectionnum) {
@@ -338,6 +373,8 @@ define(['jquery', 'jqueryui'], function($) {
                         // X console.log('--> tab0 is a single tab - hiding it');
                         $('.tabitem').hide();
                     }
+                    // this will make sure tab navigation goes from tab to its sections and then on to the next tab
+                    insertTabIndex();
                 });
             };
 
@@ -559,6 +596,8 @@ define(['jquery', 'jqueryui'], function($) {
                 moveInline();
                 dropdownToggle();
                 set_numsections_cookie();
+                tabnav();
+                sandbox();
 //                Hover_tabname();
             };
 
