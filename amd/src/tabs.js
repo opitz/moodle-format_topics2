@@ -303,30 +303,6 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                     // X console.log('number of visible sections: ' + visibleSections);
                     // X console.log('number of hidden sections: ' + hiddenSections);
 
-                    // If all visible sections are hidden for students the tab is hidden for them as well
-                    // in this case mark the tab for admins so they are aware
-                    if (visibleSections <= hiddenSections) {
-                        $(this).addClass('hidden-tab');
-                        // X console.log("==> marking hidden tab " + tabid);
-                        var self = $(this);
-                        require(['core/str'], function(str) {
-                            var getTheString = str.get_string('hidden_tab_hint', 'format_topics2');
-                            $.when(getTheString).done(function(theString) {
-                                self.find('#not-shown-hint-' + tabid).remove();
-                                var theAppendix = '<i id="not-shown-hint-' + tabid + '" class="fa fa-info" title="' +
-                                    theString + '"></i>';
-                                if ($('.tablink .fa-pencil').length > 0) { // When in edit mode ...
-                                    self.find('.inplaceeditable').append(theAppendix);
-                                } else {
-                                    self.append(theAppendix);
-                                }
-                            });
-                        });
-                    } else {
-                        $(this).removeClass('hidden-tab');
-                        $('#not-shown-hint-' + tabid).remove();
-                    }
-
                     if (visibleSections < 1) {
                         // X console.log('tab with no visible sections - hiding it');
                         $(this).parent().hide();
@@ -358,11 +334,12 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                         var target = $('li.section:visible:not(.hidden)').first();
                         // If section0 is shown always on top ignore the first visible section and use the 2nd
                         if ($('.section0_ontop').length > 0) {
-                            target = $('li.section:visible:not(.hidden):eq(1)');
+//                            target = $('li.section:visible:not(.hidden):eq(1)');
+                            target = $('li.section:eq(1)');
                         }
                         var firstSectionId = target.attr('id');
-
-                        if (visibleSections - hiddenSections <= 1
+//                        if (visibleSections - hiddenSections <= 1
+                        if ($(this).attr('sections').split(',').length == 1
                             && firstSectionId !== 'section-0'
                             && $(this).attr('generic_title').indexOf('Tab') >= 0 // Do this only for original tabs
                         ) {
@@ -372,6 +349,34 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                         } else if ($('.inplaceeditable').length > 0 && firstSectionId !== 'section-0') {
                             restoreTab($(this));
                         }
+                    }
+
+                    // If all visible sections are hidden for students the tab is hidden for them as well
+                    // in this case mark the tab for admins so they are aware
+                    if (visibleSections <= hiddenSections) {
+                        $(this).addClass('hidden-tab');
+                        // X console.log("==> marking hidden tab " + tabid);
+                        var self = $(this);
+                        require(['core/str'], function(str) {
+                            var getTheString = str.get_string('hidden_tab_hint', 'format_topics2');
+                            $.when(getTheString).done(function(theString) {
+                                self.find('#not-shown-hint-' + tabid).remove();
+                                var theAppendix = '<i id="not-shown-hint-' + tabid + '" class="fa fa-info" title="' +
+                                    theString + '"></i>';
+                                if (self.attr('sections').split(',').length == 1
+                                    && $('.single_section_tabs').length > 0) { // if there is a single topic
+                                    self.html(self.html() + ' ' +theAppendix);
+                                } else if ($('.tablink .fa-pencil').length > 0) { // When in edit mode ...
+                                    self.find('.inplaceeditable').append(theAppendix);
+                                } else {
+//                                    self.append(theAppendix);
+                                    self.html(self.html() + ' ' +theAppendix);
+                                }
+                            });
+                        });
+                    } else {
+                        $(this).removeClass('hidden-tab');
+                        $('#not-shown-hint-' + tabid).remove();
                     }
 
                     // If tab0 is alone hide it
