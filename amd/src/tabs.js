@@ -330,12 +330,14 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                     }
 
                     // If option is set and when a tab other than tab 0 shows a single section perform some visual tricks
-                    if ($('.single_section_tabs').length > 0 && tabid !== 'tab0') {
-                        var target = $('li.section:visible:not(.hidden)').first();
+                    if ($('.single_section_tabs').length > 0
+                        && $(this).attr('sections').split(',').length == 1
+                        && tabid !== 'tab0') {
+                        var target = $('li.section:visible').first();
                         // If section0 is shown always on top ignore the first visible section and use the 2nd
                         if ($('.section0_ontop').length > 0) {
 //                            target = $('li.section:visible:not(.hidden):eq(1)');
-                            target = $('li.section:eq(1)');
+                            target = $('li.section:visible:eq(1)');
                         }
                         var firstSectionId = target.attr('id');
 //                        if (visibleSections - hiddenSections <= 1
