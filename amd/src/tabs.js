@@ -553,7 +553,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
 
                     if ($(this).find('.menu-action-text').html().indexOf("Hide") >= 0) {
                         if (activeTab.attr('id') != undefined
-                            && visibleSections <= hiddenSections + 1
+                            && visibleSections <= hiddenSections + $('.section0_ontop').length + 1
                         ) {
                             showTabHint(activeTab);
                         }
