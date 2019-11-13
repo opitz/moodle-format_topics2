@@ -287,7 +287,6 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                         $.each(sectionArray, function(index, value) {
                             var target = $(".section[section-id='" + value + "']");
                             target.show();
-                            // X console.log("--> showing section " + value);
                         });
                     }
 
@@ -300,8 +299,6 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                        // X console.log('section0 is on top - so reducing the number of visible sections for this tab by 1');
                         visibleSections--;
                     }
-                    // X console.log('number of visible sections: ' + visibleSections);
-                    // X console.log('number of hidden sections: ' + hiddenSections);
 
                     if (visibleSections < 1) {
                         // X console.log('tab with no visible sections - hiding it');
@@ -336,11 +333,9 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                         var target = $('li.section:visible').first();
                         // If section0 is shown always on top ignore the first visible section and use the 2nd
                         if ($('.section0_ontop').length > 0) {
-//                            target = $('li.section:visible:not(.hidden):eq(1)');
                             target = $('li.section:visible:eq(1)');
                         }
                         var firstSectionId = target.attr('id');
-//                        if (visibleSections - hiddenSections <= 1
                         if ($(this).attr('sections').split(',').length == 1
                             && firstSectionId !== 'section-0'
                             && $(this).attr('generic_title').indexOf('Tab') >= 0 // Do this only for original tabs
@@ -356,29 +351,9 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                     // If all visible sections are hidden for students the tab is hidden for them as well
                     // in this case mark the tab for admins so they are aware
                     if (visibleSections <= hiddenSections) {
-                        $(this).addClass('hidden-tab');
-                        // X console.log("==> marking hidden tab " + tabid);
-                        var self = $(this);
-                        require(['core/str'], function(str) {
-                            var getTheString = str.get_string('hidden_tab_hint', 'format_topics2');
-                            $.when(getTheString).done(function(theString) {
-                                self.find('#not-shown-hint-' + tabid).remove();
-                                var theAppendix = '<i id="not-shown-hint-' + tabid + '" class="fa fa-info" title="' +
-                                    theString + '"></i>';
-                                if (self.attr('sections').split(',').length == 1
-                                    && $('.single_section_tabs').length > 0) { // if there is a single topic
-                                    self.html(self.html() + ' ' +theAppendix);
-                                } else if ($('.tablink .fa-pencil').length > 0) { // When in edit mode ...
-                                    self.find('.inplaceeditable').append(theAppendix);
-                                } else {
-//                                    self.append(theAppendix);
-                                    self.html(self.html() + ' ' +theAppendix);
-                                }
-                            });
-                        });
+                        showTabHint($(this));
                     } else {
-                        $(this).removeClass('hidden-tab');
-                        $('#not-shown-hint-' + tabid).remove();
+                        hideTabHint($(this));
                     }
 
                     // If tab0 is alone hide it
@@ -389,6 +364,37 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                     // this will make sure tab navigation goes from tab to its sections and then on to the next tab
                     insertTabIndex($(this));
                 });
+            };
+
+// ---------------------------------------------------------------------------------------------------------------------
+            var showTabHint = function(tab) {
+                var tabid = tab.attr('id');
+                tab.addClass('hidden-tab');
+
+                // Get the hint string and show the hint icon next to the tab name
+                require(['core/str'], function(str) {
+                    var get_the_string = str.get_string('hidden_tab_hint', 'format_qmultopics');
+                    $.when(get_the_string).done(function(theString) {
+                        tab.find('#not-shown-hint-'+tabid).remove();
+                        var theAppendix = '<i id="not-shown-hint-'+tabid+'" class="fa fa-info" title="'+theString+'"></i>';
+                        if (tab.attr('sections').split(',').length == 1
+                            && $('.single_section_tabs').length > 0) { // If there is a single topic
+                            tab.html(tab.html() + ' ' +theAppendix);
+                        } else if ($('.tablink .fa-pencil').length > 0) { // When in edit mode ...
+                            tab.find('.inplaceeditable').append(theAppendix);
+                        } else {
+//                                self.append(theAppendix);
+                            tab.html(tab.html() + ' ' +theAppendix);
+                        }
+                    });
+                });
+            };
+
+// ---------------------------------------------------------------------------------------------------------------------
+            var hideTabHint = function(tab) {
+                var tabid = tab.attr('id');
+                tab.removeClass('hidden-tab');
+                $('#not-shown-hint-'+tabid).remove();
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -409,69 +415,6 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                     // X console.log('moving section '+sectionid+' from tab "'+activeTabId+'" to tab nr '+tabnum);
                     add2tab(tabnum, sectionid, sectionnum);
 
-                    $("#tab" + tabnum).click();
-                    $('#' + activeTabId).click();
-
-                    // Restore the section before moving it in case it was a single
-                    restoreTab($('#tab' + tabnum));
-
-                    // If the last section of a tab was moved click the target tab
-                    // otherwise click the active tab to refresh it
-                    var countableSections = $('li.section:visible').length - ($("#ontop_area").hasClass('section0_ontop') ? 1 : 0);
-                    // X console.log('---> visible sections = '+$('li.section:visible').length);
-                    // X console.log('---> countableSections = '+countableSections);
-                    if (countableSections > 0 && $('li.section:visible').length >= countableSections) {
-                        // X console.log('staying with the current tab (id = '+activeTabId+
-                        // X   ') as there are still '+$('li.section:visible').length+' sections left');
-                        $("#tab" + tabnum).click();
-                        $('#' + activeTabId).click();
-                    } else {
-                        // X console.log('no section in active tab id '+
-                        // X   activeTabId+' left - hiding it and following section to new tab nr '+tabnum);
-                        $("#tab" + tabnum).click();
-                        $('#' + activeTabId).parent().hide();
-                    }
-                });
-            };
-            var tabMove0 = function() {
-                $(".tab_mover").on('click', function() {
-                    var tabnum = $(this).attr('tabnr'); // This is the tab number where the section is moved to
-                    var sectionid = $(this).closest('li.section').attr('section-id');
-                    var sectionnum = $(this).closest('li.section').attr('id').substring(8);
-
-                    // X console.log('--> found section num: '+sectionnum);
-                    var activeTabId = $('.topictab.active').first().attr('id');
-
-                    if (typeof activeTabId == 'undefined') {
-                        activeTabId = 'tab0';
-                    }
-                    // X console.log('----');
-                    // X console.log('moving section '+sectionid+' from tab "'+activeTabId+'" to tab nr '+tabnum);
-
-                    // Remove the section id and section number from any tab
-                    $(".tablink").each(function() {
-                        $(this).attr('sections', $(this).attr('sections').replace("," + sectionid, ""));
-                        $(this).attr('sections', $(this).attr('sections').replace(sectionid + ",", ""));
-                        $(this).attr('sections', $(this).attr('sections').replace(sectionid, ""));
-
-                        $(this).attr('section_nums', $(this).attr('section_nums').replace("," + sectionnum, ""));
-                        $(this).attr('section_nums', $(this).attr('section_nums').replace(sectionnum + ",", ""));
-                        $(this).attr('section_nums', $(this).attr('section_nums').replace(sectionnum, ""));
-                    });
-                    // Add the sectionid to the new tab
-                    if (tabnum > 0) { // No need to store section ids for tab 0
-                        if ($("#tab" + tabnum).attr('sections').length === 0) {
-                            $("#tab" + tabnum).attr('sections', $("#tab" + tabnum).attr('sections') + sectionid);
-                        } else {
-                            $("#tab" + tabnum).attr('sections', $("#tab" + tabnum).attr('sections') + "," + sectionid);
-                        }
-                        if ($("#tab" + tabnum).attr('section_nums').length === 0) {
-                            $("#tab" + tabnum).attr('section_nums', $("#tab" + tabnum).attr('section_nums') + sectionnum);
-                        } else {
-                            $("#tab" + tabnum).attr('section_nums', $("#tab" + tabnum).attr('section_nums') + "," + sectionnum);
-                            // X console.log('---> section_nums: '+$("#tab"+tabnum).attr('section_nums'));
-                        }
-                    }
                     $("#tab" + tabnum).click();
                     $('#' + activeTabId).click();
 
@@ -601,6 +544,28 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
 };
 
 // ---------------------------------------------------------------------------------------------------------------------
+            // a section edit menu is clicked - to hide or show a section to students
+            var toggleAvailiability = function() {
+                $(".section-actions .menubar .action-menu-trigger .dropdown .dropdown-menu .dropdown-item").on('click', function() {
+                    var activeTab = $('.tablink.active');
+                    var visibleSections = $('li.section:visible').length;
+                    var hiddenSections = $('li.section.hidden:visible').length;
+
+                    if ($(this).find('.menu-action-text').html().indexOf("Hide") >= 0) {
+                        if (activeTab.attr('id') != undefined
+                            && visibleSections <= hiddenSections + 1
+                        ) {
+                            showTabHint(activeTab);
+                        }
+                    }
+                    if ($(this).find('.menu-action-text').html().indexOf("Show") >= 0) {
+                        if (activeTab.attr('id') != undefined) {
+                            hideTabHint(activeTab);
+                        }
+                    }
+                });};
+
+// ---------------------------------------------------------------------------------------------------------------------
             var initFunctions = function() {
                 // Load all required functions above
                 tabClick();
@@ -610,6 +575,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                 dropdownToggle();
                 set_numsections_cookie();
                 tabnav();
+                toggleAvailiability();
                 sandbox();
 //                Hover_tabname();
             };
