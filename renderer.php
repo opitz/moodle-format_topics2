@@ -131,6 +131,9 @@ class format_topics2_renderer extends format_topics_renderer {
         global $DB, $USER;
 
         $record = $DB->get_record('user_preferences', array('userid' => $USER->id, 'name' => 'toggle_seq_'.$course->id));
+        if(!isset($record->value)) {
+            return '';
+        }
         return $record->value;
     }
 
