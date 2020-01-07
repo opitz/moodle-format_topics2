@@ -84,7 +84,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
         // add an invisible div that carries the course ID to be used by JS
         // add class 'single_section_tabs' when option is set so JS can play accordingly
-        $class = ($format_options['single_section_tabs'] ? 'single_section_tabs' : '');
+        $class = (isset($format_options['single_section_tabs']) && $format_options['single_section_tabs'] ? 'single_section_tabs' : '');
 
         // the sections
         echo $this->start_section_list();
@@ -131,6 +131,9 @@ class format_topics2_renderer extends format_topics_renderer {
         global $DB, $USER;
 
         $record = $DB->get_record('user_preferences', array('userid' => $USER->id, 'name' => 'toggle_seq_'.$course->id));
+        if(!isset($record->value)) {
+            return '';
+        }
         return $record->value;
     }
 
@@ -266,6 +269,7 @@ class format_topics2_renderer extends format_topics_renderer {
             $itemid = false;
         }
 
+        $tabindex = ((int) substr($tab->id,3,1) +1)* 100;
         if ($tab->id == 'tab0') {
             $o .= '<span
                 data-toggle="tab" id="'.$tab->id.'"
@@ -274,6 +278,7 @@ class format_topics2_renderer extends format_topics_renderer {
                 class="tablink nav-link "
                 tab_title="'.$tab->title.'",
                 generic_title = "'.$tab->generic_title.'"
+                tabindex = "'.$tabindex.'"
                 >';
         } else {
             $o .= '<span
@@ -283,6 +288,7 @@ class format_topics2_renderer extends format_topics_renderer {
                 class="tablink topictab nav-link "
                 tab_title="'.$tab->title.'"
                 generic_title = "'.$tab->generic_title.'"
+                tabindex = "'.$tabindex.'"
                 style="'.($PAGE->user_is_editing() ? 'cursor: move;' : '').'">';
         }
         // render the tab name as inplace_editable
@@ -435,9 +441,14 @@ class format_topics2_renderer extends format_topics_renderer {
         }
 
         // start the section
-        $o.= html_writer::start_tag('li', array('id' => 'section-'.$section->section, 'section-id' => $section->id,
-            'class' => $classes.$sectionstyle, 'role'=>'region',
-            'aria-label'=> get_section_name($course, $section)));
+        $o.= html_writer::start_tag('li', array(
+            'id' => 'section-'.$section->section,
+            'section-id' => $section->id,
+            'class' => $classes.$sectionstyle,
+            'role'=>'region',
+            'aria-label'=> get_section_name($course, $section),
+            'tabindex' => '0'
+        ));
 
         // Create a span that contains the section title to be used to create the keyboard section move menu.
 //        $o .= html_writer::tag('span', get_section_name($course, $section), array('class' => 'hidden sectionname'));
