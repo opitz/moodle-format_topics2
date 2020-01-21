@@ -682,17 +682,20 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                 // Only when the page is reloaded for the same course check for a tab cookie and delete it otherwise
                 var courseid = $('#courseid').attr('courseid');
                 var originCourseid = sessionStorage.getItem('courseid');
+                var tabid = null;
                 if(originCourseid !== null && originCourseid == courseid) {
-                    var tabid = sessionStorage.getItem('tabid');
+                    tabid = sessionStorage.getItem('tabid');
                 } else {
                     sessionStorage.removeItem('courseid');
                     sessionStorage.removeItem('tabid');
                 }
 
+                // Click tab0 once to reveal it if needed
+                $('#tab0').click();
+
                 // If there are visible tabs click them all once to potentially reveal any section names as tab names
                 if ($(".topictab:visible").length > 0) {
-                    $('#tab0').click();
-                    // Click ALL tabs once
+                    // Click all visible tabs once
                     $('.tablink:visible').click();
 
                     if(tabid !== null && tabid != 'tab0') {
