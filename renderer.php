@@ -166,8 +166,16 @@ class format_topics2_renderer extends format_topics_renderer {
 
             // check section IDs and section numbers for tabs other than tab0
             if($i > 0) {
-                $tab_sections = str_replace(' ', '', $format_options['tab' . $i]);
-                $tab_section_nums = str_replace(' ', '', $format_options['tab' . $i. '_sectionnums']);
+                if(isset($format_options['tab' . $i])) {
+                    $tab_sections = str_replace(' ', '', $format_options['tab' . $i]);
+                } else {
+                    $tab_sections = '';
+                }
+                if(isset($format_options['tab' . $i. '_sectionnums'])) {
+                    $tab_section_nums = str_replace(' ', '', $format_options['tab' . $i. '_sectionnums']);
+                } else {
+                    $tab_section_nums = '';
+                }
                 $tab_sections = $this->check_tab_section_ids($course->id, $section_ids, $tab_sections, $tab_section_nums,$i);
 //                $tab_sections = $this->check_section_ids($course->id, $sections, $section_ids, $section_nums, $tab_sections, $tab_section_nums,$i);
             }
