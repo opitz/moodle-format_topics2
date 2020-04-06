@@ -324,7 +324,7 @@ class format_topics2_renderer extends format_topics_renderer {
         }
         $tab_section_nums = explode(',',$tab_section_nums);
         foreach($tab_section_ids as $key => $tab_section_id) {
-            if(!in_array($tab_section_id, $section_ids)){ // the tab_section_id is not among the sections of that course - the ID needs to be corrected
+            if(!in_array($tab_section_id, $section_ids) && isset($section_ids[$tab_section_nums[$key]])){ // the tab_section_id is not among the sections of that course - the ID needs to be corrected
                 $new_tab_section_ids[] = $section_ids[$tab_section_nums[$key]];
                 $has_changed = true;
             } else {
