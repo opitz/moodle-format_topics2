@@ -87,7 +87,4 @@ $string['tooltip_open_all'] = 'Expand all topics';
 $string['tooltip_close_all'] = 'Collapse all topics';
 $string['tooltip_goto_top'] = 'Go to the top of the page';
 
-$string['coursedisplay_collapse'] = 'Show collapsible sections on one page';
-
-$string['gnupf'] = 'Gnupf';
-
+$string['coursedisplay_nocollapse'] = 'Show noncollapsible sections on one page';

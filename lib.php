@@ -24,7 +24,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-defined('COURSE_DISPLAY_COLLAPSE') || define('COURSE_DISPLAY_COLLAPSE', 2);
+defined('COURSE_DISPLAY_NOCOLLAPSE') || define('COURSE_DISPLAY_NOCOLLAPSE', 2);
 require_once($CFG->dirroot. '/course/format/topics/lib.php');
 
 /**
@@ -87,8 +87,8 @@ class format_topics2 extends format_topics {
                     'element_attributes' => array(
                         array(
                             COURSE_DISPLAY_SINGLEPAGE => new lang_string('coursedisplay_single'),
-                            COURSE_DISPLAY_COLLAPSE => get_string('coursedisplay_collapse', 'format_topics2'),
-                            COURSE_DISPLAY_MULTIPAGE => new lang_string('coursedisplay_multi')
+                            COURSE_DISPLAY_NOCOLLAPSE => get_string('coursedisplay_nocollapse', 'format_topics2'),
+                            COURSE_DISPLAY_MULTIPAGE => new lang_string('coursedisplay_multi'),
                         )
                     ),
                     'help' => 'coursedisplay',
