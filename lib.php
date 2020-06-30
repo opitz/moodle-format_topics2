@@ -24,7 +24,8 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-defined('COURSE_DISPLAY_NOCOLLAPSE') || define('COURSE_DISPLAY_NOCOLLAPSE', 2);
+defined('COURSE_DISPLAY_COLLAPSE') || define('COURSE_DISPLAY_COLLAPSE', 2); // legacy support - no longer used
+defined('COURSE_DISPLAY_NOCOLLAPSE') || define('COURSE_DISPLAY_NOCOLLAPSE', 3);
 require_once($CFG->dirroot. '/course/format/topics/lib.php');
 
 /**
