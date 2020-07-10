@@ -26,8 +26,9 @@ function update_toggle_status($courseid, $toggle_seq) {
     }
     return $toggle_seq;
 }
+//----------------------------------------------------------------------------------------------------------------------
 
-if(!isset($_POST['toggle_seq']) || sizeof($_POST['toggle_seq']) === 0) {
+if(!isset($_POST['toggle_seq']) || sizeof(str_split($_POST['toggle_seq'])) === 0) {
     exit;
 }
 
