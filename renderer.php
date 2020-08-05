@@ -310,7 +310,7 @@ class format_topics2_renderer extends format_topics_renderer {
     }
 
     // Check section IDs used in tabs and repair them if they have changed - most probably because a course was imported
-    public function check_tab_section_ids($courseid, $section_ids, $tab_section_ids, $tab_section_nums, $i) {
+    public function check_tab_section_ids0($courseid, $section_ids, $tab_section_ids, $tab_section_nums, $i) {
         global $DB;
         $has_changed = false;
 
@@ -335,6 +335,53 @@ class format_topics2_renderer extends format_topics_renderer {
         $tab_section_ids = implode(',', $new_tab_section_ids);
         if($has_changed) {
             $DB->update_record('course_format_options', array('id' => $tab_format_record->id, 'value' => $tab_section_ids));
+        }
+
+        return $tab_section_ids;
+    }
+    public function check_tab_section_ids($courseid, $section_ids, $tab_section_ids, $tab_section_nums, $i) {
+        global $DB;
+        $id_has_changed = false;
+        $num_has_changed = false;
+
+        $new_tab_section_ids = array();
+        $new_tab_section_nums = array();
+        $tab_format_record_ids = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i));
+        $tab_format_record_nums = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i.'_sectionnums'));
+
+        if($tab_section_ids != "") {
+            $tab_section_ids = explode(',',$tab_section_ids);
+        } else {
+            $tab_section_ids = array();
+        }
+
+        if($tab_section_nums != "") {
+            $tab_section_nums = explode(',',$tab_section_nums);
+        } else {
+            $tab_section_nums = array();
+        }
+//        $tab_section_nums = explode(',',$tab_section_nums);
+
+        foreach($tab_section_ids as $key => $tab_section_id) {
+            if(!in_array($tab_section_id, $section_ids) && isset($section_ids[$tab_section_nums[$key]])){
+                // the tab_section_id is not among the sections of that course - the ID needs to be corrected
+                $new_tab_section_ids[] = $section_ids[$tab_section_nums[$key]];
+                $id_has_changed = true;
+            } else {
+                $new_tab_section_ids[] = $tab_section_id;
+            }
+            if(array_search($tab_section_id, $section_ids)) {
+                $new_tab_section_nums[] = array_search($tab_section_id, $section_ids);
+            }
+        }
+
+        $tab_section_ids = implode(',', $new_tab_section_ids);
+        $tab_section_nums = implode(',', $new_tab_section_nums);
+        if($id_has_changed) {
+            $DB->update_record('course_format_options', array('id' => $tab_format_record_ids->id, 'value' => $tab_section_ids));
+        }
+        if($tab_section_nums != $tab_format_record_nums->value) {
+            $DB->update_record('course_format_options', array('id' => $tab_format_record_nums->id, 'value' => $tab_section_nums));
         }
 
         return $tab_section_ids;
