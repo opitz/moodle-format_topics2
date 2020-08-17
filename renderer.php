@@ -384,7 +384,7 @@ class format_topics2_renderer extends format_topics_renderer {
         if($id_has_changed) {
             $DB->update_record('course_format_options', array('id' => $tab_format_record_ids->id, 'value' => $tab_section_ids));
         }
-        if($tab_section_nums != $tab_format_record_nums->value) {
+        if($tab_format_record_nums && $tab_section_nums != $tab_format_record_nums->value) {
             // if the tab nums of that tab have changed update them
             $DB->update_record('course_format_options', array('id' => $tab_format_record_nums->id, 'value' => $tab_section_nums));
         }
