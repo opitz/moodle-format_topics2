@@ -1,4 +1,19 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Created by PhpStorm.
  * User: opitz
@@ -10,22 +25,22 @@ require_once('../../../../config.php');
 
 function update_tab_settings($courseid, $tabid, $sections, $sectionnums)
 {
-    global $COURSE, $DB, $PAGE;
+    global $DB;
 
     $context = context_course::instance($courseid);
 
     if (has_capability('moodle/course:update', $context)) {
-        // save the sections of the tab
-        $format_option = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => $tabid));
-        if(isset($format_option) && $format_option) {
-            $format_option->value = $sections;
-            $DB->update_record('course_format_options', $format_option);
+        // Save the sections of the tab.
+        $formatOption = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => $tabid));
+        if (isset($formatOption) && $formatOption) {
+            $formatOption->value = $sections;
+            $DB->update_record('course_format_options', $formatOption);
         }
-        // save the sectionnums of the tab
-        $format_option = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => $tabid.'_sectionnums'));
-        if(isset($format_option) && $format_option) {
-            $format_option->value = $sectionnums;
-            $DB->update_record('course_format_options', $format_option);
+        // Save the sectionnums of the tab.
+        $formatOption = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => $tabid.'_sectionnums'));
+        if (isset($formatOption) && $formatOption) {
+            $formatOption->value = $sectionnums;
+            $DB->update_record('course_format_options', $formatOption);
         }
     }
     return 'ok';
