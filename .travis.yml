@@ -27,13 +27,15 @@ env:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install 8.9
-  - nvm use 8.9
+  - nvm install 14.2.0
+  - nvm use 14.2.0
   - cd ../..
+  - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
   - docker run -d -p 127.0.0.1:4444:4444 --net=host -v /dev/shm:/dev/shm selenium/standalone-firefox:3
 
 install:
+  - moodle-plugin-ci install
 
 script:
   - moodle-plugin-ci phplint
