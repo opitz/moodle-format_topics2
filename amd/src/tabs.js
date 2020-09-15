@@ -1,13 +1,15 @@
-define(['jquery', 'jqueryui', 'core/str'], function($, str) {
+define(['jquery', 'jqueryui', 'core/str'], function($) {
     /* eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
     return {
         init: function() {
 
 // ---------------------------------------------------------------------------------------------------------------------
+            // eslint-disable-next-line require-jsdoc
             function sandbox() {
             }
 
 // ---------------------------------------------------------------------------------------------------------------------
+            // eslint-disable-next-line require-jsdoc
             function insertTabIndex(element) {
                 // Inserts the tabindex from any active tab to its visible sections to make sure they will follow
                 // directly after the tab when navigating using the TAB key
@@ -20,24 +22,20 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
             }
 
 // ---------------------------------------------------------------------------------------------------------------------
+            // eslint-disable-next-line require-jsdoc
             function tabnav() {
                 // Supporting navigation using the keyboard
                 $(document).keyup(function(e) {
                     var code = e.keyCode || e.which;
                     var focused = $(':focus');
                     // When using the TAB key to navigate the page actually click a tab when in focus to reveal its sections
-//                    if (code == '9') { // TAB key pressed
-//                        if ( typeof focused.attr('id') !== 'undefined' && focused.attr('id').indexOf("tab") > -1) {
-//                            focused.click();
-//                        }
-//                    }
-                    if (code == 13) { // ENTER key pressed
+                    if (code === 13) { // ENTER key pressed
                         // Click a focused tab by pressing ENTER
-                        if ( typeof focused.attr('id') !== 'undefined' && focused.attr('id').indexOf("tab") > -1) {
+                        if (typeof focused.attr('id') !== 'undefined' && focused.attr('id').indexOf("tab") > -1) {
                             focused.click();
                         }
                         // Toggle a focused section by pressing ENTER
-                        if ( typeof focused.attr('id') !== 'undefined' && focused.attr('id').indexOf("section") > -1) {
+                        if (typeof focused.attr('id') !== 'undefined' && focused.attr('id').indexOf("section") > -1) {
                             focused.find('.toggler:visible').click();
                         }
                     }
@@ -45,6 +43,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
             }
 
 // ---------------------------------------------------------------------------------------------------------------------
+            // eslint-disable-next-line require-jsdoc
             function add2tab(tabnum, sectionid, sectionnum) {
                 // Remove the section id and section number from any tab
                 $(".tablink").each(function() {
@@ -73,6 +72,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
             }
 
 // ---------------------------------------------------------------------------------------------------------------------
+            // eslint-disable-next-line require-jsdoc
             function save2tab(tabid) {
                 // save the new tab data to the database
                 var courseid = $('#courseid').attr('courseid');
@@ -505,21 +505,13 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                     });
 
                     // Updating menu options with current tab names
-                    // X console.log('--> Updating menu options with current tab names');
                     $(this).parent().find('.tab_mover').each(function() {
                         var tabnr = $(this).attr('tabnr');
-                        var tabtext = $(this).find('.menu-action-text').html();
-                        // X console.log(tabnr + ' --> ' + tabtext.trim() + ' ==> ' + tabArray[tabnr]);
-//                        Var newMenuText = 'To Tab "' + tabArray[tabnr] +
-//                            ( (tabArray[tabnr] === 'Tab ' + tabnr || tabnr === '0') ? '"' : '" (Tab ' + tabnr + ')');
-
                         var newMenuText = 'To Tab ' +
                             (tabArray[tabnr] === '' || tabArray[tabnr] === 'Tab ' + tabnr ? tabnr : '"' + tabArray[tabnr] +
                             ((tabArray[tabnr] === 'Tab ' + tabnr || tabnr === '0') ? '"' : '" (Tab ' + tabnr + ')'));
 
                         $(this).find('.menu-action-text').html(newMenuText);
-//                        $(this).find('.menu-action-text').html('To Tab "' + tabArray[tabnr] +
-//                            ( (tabArray[tabnr] === 'Tab ' + tabnr || tabnr === '0') ? '"' : '" (Tab ' + tabnr + ')'));
                     });
                     if (sectionid === 'section-0') {
                         if ($('#ontop_area.section0_ontop').length === 1) { // If section0 is on top don't show tab options
@@ -534,7 +526,6 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                     } else if (typeof $('.tablink.active').attr('id') !== 'undefined') {
                         var tabnum = $('.tablink.active').attr('id').substring(3);
                         $('#' + sectionid + ' .tab_mover[tabnr="' + tabnum + '"]').hide(); // Then hide the one not needed
-                        // X console.log('hiding tab ' + tabnum + ' from edit menu for section '+sectionid);
                     }
                     if ($('.tablink:visible').length === 0) {
                         $('#' + sectionid + ' .tab_mover[tabnr="0"]').hide();
@@ -587,11 +578,6 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                 var draggedTab = ui.draggable.find('.topictab').first();
                 var targetTab = $(this).find('.topictab').first();
 
-// For development purposes only - not used in production environments
-                var draggedTab_id = draggedTab.attr('id');
-                var targetTab_id = targetTab.attr('id');
-                // X console.log('The tab with ID "' + draggedTab_id + '" was dropped onto tab with the ID "' + targetTab_id + '"');
-
                 // Swap both tabs
                 var zwischenspeicher = draggedTab.parent().html();
                 draggedTab.parent().html(targetTab.parent().html());
@@ -622,8 +608,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                     url: "format/topics2/ajax/update_tab_seq.php",
                     type: "POST",
                     data: {'courseid': courseid, 'tab_seq': tabSeq, 'course_format_name': course_format_name},
-//                    Success: function() {
-                    success: function(result) {
+                    success: function() {
                         // X console.log('the new tab sequence: ' + result);
                     }});
             };
