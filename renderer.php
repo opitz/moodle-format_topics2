@@ -91,7 +91,8 @@ class format_topics2_renderer extends format_topics_renderer {
 
         // An invisible tag with the value of the tab name limit to be used in jQuery.
         if (isset($formatoptions['limittabname']) && $formatoptions['limittabname'] > 0) {
-            echo html_writer::tag('div','', array('class' => 'limittabname',
+            echo html_writer::tag('div', '',
+                array('class' => 'limittabname', 
                 'value' => $formatoptions['limittabname'],
                 'style' => 'display: hidden;'
             ));
@@ -212,7 +213,7 @@ class format_topics2_renderer extends format_topics_renderer {
         }
         // Check if there are tabs that are not in the sequence (yet) - and if so display them now.
         // We need to compare the sequence with the keys of the tabs array.
-        if ($seqdiff = array_diff(array_keys($this->tabs), $tabseq)){
+        if ($seqdiff = array_diff(array_keys($this->tabs), $tabseq)) {
             foreach ($seqdiff as $tabid) {
                 if (isset($this->tabs[$tabid]) && $tab = $this->tabs[$tabid]) {
                     $o .= $this->render_tab($tab);
@@ -261,7 +262,7 @@ class format_topics2_renderer extends format_topics_renderer {
                 $record->name = $tab->id.'_title';
                 $record->value = ($tab->id == 'tab0'
                     ? get_string('tabzero_title', 'format_topics2')
-                    : 'Tab '.substr($tab->id,3)
+                    : 'Tab '.substr($tab->id, 3)
                 );
                 $DB->insert_record('course_format_options', $record);
             }
@@ -274,7 +275,7 @@ class format_topics2_renderer extends format_topics_renderer {
             $itemid = false;
         }
 
-        $tabindex = ((int) substr($tab->id,3,1) + 1) * 100;
+        $tabindex = ((int) substr($tab->id, 3, 1) + 1) * 100;
         if ($tab->id == 'tab0') {
             $o .= '<span
                 data-toggle="tab" id="'.$tab->id.'"
@@ -498,7 +499,7 @@ class format_topics2_renderer extends format_topics_renderer {
             $o .= $this->section_availability($section);
         }
 
-        // the sectionbody
+        // The sectionbody.
         if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && isset($toggleseq[$section->section])
             && $toggleseq[$section->section] === '0' && ($section->section !== 0 || $section->name !== '')) {
             $o .= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area hidden',
@@ -525,7 +526,7 @@ class format_topics2_renderer extends format_topics_renderer {
             }
 
             $tooltipopen = get_string('tooltip_open', 'format_topics2');
-            $tooltipclosed = get_string('tooltip_closed','format_topics2');
+            $tooltipclosed = get_string('tooltip_closed', 'format_topics2');
             if (isset($toggleseq[$section->section]) && $toggleseq[$section->section] === '0') {
                 $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltipopen
                     .'" style="cursor: pointer; display: none;"></i>';
@@ -548,7 +549,7 @@ class format_topics2_renderer extends format_topics_renderer {
     // Render hidden sections for course editors only.
     public function render_hidden_sections($course, $sections, $context, $modinfo, $numsections) {
         global $PAGE;
-        $o ='<div class="testing"></div>';
+        $o = '<div class="testing"></div>';
         if ($PAGE->user_is_editing() and has_capability('moodle/course:update', $context)) {
             // Print stealth sections if present.
             foreach ($sections as $section => $thissection) {
@@ -579,7 +580,7 @@ class format_topics2_renderer extends format_topics_renderer {
             9 => 'nine'
         );
         for ($i = 0; $i < 10; $i++) {
-            $string = str_replace($i, $numwords[$i],$string);
+            $string = str_replace($i, $numwords[$i], $string);
         }
         return $string;
     }
@@ -600,9 +601,9 @@ class format_topics2_renderer extends format_topics_renderer {
         }
 
         $options = $DB->get_records('course_format_options', array('courseid' => $course->id));
-        $formatoptions=array();
+        $formatoptions = array();
         foreach ($options as $option) {
-            $formatoptions[$option->name] =$option->value;
+            $formatoptions[$option->name] = $option->value;
         }
 
         if (isset($formatoptions['maxtabs'])) {
