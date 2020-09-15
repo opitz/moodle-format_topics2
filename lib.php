@@ -108,8 +108,13 @@ class format_topics2 extends format_topics {
                 ),
             );
 
-            // the sequence in which the tabs will be displayed
-            $courseformatoptions['tab_seq'] = array('default' => '', 'type' => PARAM_TEXT, 'label' => '', 'element_type' => 'hidden',);
+            // The sequence in which the tabs will be displayed.
+            $courseformatoptions['tab_seq'] = array(
+                'default' => '',
+                'type' => PARAM_TEXT,
+                'label' => '',
+                'element_type' => 'hidden'
+            );
 
             // now loop through the tabs but don't show them as we only need the DB records...
             $courseformatoptions['tab0_title'] = array(
@@ -119,20 +124,29 @@ class format_topics2 extends format_topics {
                 'label' => '',
                 'element_type' => 'hidden',
                 );
-            $courseformatoptions['tab0'] = array('default' => "", 'type' => PARAM_TEXT, 'label' => '', 'element_type' => 'hidden',);
+            $courseformatoptions['tab0'] = array('default' => "",
+                'type' => PARAM_TEXT,
+                'label' => '',
+                'element_type' => 'hidden'
+            );
 
             for ($i = 1; $i <= $maxtabs; $i++) {
                 $courseformatoptions['tab'.$i.'_title'] = array(
                     'default' => "Tab ".$i,
                     'type' => PARAM_TEXT,
-                    'label' => '', 'element_type' => 'hidden',
+                    'label' => '',
+                    'element_type' => 'hidden'
                     );
-                $courseformatoptions['tab'.$i] = array('default' => "", 'type' => PARAM_TEXT, 'label' => '', 'element_type' => 'hidden',);
+                $courseformatoptions['tab'.$i] = array('default' => "",
+                    'type' => PARAM_TEXT,
+                    'label' => '',
+                    'element_type' => 'hidden'
+                );
                 $courseformatoptions['tab'.$i.'_sectionnums'] = array(
                     'default' => "",
                     'type' => PARAM_TEXT,
                     'label' => '',
-                    'element_type' => 'hidden',
+                    'element_type' => 'hidden'
                 );
             }
 
@@ -200,7 +214,7 @@ class format_topics2 extends format_topics {
         // Remove section number from all tab format settings.
         $settings = $this->removefromtabs($section2move, $settings);
 
-        // add section number to new tab format settings if not tab0
+        // Add section number to new tab format settings if not tab0.
         if ($tabnum > 0) {
             $settings['tab'.$tabnum] .= ($settings['tab'.$tabnum] === '' ? '' : ',').$section2move->id;
             $settings['tab'.$tabnum.'_sectionnums'] .= ($settings['tab'.$tabnum.'_sectionnums'] === '' ? '' : ',').$section2move->section;
@@ -312,14 +326,14 @@ class format_topics2 extends format_topics {
     public function remove_sectionid($option, $sectionid) {
         global $DB;
         $tabsections = explode(',',$option->value);
-        $newTabsections = array();
+        $newtabsections = array();
         foreach ($tabsections as $tabsectionid) {
             if ($tabsectionid !== $sectionid) {
-                $newTabsections[] = $tabsectionid;
+                $newtabsections[] = $tabsectionid;
             }
         }
-        if (count(array_diff($tabsections, $newTabsections)) > 0) {
-            $option->value = implode(',', $newTabsections);
+        if (count(array_diff($tabsections, $newtabsections)) > 0) {
+            $option->value = implode(',', $newtabsections);
             $DB->update_record('course_format_options', $option);
         }
     }

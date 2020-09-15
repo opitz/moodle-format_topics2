@@ -25,7 +25,6 @@
 
 
 defined('MOODLE_INTERNAL') || die();
-//require_once($CFG->dirroot.'/course/format/renderer.php');
 require_once($CFG->dirroot.'/course/format/topics/renderer.php');
 
 /**
@@ -57,10 +56,10 @@ class format_topics2_renderer extends format_topics_renderer {
     public function print_multiple_section_page($course, $sections, $mods, $modnames, $modnamesused) {
         global $DB;
 
-        // Include the required JS files
+        // Include the required JS files.
         $this->require_js();
 
-        $this->toggleseq = $this->get_toggleseq($course); // the toggle sequence for this user and course
+        $this->toggleseq = $this->get_toggleseq($course); // The toggle sequence for this user and course.
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
         $options = $DB->get_records('course_format_options', array('courseid' => $course->id));
@@ -82,17 +81,15 @@ class format_topics2_renderer extends format_topics_renderer {
         $numsections = course_get_format($course)->get_last_section_number();
         $sections = $modinfo->get_section_info_all();
 
-        // add an invisible div that carries the course ID to be used by JS
-        // add class 'single_section_tabs' when option is set so JS can play accordingly
-        $class = (isset($formatoptions['single_section_tabs']) && $formatoptions['single_section_tabs'] ? 'single_section_tabs' : '');
+        // Add an invisible div that carries the course ID to be used by JS.
+        // Add class 'single_section_tabs' when option is set so JS can play accordingly.
+        $class = (isset($formatoptions['single_section_tabs']) &&
+        $formatoptions['single_section_tabs'] ? 'single_section_tabs' : '');
 
-        // the sections
+        // The Sections.
         echo $this->start_section_list();
 
-        // An invisible tag with the name of the course format to be used in jQuery
-//        echo html_writer::div($course->format, 'course_format_name', array('style' => 'display:none;'));
-
-        // An invisible tag with the value of the tab name limit to be used in jQuery
+        // An invisible tag with the value of the tab name limit to be used in jQuery.
         if (isset($formatoptions['limittabname']) && $formatoptions['limittabname'] > 0) {
             echo html_writer::tag('div','', array('class' => 'limittabname', 'value' => $formatoptions['limittabname'], 'style' => 'display: hidden;'));
         }
@@ -100,27 +97,27 @@ class format_topics2_renderer extends format_topics_renderer {
         echo html_writer::start_tag('div', array('id' => 'courseid', 'courseid' => $course->id, 'class' => $class));
         echo html_writer::end_tag('div');
 
-        // display section-0 on top of tabs if option is checked
+        // Display section-0 on top of tabs if option is checked.
         echo $this->render_section0_ontop($course, $sections, $formatoptions, $modinfo);
 
-        // the tab navigation
+        // The tab navigation.
         $this->prepare_tabs($course, $formatoptions, $sections);
 
-        // rendering the tab navigation
+        // Rendering the tab navigation.
         $rentabs = $this->render_tabs($formatoptions);
         echo $rentabs;
 
-        // Render the sections
+        // Render the sections.
         echo $this->render_sections($course, $sections, $formatoptions, $modinfo, $numsections);
 
-        // Show hidden sections to users with update abilities only
+        // Show hidden sections to users with update abilities only.
         echo $this->render_hidden_sections($course, $sections, $context, $modinfo, $numsections);
 
         echo $this->end_section_list();
 
     }
 
-    // Require the jQuery file for this class.
+    // Require the jQuery files for this class.
     public function require_js() {
         $this->page->requires->js_call_amd('format_topics2/tabs', 'init', array());
         $this->page->requires->js_call_amd('format_topics2/toggle', 'init', array());
@@ -142,7 +139,8 @@ class format_topics2_renderer extends format_topics_renderer {
     public function prepare_tabs($course, $formatoptions, $sections) {
         global $CFG, $DB;
 
-        $maxtabs = ((isset($formatoptions['maxtabs']) && $formatoptions['maxtabs'] > 0) ? $formatoptions['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
+        $maxtabs = ((isset($formatoptions['maxtabs']) &&
+            $formatoptions['maxtabs'] > 0) ? $formatoptions['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
         $tabs = array();
 
         // Get the section IDs along with their section numbers.
@@ -168,7 +166,7 @@ class format_topics2_renderer extends format_topics_renderer {
                 } else {
                     $tabsectionnums = '';
                 }
-                $tabsections = $this->check_tab_section_ids($course->id, $sectionids, $tabsections, $tabsectionnums,$i);
+                $tabsections = $this->check_tab_section_ids($course->id, $sectionids, $tabsections, $tabsectionnums, $i);
             }
 
             $tab = (object) new stdClass();
@@ -176,7 +174,8 @@ class format_topics2_renderer extends format_topics_renderer {
                 $tab->id = "tab" . $i;
                 $tab->name = "tab" . $i;
                 $tab->generic_title = ($i === 0 ? get_string('tab0_generic_name', 'format_topics2'):'Tab '.$i);
-                $tab->title = (isset($formatoptions['tab' . $i . '_title']) && $formatoptions['tab' . $i . '_title'] != '' ? $formatoptions['tab' . $i . '_title'] : $tab->generic_title);
+                $tab->title = (isset($formatoptions['tab' . $i . '_title']) &&
+                    $formatoptions['tab' . $i . '_title'] != '' ? $formatoptions['tab' . $i . '_title'] : $tab->generic_title);
                 $tab->sections = $tabsections;
                 $tab->section_nums = $tabsectionnums;
                 $tabs[$tab->id] = $tab;
@@ -290,7 +289,7 @@ class format_topics2_renderer extends format_topics_renderer {
                 tabindex = "'.$tabindex.'"
                 style="'.($PAGE->user_is_editing() ? 'cursor: move;' : '').'">';
         }
-        // render the tab name as inplace_editable
+        // Render the tab name as inplace_editable.
         $tmpl = new \core\output\inplace_editable('format_topics2', 'tabname', $itemid,
             $PAGE->user_is_editing(),
             format_string($tab->title), $tab->title, get_string('tabtitle_edithint', 'format_topics2'),  get_string('tabtitle_editlabel', 'format_topics2', format_string($tab->title)));
@@ -300,44 +299,14 @@ class format_topics2_renderer extends format_topics_renderer {
         return $o;
     }
 
-    // Check section IDs used in tabs and repair them if they have changed - most probably because a course was imported
-    public function check_tab_section_ids0($courseid, $sectionids, $tabsectionids, $tabsectionnums, $i) {
-        global $DB;
-        $haschanged = false;
-
-        $newtabsectionids = array();
-        $tabformatrecord = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i));
-
-        if ($tabsectionids != "") {
-            $tabsectionids = explode(',',$tabsectionids);
-        } else {
-            $tabsectionids = array();
-        }
-        $tabsectionnums = explode(',',$tabsectionnums);
-        foreach ($tabsectionids as $key => $tabsectionid) {
-            if (!in_array($tabsectionid, $sectionids) && isset($sectionids[$tabsectionnums[$key]])) {
-                // The tab_section_id is not among the sections of that course - the ID needs to be corrected.
-                $newtabsectionids[] = $sectionids[$tabsectionnums[$key]];
-                $haschanged = true;
-            } else {
-                $newtabsectionids[] = $tabsectionid;
-            }
-        }
-
-        $tabsectionids = implode(',', $newtabsectionids);
-        if ($haschanged) {
-            $DB->update_record('course_format_options', array('id' => $tabformatrecord->id, 'value' => $tabsectionids));
-        }
-
-        return $tabsectionids;
-    }
+    // Check section IDs used in tabs and repair them if they have changed - most probably because a course was imported.
     public function check_tab_section_ids($courseid, $sectionids, $tabsectionids, $tabsectionnums, $i) {
         global $DB;
-        $id_has_changed = false;
+        $idhaschanged = false;
 
         $newtabsectionids = array();
-        $newTabSectionNums = array();
-        $tabformatrecord_ids = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i));
+        $newtabsectionnums = array();
+        $tabformatrecordids = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i));
         $tabformatrecordnums = $DB->get_record('course_format_options',
             array('courseid' => $courseid, 'name' => 'tab'.$i.'_sectionnums')
         );
@@ -359,21 +328,21 @@ class format_topics2_renderer extends format_topics_renderer {
                 // The tab_section_id is not among the (new) section ids of that course.
                 // This is most likely because the course has been restored - so use the sectionnums to determine the new id.
                 $newtabsectionids[] = $sectionids[$tabsectionnums[$key]];
-                $id_has_changed = true;
+                $idhaschanged = true;
                 // Preserve the backup sequence of sectionnums.
-                $newTabSectionNums[] = $tabsectionnums[$key];
+                $newtabsectionnums[] = $tabsectionnums[$key];
             } else {
                 // The tab_section_id IS part of the section ids of that course and will be preserved.
                 $newtabsectionids[] = $tabsectionid;
                 // Create a backup sequence of sectionnums from section IDs to use it in the correction scheme above after a backup.
-                $newTabSectionNums[] = array_search($tabsectionid, $sectionids);
+                $newtabsectionnums[] = array_search($tabsectionid, $sectionids);
             }
         }
 
         $tabsectionids = implode(',', $newtabsectionids);
-        $tabsectionnums = implode(',', $newTabSectionNums);
-        if ($id_has_changed) {
-            $DB->update_record('course_format_options', array('id' => $tabformatrecord_ids->id, 'value' => $tabsectionids));
+        $tabsectionnums = implode(',', $newtabsectionnums);
+        if ($idhaschanged) {
+            $DB->update_record('course_format_options', array('id' => $tabformatrecordids->id, 'value' => $tabsectionids));
         }
         if ($tabformatrecordnums && $tabsectionnums != $tabformatrecordnums->value) {
             // If the tab nums of that tab have changed update them.

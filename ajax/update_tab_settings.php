@@ -24,8 +24,7 @@
 require_once('../../../../config.php');
 require_login();
 
-function update_tab_settings($courseid, $tabid, $sections, $sectionnums)
-{
+function update_tab_settings($courseid, $tabid, $sections, $sectionnums) {
     global $DB;
 
     $context = context_course::instance($courseid);
