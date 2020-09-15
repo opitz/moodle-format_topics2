@@ -8,20 +8,20 @@
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
     border-color: lightgrey;
-    border-style: solid ;
+    border-style: solid;
     cursor: pointer;
 }
 
 .course-content ul.topics2 .tablink.active {
-    background-color: #eeeeee !important;
+    background-color: #eee;
 }
 
 .course-content ul.topics2 li.section .sectionname {
-    padding-top: 10px !important;
+    padding-top: 10px;
 }
 
 .course-content ul.topics2 li.section.ontop {
-    border-bottom: 0px !important;
+    border-bottom: 0;
 }
 
 .course-content ul.topics2 li.section .fa-info {
@@ -29,7 +29,7 @@
 }
 
 .course-content ul.topics2 li.section .edit_only {
-    background-color: #FAFAFA;
+    background-color: #fafafa;
 }
 
 .course-content ul.topics2 li.section .tabs {
