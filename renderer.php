@@ -59,7 +59,7 @@ class format_topics2_renderer extends format_topics_renderer {
         // Include the required JS files.
         $this->require_js();
 
-        $this->toggleseq = $this->get_toggleseq($course); // The toggle sequence for this user and course.
+        $this->toggleseq = $this->get_toggle_seq($course); // The toggle sequence for this user and course.
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
         $options = $DB->get_records('course_format_options', array('courseid' => $course->id));
@@ -129,10 +129,10 @@ class format_topics2_renderer extends format_topics_renderer {
     }
 
     // Get the toggle sequence of a given course for the current user.
-    public function get_toggleseq($course) {
+    public function get_toggle_seq($course) {
         global $DB, $USER;
 
-        $record = $DB->get_record('user_preferences', array('userid' => $USER->id, 'name' => 'toggleseq_'.$course->id));
+        $record = $DB->get_record('user_preferences', array('userid' => $USER->id, 'name' => 'toggle_seq_'.$course->id));
         if (!isset($record->value)) {
             return '';
         }
