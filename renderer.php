@@ -92,9 +92,10 @@ class format_topics2_renderer extends format_topics_renderer {
         // An invisible tag with the value of the tab name limit to be used in jQuery.
         if (isset($formatoptions['limittabname']) && $formatoptions['limittabname'] > 0) {
             echo html_writer::tag('div', '',
-                array('class' => 'limittabname', 
-                'value' => $formatoptions['limittabname'],
-                'style' => 'display: hidden;'
+                array(
+                    'class' => 'limittabname',
+                    'value' => $formatoptions['limittabname'],
+                    'style' => 'display: hidden;'
             ));
         }
 
