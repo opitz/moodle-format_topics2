@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -47,7 +46,7 @@ $string['hidefromothers'] = 'Hide topic';
 $string['showfromothers'] = 'Show topic';
 $string['addsections'] = 'Add Topics';
 
-// tab related strings
+// Tab related strings.
 $string['modulecontent'] = 'Module Content';
 $string['tab0_generic_name'] = 'Module Content';
 

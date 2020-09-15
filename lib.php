@@ -41,12 +41,14 @@ class format_topics2 extends format_topics {
     public function course_format_options($foreditform = false) {
         global $CFG, $COURSE, $DB;
         $fo = $DB->get_records('course_format_options', array('courseid' => $COURSE->id));
-        $formatOptions = array();
+        $formatoptions = array();
         foreach ($fo as $o) {
-            $formatOptions[$o->name] = $o->value;
+            $formatoptions[$o->name] = $o->value;
         }
 
-        $maxTabs = ((isset($formatOptions['maxtabs']) && $formatOptions['maxtabs'] > 0) ? $formatOptions['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
+        $maxtabs = (
+            (isset($formatoptions['maxtabs']) &&
+            $formatoptions['maxtabs'] > 0) ? $formatoptions['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
         static $courseformatoptions = false;
         if ($courseformatoptions === false) {
             $courseformatoptions = array(
@@ -107,16 +109,31 @@ class format_topics2 extends format_topics {
             );
 
             // the sequence in which the tabs will be displayed
-            $courseformatoptions['tab_seq'] = array('default' => '','type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
+            $courseformatoptions['tab_seq'] = array('default' => '', 'type' => PARAM_TEXT, 'label' => '', 'element_type' => 'hidden',);
 
             // now loop through the tabs but don't show them as we only need the DB records...
-            $courseformatoptions['tab0_title'] = array('default' => get_string('tabzero_title', 'format_topics2'),'type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
-            $courseformatoptions['tab0'] = array('default' => "",'type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
+            $courseformatoptions['tab0_title'] = array(
+                'default' => get_string('tabzero_title',
+                'format_topics2'),
+                'type' => PARAM_TEXT,
+                'label' => '',
+                'element_type' => 'hidden',
+                );
+            $courseformatoptions['tab0'] = array('default' => "", 'type' => PARAM_TEXT, 'label' => '', 'element_type' => 'hidden',);
 
-            for ($i = 1; $i <= $maxTabs; $i++) {
-                $courseformatoptions['tab'.$i.'_title'] = array('default' => "Tab ".$i,'type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
-                $courseformatoptions['tab'.$i] = array('default' => "",'type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
-                $courseformatoptions['tab'.$i.'_sectionnums'] = array('default' => "",'type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
+            for ($i = 1; $i <= $maxtabs; $i++) {
+                $courseformatoptions['tab'.$i.'_title'] = array(
+                    'default' => "Tab ".$i,
+                    'type' => PARAM_TEXT,
+                    'label' => '', 'element_type' => 'hidden',
+                    );
+                $courseformatoptions['tab'.$i] = array('default' => "", 'type' => PARAM_TEXT, 'label' => '', 'element_type' => 'hidden',);
+                $courseformatoptions['tab'.$i.'_sectionnums'] = array(
+                    'default' => "",
+                    'type' => PARAM_TEXT,
+                    'label' => '',
+                    'element_type' => 'hidden',
+                );
             }
 
         }
@@ -177,18 +194,14 @@ class format_topics2 extends format_topics {
         return $rv;
     }
 
-    // move section ID and section number to tab format settings of a given tab
+    // Move section ID and section number to tab format settings of a given tab.
     public function move2tab($tabnum, $section2move, $settings) {
-        global $PAGE;
-        global $DB;
 
-        $course = $PAGE->course;
-
-        // remove section number from all tab format settings
+        // Remove section number from all tab format settings.
         $settings = $this->removefromtabs($section2move, $settings);
 
         // add section number to new tab format settings if not tab0
-        if ($tabnum > 0){
+        if ($tabnum > 0) {
             $settings['tab'.$tabnum] .= ($settings['tab'.$tabnum] === '' ? '' : ',').$section2move->id;
             $settings['tab'.$tabnum.'_sectionnums'] .= ($settings['tab'.$tabnum.'_sectionnums'] === '' ? '' : ',').$section2move->section;
             $this->update_course_format_options($settings);
@@ -196,38 +209,40 @@ class format_topics2 extends format_topics {
         return $settings;
     }
 
-    // remove section id from all tab format settings
+    // Remove section id from all tab format settings.
     public function removefromtabs($section2remove, $settings) {
         global $CFG;
 
-        $maxTabs = ((isset($settings['maxtabs']) && $settings['maxtabs'] > 0) ? $settings['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
+        $maxtabs = ((isset($settings['maxtabs']) &&
+            $settings['maxtabs'] > 0) ? $settings['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9)
+        );
 
-        for ($i = 0; $i <= $maxTabs; $i++) {
+        for ($i = 0; $i <= $maxtabs; $i++) {
             if (strstr($settings['tab'.$i], $section2remove->id) > -1) {
                 $sections = explode(',', $settings['tab'.$i]);
-                $newSections = array();
+                $newsections = array();
                 foreach ($sections as $section) {
                     if ($section != $section2remove->id) {
-                        $newSections[] = $section;
+                        $newsections[] = $section;
                     }
                 }
-                $settings['tab'.$i] = implode(',', $newSections);
+                $settings['tab'.$i] = implode(',', $newsections);
 
-                $sectionNums = explode(',', $settings['tab'.$i.'_sectionnums']);
-                $newSectionNums = array();
-                foreach ($sectionNums as $sectionNum) {
-                    if ($sectionNum != $section2remove->section) {
-                        $newSectionNums[] = $sectionNum;
+                $sectionnums = explode(',', $settings['tab'.$i.'_sectionnums']);
+                $newsectionnums = array();
+                foreach ($sectionnums as $sectionnum) {
+                    if ($sectionnum != $section2remove->section) {
+                        $newsectionnums[] = $sectionnum;
                     }
                 }
-                $settings['tab'.$i.'_sectionnums'] = implode(',', $newSectionNums);
+                $settings['tab'.$i.'_sectionnums'] = implode(',', $newsectionnums);
                 $this->update_course_format_options($settings);
             }
         }
         return $settings;
     }
 
-    // switch to show section0 always on top of the tabs
+    // Switch to show section0 always on top of the tabs.
     public function sectionzeroswitch($settings, $value) {
         $settings['section0_ontop'] = $value;
         $this->update_course_format_options($settings);
@@ -238,27 +253,27 @@ class format_topics2 extends format_topics {
     public function delete_section($section, $forceifnotempty = false) {
         global $DB;
 
-        // Before we delete the section record we need it's ID to remove it from tabs after(!) a successful deletion
+        // Before we delete the section record we need it's ID to remove it from tabs after(!) a successful deletion.
         $srec = $DB->get_record('course_sections', array('course' => $this->courseid, 'section' => $section));
         $sectionid = $srec->id;
 
-        $whatParentsSay = parent::delete_section($section, $forceifnotempty);
-        if (!$whatParentsSay) {
+        $whatparentssay = parent::delete_section($section, $forceifnotempty);
+        if (!$whatparentssay) {
             return false;
         }
 
-        // Remove sectionid and section(num) from tabs
+        // Remove sectionid and section(num) from tabs.
         $this->remove_from_tabs($section, $sectionid);
-        return $whatParentsSay;
+        return $whatparentssay;
     }
 
-    // Remove traces of a deleted section from tabs where needed
+    // Remove traces of a deleted section from tabs where needed.
     public function remove_from_tabs($section = false, $sectionid = false) {
         global $DB;
         if (!$section || !$sectionid) {
             return false;
         }
-        // Loop through the tabs
+        // Loop through the tabs.
         $records = $DB->get_records('course_format_options', array('courseid' => $this->courseid, 'format' => $this->format));
         foreach ($records as $option) {
             switch($option->name) {
@@ -284,7 +299,7 @@ class format_topics2 extends format_topics {
                 case 'tab7_sectionnums':
                 case 'tab8_sectionnums':
                 case 'tab9_sectionnums':
-                    if (strstr($option->value, $section)){
+                    if (strstr($option->value, $section)) {
                         $this->remove_sectionnum($option, $section);
                     }
                     break;
@@ -293,7 +308,7 @@ class format_topics2 extends format_topics {
 
     }
 
-    // Remove the section ID from tabs
+    // Remove the section ID from tabs.
     public function remove_sectionid($option, $sectionid) {
         global $DB;
         $tabsections = explode(',',$option->value);
@@ -303,24 +318,24 @@ class format_topics2 extends format_topics {
                 $newTabsections[] = $tabsectionid;
             }
         }
-        if (sizeof(array_diff($tabsections, $newTabsections)) > 0) {
+        if (count(array_diff($tabsections, $newTabsections)) > 0) {
             $option->value = implode(',', $newTabsections);
             $DB->update_record('course_format_options', $option);
         }
     }
 
-    // Remove the section number from tabs
+    // Remove the section number from tabs.
     public function remove_sectionnum($option, $sectionnum) {
         global $DB;
         $tabsectionnums = explode(',',$option->value);
-        $newTabsectionNums = array();
+        $newtabsectionnums = array();
         foreach ($tabsectionnums as $tabsectionnum) {
             if ($tabsectionnum !== $sectionnum) {
-                $newTabsectionNums[] = $tabsectionnum;
+                $newtabsectionnums[] = $tabsectionnum;
             }
         }
-        if (sizeof(array_diff($tabsectionnums, $newTabsectionNums)) > 0) {
-            $option->value = implode(',', $newTabsectionNums);
+        if (count(array_diff($tabsectionnums, $newtabsectionnums)) > 0) {
+            $option->value = implode(',', $newtabsectionnums);
             $DB->update_record('course_format_options', $option);
         }
     }
@@ -344,23 +359,23 @@ function format_topics2_inplace_editable($itemtype, $itemid, $newvalue) {
             array($itemid, 'topics2'), MUST_EXIST);
         return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
     }
-    // deal with inplace changes of a tab name
+    // Deal with inplace changes of a tab name.
     if ($itemtype === 'tabname') {
         global $DB;
-        // the $itemid is actually the name of the record so use it to get the id
+        // The $itemid is actually the name of the record so use it to get the id.
 
-        // update the database with the new value given
+        // Update the database with the new value given.
         // Must call validate_context for either system, or course or course module context.
+
         // This will both check access and set current context.
         \external_api::validate_context(context_system::instance());
-        // Check permission of the user to update this item.
-//        require_capability('moodle/course:update', context_system::instance());
+
         // Clean input and update the record.
         $newvalue = clean_param($newvalue, PARAM_NOTAGS);
         $record = $DB->get_record('course_format_options', array('id' => $itemid), '*', MUST_EXIST);
         $DB->update_record('course_format_options', array('id' => $record->id, 'value' => $newvalue));
 
-        // Prepare the element for the output ():
+        // Prepare the element for the output ().
         $output = new \core\output\inplace_editable('format_topics2', 'tabname', $record->id,
             true,
             format_string($newvalue), $newvalue, 'Edit tab name',  'New value for ' . format_string($newvalue));

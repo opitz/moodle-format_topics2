@@ -22,6 +22,7 @@
  * Updating the course format options for a tab
  */
 require_once('../../../../config.php');
+require_login();
 
 function update_tab_settings($courseid, $tabid, $sections, $sectionnums)
 {
@@ -31,16 +32,16 @@ function update_tab_settings($courseid, $tabid, $sections, $sectionnums)
 
     if (has_capability('moodle/course:update', $context)) {
         // Save the sections of the tab.
-        $formatOption = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => $tabid));
-        if (isset($formatOption) && $formatOption) {
-            $formatOption->value = $sections;
-            $DB->update_record('course_format_options', $formatOption);
+        $formatoption = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => $tabid));
+        if (isset($formatoption) && $formatoption) {
+            $formatoption->value = $sections;
+            $DB->update_record('course_format_options', $formatoption);
         }
         // Save the sectionnums of the tab.
-        $formatOption = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => $tabid.'_sectionnums'));
-        if (isset($formatOption) && $formatOption) {
-            $formatOption->value = $sectionnums;
-            $DB->update_record('course_format_options', $formatOption);
+        $formatoption = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => $tabid.'_sectionnums'));
+        if (isset($formatoption) && $formatoption) {
+            $formatoption->value = $sectionnums;
+            $DB->update_record('course_format_options', $formatoption);
         }
     }
     return 'ok';

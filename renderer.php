@@ -60,13 +60,13 @@ class format_topics2_renderer extends format_topics_renderer {
         // Include the required JS files
         $this->require_js();
 
-        $this->toggle_seq = $this->get_toggle_seq($course); // the toggle sequence for this user and course
+        $this->toggleseq = $this->get_toggleseq($course); // the toggle sequence for this user and course
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
         $options = $DB->get_records('course_format_options', array('courseid' => $course->id));
-        $formatOptions = array();
+        $formatoptions = array();
         foreach ($options as $option) {
-            $formatOptions[$option->name] = $option->value;
+            $formatoptions[$option->name] = $option->value;
         }
 
         $context = context_course::instance($course->id);
@@ -84,7 +84,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
         // add an invisible div that carries the course ID to be used by JS
         // add class 'single_section_tabs' when option is set so JS can play accordingly
-        $class = (isset($formatOptions['single_section_tabs']) && $formatOptions['single_section_tabs'] ? 'single_section_tabs' : '');
+        $class = (isset($formatoptions['single_section_tabs']) && $formatoptions['single_section_tabs'] ? 'single_section_tabs' : '');
 
         // the sections
         echo $this->start_section_list();
@@ -93,25 +93,25 @@ class format_topics2_renderer extends format_topics_renderer {
 //        echo html_writer::div($course->format, 'course_format_name', array('style' => 'display:none;'));
 
         // An invisible tag with the value of the tab name limit to be used in jQuery
-        if (isset($formatOptions['limittabname']) && $formatOptions['limittabname'] > 0) {
-            echo html_writer::tag('div','', array('class' => 'limittabname', 'value' => $formatOptions['limittabname'], 'style' => 'display: hidden;'));
+        if (isset($formatoptions['limittabname']) && $formatoptions['limittabname'] > 0) {
+            echo html_writer::tag('div','', array('class' => 'limittabname', 'value' => $formatoptions['limittabname'], 'style' => 'display: hidden;'));
         }
 
         echo html_writer::start_tag('div', array('id' => 'courseid', 'courseid' => $course->id, 'class' => $class));
         echo html_writer::end_tag('div');
 
         // display section-0 on top of tabs if option is checked
-        echo $this->render_section0_ontop($course, $sections, $formatOptions, $modinfo);
+        echo $this->render_section0_ontop($course, $sections, $formatoptions, $modinfo);
 
         // the tab navigation
-        $this->prepare_tabs($course, $formatOptions, $sections);
+        $this->prepare_tabs($course, $formatoptions, $sections);
 
         // rendering the tab navigation
-        $rentabs = $this->render_tabs($formatOptions);
+        $rentabs = $this->render_tabs($formatoptions);
         echo $rentabs;
 
         // Render the sections
-        echo $this->render_sections($course, $sections, $formatOptions, $modinfo, $numsections);
+        echo $this->render_sections($course, $sections, $formatoptions, $modinfo, $numsections);
 
         // Show hidden sections to users with update abilities only
         echo $this->render_hidden_sections($course, $sections, $context, $modinfo, $numsections);
@@ -127,10 +127,10 @@ class format_topics2_renderer extends format_topics_renderer {
     }
 
     // Get the toggle sequence of a given course for the current user.
-    public function get_toggle_seq($course) {
+    public function get_toggleseq($course) {
         global $DB, $USER;
 
-        $record = $DB->get_record('user_preferences', array('userid' => $USER->id, 'name' => 'toggle_seq_'.$course->id));
+        $record = $DB->get_record('user_preferences', array('userid' => $USER->id, 'name' => 'toggleseq_'.$course->id));
         if (!isset($record->value)) {
             return '';
         }
@@ -139,36 +139,36 @@ class format_topics2_renderer extends format_topics_renderer {
 
 // ====================================================< tabs >=========================================================
     // Prepare the tabs for rendering.
-    public function prepare_tabs($course, $formatOptions, $sections) {
+    public function prepare_tabs($course, $formatoptions, $sections) {
         global $CFG, $DB;
 
-        $max_tabs = ((isset($formatOptions['maxtabs']) && $formatOptions['maxtabs'] > 0) ? $formatOptions['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
+        $maxtabs = ((isset($formatoptions['maxtabs']) && $formatoptions['maxtabs'] > 0) ? $formatoptions['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
         $tabs = array();
 
         // Get the section IDs along with their section numbers.
-        $sectionIds = array();
+        $sectionids = array();
         foreach ($sections as $section) {
-            $sectionIds[$section->section] = $section->id;
+            $sectionids[$section->section] = $section->id;
         }
 
         // Preparing the tabs.
-        for ($i = 0; $i <= $max_tabs; $i++) {
-            $tab_sections = '';
-            $tab_section_nums = '';
+        for ($i = 0; $i <= $maxtabs; $i++) {
+            $tabsections = '';
+            $tabsectionnums = '';
 
             // Check section IDs and section numbers for tabs other than tab0.
             if ($i > 0) {
-                if (isset($formatOptions['tab' . $i])) {
-                    $tab_sections = str_replace(' ', '', $formatOptions['tab' . $i]);
+                if (isset($formatoptions['tab' . $i])) {
+                    $tabsections = str_replace(' ', '', $formatoptions['tab' . $i]);
                 } else {
-                    $tab_sections = '';
+                    $tabsections = '';
                 }
-                if (isset($formatOptions['tab' . $i. '_sectionnums'])) {
-                    $tab_section_nums = str_replace(' ', '', $formatOptions['tab' . $i. '_sectionnums']);
+                if (isset($formatoptions['tab' . $i. '_sectionnums'])) {
+                    $tabsectionnums = str_replace(' ', '', $formatoptions['tab' . $i. '_sectionnums']);
                 } else {
-                    $tab_section_nums = '';
+                    $tabsectionnums = '';
                 }
-                $tab_sections = $this->check_tab_section_ids($course->id, $sectionIds, $tab_sections, $tab_section_nums,$i);
+                $tabsections = $this->check_tab_section_ids($course->id, $sectionids, $tabsections, $tabsectionnums,$i);
             }
 
             $tab = (object) new stdClass();
@@ -176,16 +176,16 @@ class format_topics2_renderer extends format_topics_renderer {
                 $tab->id = "tab" . $i;
                 $tab->name = "tab" . $i;
                 $tab->generic_title = ($i === 0 ? get_string('tab0_generic_name', 'format_topics2'):'Tab '.$i);
-                $tab->title = (isset($formatOptions['tab' . $i . '_title']) && $formatOptions['tab' . $i . '_title'] != '' ? $formatOptions['tab' . $i . '_title'] : $tab->generic_title);
-                $tab->sections = $tab_sections;
-                $tab->section_nums = $tab_section_nums;
+                $tab->title = (isset($formatoptions['tab' . $i . '_title']) && $formatoptions['tab' . $i . '_title'] != '' ? $formatoptions['tab' . $i . '_title'] : $tab->generic_title);
+                $tab->sections = $tabsections;
+                $tab->section_nums = $tabsectionnums;
                 $tabs[$tab->id] = $tab;
             }
         }
         $this->tabs = $tabs;
 
         // Check for abandoned tab format_options and get rid of them.
-        while(isset($formatOptions['tab'.$i.'_title'])) {
+        while(isset($formatoptions['tab'.$i.'_title'])) {
             $sql = "DELETE FROM {course_format_options} WHERE courseid = $course->id and name like 'tab$i%'";
             $DB->execute($sql);
             $i++;
@@ -195,24 +195,24 @@ class format_topics2_renderer extends format_topics_renderer {
     }
 
     // Render the tabs in sequence order if present or ascending otherwise.
-    public function render_tabs($formatOptions) {
-        $o = html_writer::start_tag('ul', array('class'=>'tabs nav nav-tabs row'));
+    public function render_tabs($formatoptions) {
+        $o = html_writer::start_tag('ul', array('class' => 'tabs nav nav-tabs row'));
 
-        $tab_seq = array();
-        if ($formatOptions['tab_seq']) {
-            $tab_seq = explode(',',$formatOptions['tab_seq']);
+        $tabseq = array();
+        if ($formatoptions['tab_seq']) {
+            $tabseq = explode(',',$formatoptions['tab_seq']);
         }
 
         // Show the tabs in the sequence.
-        foreach ($tab_seq as $tabid) {
+        foreach ($tabseq as $tabid) {
             if (isset($this->tabs[$tabid]) && $tab = $this->tabs[$tabid]) {
                 $o .= $this->render_tab($tab);
             }
         }
         // Check if there are tabs that are not in the sequence (yet) - and if so display them now.
         // We need to compare the sequence with the keys of the tabs array.
-        if ($seq_diff = array_diff(array_keys($this->tabs),$tab_seq)){
-            foreach ($seq_diff as $tabid) {
+        if ($seqdiff = array_diff(array_keys($this->tabs),$tabseq)){
+            foreach ($seqdiff as $tabid) {
                 if (isset($this->tabs[$tabid]) && $tab = $this->tabs[$tabid]) {
                     $o .= $this->render_tab($tab);
                 }
@@ -234,15 +234,15 @@ class format_topics2_renderer extends format_topics_renderer {
 
         $o = '';
         if ($tab->sections == '') {
-            $o .= html_writer::start_tag('li', array('class'=>'tabitem nav-item', 'style' => 'display:none;'));
+            $o .= html_writer::start_tag('li', array('class' => 'tabitem nav-item', 'style' => 'display:none;'));
         } else {
-            $o .= html_writer::start_tag('li', array('class'=>'tabitem nav-item'));
+            $o .= html_writer::start_tag('li', array('class' => 'tabitem nav-item'));
         }
 
-        $sections_array = explode(',', str_replace(' ', '', $tab->sections));
-        if ($sections_array[0]) {
-            while ($sections_array[0] == "0") { // remove any occurences of section-0
-                array_shift($sections_array);
+        $sectionsarray = explode(',', str_replace(' ', '', $tab->sections));
+        if ($sectionsarray[0]) {
+            while ($sectionsarray[0] == "0") { // remove any occurences of section-0
+                array_shift($sectionsarray);
             }
         }
 
@@ -301,127 +301,129 @@ class format_topics2_renderer extends format_topics_renderer {
     }
 
     // Check section IDs used in tabs and repair them if they have changed - most probably because a course was imported
-    public function check_tab_section_ids0($courseid, $sectionIds, $tab_section_ids, $tab_section_nums, $i) {
+    public function check_tab_section_ids0($courseid, $sectionids, $tabsectionids, $tabsectionnums, $i) {
         global $DB;
-        $has_changed = false;
+        $haschanged = false;
 
-        $newTabSectionIds = array();
-        $tab_format_record = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i));
+        $newtabsectionids = array();
+        $tabformatrecord = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i));
 
-        if ($tab_section_ids != "") {
-            $tab_section_ids = explode(',',$tab_section_ids);
+        if ($tabsectionids != "") {
+            $tabsectionids = explode(',',$tabsectionids);
         } else {
-            $tab_section_ids = array();
+            $tabsectionids = array();
         }
-        $tab_section_nums = explode(',',$tab_section_nums);
-        foreach ($tab_section_ids as $key => $tab_section_id) {
-            if (!in_array($tab_section_id, $sectionIds) && isset($sectionIds[$tab_section_nums[$key]])){ // the tab_section_id is not among the sections of that course - the ID needs to be corrected
-                $newTabSectionIds[] = $sectionIds[$tab_section_nums[$key]];
-                $has_changed = true;
+        $tabsectionnums = explode(',',$tabsectionnums);
+        foreach ($tabsectionids as $key => $tabsectionid) {
+            if (!in_array($tabsectionid, $sectionids) && isset($sectionids[$tabsectionnums[$key]])) {
+                // The tab_section_id is not among the sections of that course - the ID needs to be corrected.
+                $newtabsectionids[] = $sectionids[$tabsectionnums[$key]];
+                $haschanged = true;
             } else {
-                $newTabSectionIds[] = $tab_section_id;
+                $newtabsectionids[] = $tabsectionid;
             }
         }
 
-        $tab_section_ids = implode(',', $newTabSectionIds);
-        if ($has_changed) {
-            $DB->update_record('course_format_options', array('id' => $tab_format_record->id, 'value' => $tab_section_ids));
+        $tabsectionids = implode(',', $newtabsectionids);
+        if ($haschanged) {
+            $DB->update_record('course_format_options', array('id' => $tabformatrecord->id, 'value' => $tabsectionids));
         }
 
-        return $tab_section_ids;
+        return $tabsectionids;
     }
-    public function check_tab_section_ids($courseid, $sectionIds, $tab_section_ids, $tab_section_nums, $i) {
+    public function check_tab_section_ids($courseid, $sectionids, $tabsectionids, $tabsectionnums, $i) {
         global $DB;
         $id_has_changed = false;
 
-        $newTabSectionIds = array();
+        $newtabsectionids = array();
         $newTabSectionNums = array();
-        $tab_format_record_ids = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i));
-        $tabFormatRecordNums = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i.'_sectionnums'));
+        $tabformatrecord_ids = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i));
+        $tabformatrecordnums = $DB->get_record('course_format_options',
+            array('courseid' => $courseid, 'name' => 'tab'.$i.'_sectionnums')
+        );
 
-        if ($tab_section_ids != "") {
-            $tab_section_ids = explode(',',$tab_section_ids);
+        if ($tabsectionids != "") {
+            $tabsectionids = explode(',',$tabsectionids);
         } else {
-            $tab_section_ids = array();
+            $tabsectionids = array();
         }
 
-        if ($tab_section_nums != "") {
-            $tab_section_nums = explode(',',$tab_section_nums);
+        if ($tabsectionnums != "") {
+            $tabsectionnums = explode(',',$tabsectionnums);
         } else {
-            $tab_section_nums = array();
+            $tabsectionnums = array();
         }
 
-        foreach ($tab_section_ids as $key => $tab_section_id) {
-            if (!in_array($tab_section_id, $sectionIds) && isset($sectionIds[$tab_section_nums[$key]])){
-                // the tab_section_id is not among the (new) section ids of that course
-                // this is most likely because the course has been restored - so use the sectionnums to determine the new id
-                $newTabSectionIds[] = $sectionIds[$tab_section_nums[$key]];
+        foreach ($tabsectionids as $key => $tabsectionid) {
+            if (!in_array($tabsectionid, $sectionids) && isset($sectionids[$tabsectionnums[$key]])){
+                // The tab_section_id is not among the (new) section ids of that course.
+                // This is most likely because the course has been restored - so use the sectionnums to determine the new id.
+                $newtabsectionids[] = $sectionids[$tabsectionnums[$key]];
                 $id_has_changed = true;
-                // preserve the backup sequence of sectionnums
-                $newTabSectionNums[] = $tab_section_nums[$key];
+                // Preserve the backup sequence of sectionnums.
+                $newTabSectionNums[] = $tabsectionnums[$key];
             } else {
-                // the tab_section_id IS part of the section ids of that course and will be preserved
-                $newTabSectionIds[] = $tab_section_id;
-                // create a backup sequence of sectionnums from section IDs to use it in the correction scheme above after a backup
-                $newTabSectionNums[] = array_search($tab_section_id, $sectionIds);
-//                $newTabSectionNums[] = $section_num;
+                // The tab_section_id IS part of the section ids of that course and will be preserved.
+                $newtabsectionids[] = $tabsectionid;
+                // Create a backup sequence of sectionnums from section IDs to use it in the correction scheme above after a backup.
+                $newTabSectionNums[] = array_search($tabsectionid, $sectionids);
             }
         }
 
-        $tab_section_ids = implode(',', $newTabSectionIds);
-        $tab_section_nums = implode(',', $newTabSectionNums);
+        $tabsectionids = implode(',', $newtabsectionids);
+        $tabsectionnums = implode(',', $newTabSectionNums);
         if ($id_has_changed) {
-            $DB->update_record('course_format_options', array('id' => $tab_format_record_ids->id, 'value' => $tab_section_ids));
+            $DB->update_record('course_format_options', array('id' => $tabformatrecord_ids->id, 'value' => $tabsectionids));
         }
-        if ($tabFormatRecordNums && $tab_section_nums != $tabFormatRecordNums->value) {
-            // if the tab nums of that tab have changed update them
-            $DB->update_record('course_format_options', array('id' => $tabFormatRecordNums->id, 'value' => $tab_section_nums));
+        if ($tabformatrecordnums && $tabsectionnums != $tabformatrecordnums->value) {
+            // If the tab nums of that tab have changed update them.
+            $DB->update_record('course_format_options', array('id' => $tabformatrecordnums->id, 'value' => $tabsectionnums));
         }
 
-        return $tab_section_ids;
+        return $tabsectionids;
     }
 
-//=================================================< sections >=========================================================
-    // display section-0 on top of tabs if option has been checked
-    public function render_section0_ontop($course, $sections, $formatOptions, $modinfo) {
-        global $PAGE;
+// ================================================< sections >=========================================================
+    // Display section-0 on top of tabs if option has been checked.
+    public function render_section0_ontop($course, $sections, $formatoptions, $modinfo) {
         $o = '';
-        if ($formatOptions['section0_ontop']) {
+        if ($formatoptions['section0_ontop']) {
             $thissection = $sections[0];
             $o .= html_writer::start_tag('div', array('id' => 'ontop_area', 'class' => 'section0_ontop'));
             $o .= html_writer::start_tag('ul', array('id' => 'ontop_area', 'class' => 'topics2'));
-            $o .= $this->render_section($course, $thissection, $formatOptions);
+            $o .= $this->render_section($course, $thissection, $formatoptions);
         } else {
             $o .= html_writer::start_tag('div', array('id' => 'ontop_area'));
             $o .= html_writer::start_tag('ul', array('id' => 'ontop_area', 'class' => 'topics2'));
         }
 
-//        $o .= $this->end_section_list();
         $o .= html_writer::end_tag('div');
         return $o;
     }
 
-    // Render the sections of a course
-    public function render_sections($course, $sections, $formatOptions, $modinfo, $numsections){
+    // Render the sections of a course.
+    public function render_sections($course, $sections, $formatoptions, $modinfo, $numsections) {
         $o = '';
         foreach ($sections as $section => $thissection) {
             if ($section == 0) {
                 $o .= html_writer::start_tag('div', array('id' => 'inline_area'));
-                if ($formatOptions['section0_ontop']){ // section-0 is already shown on top
+                if ($formatoptions['section0_ontop']){ // section-0 is already shown on top
                     $o .= html_writer::end_tag('div');
                     continue;
                 }
-                $o .= $this->render_section($course, $thissection, $formatOptions);
+                $o .= $this->render_section($course, $thissection, $formatoptions);
                 $o .= html_writer::end_tag('div');
                 continue;
             }
             if ($section > $numsections) {
-                // activities inside this section are 'orphaned', this section will be printed as 'stealth' below
+                // Activities inside this section are 'orphaned', this section will be printed as 'stealth' below.
                 continue;
             }
-            // Show the section if the user is permitted to access it, OR if it's not available
-            // but there is some available info text which explains the reason & should display,
-            // OR it is hidden but the course has a setting to display hidden sections as unavilable.
+            /*
+             * Show the section if the user is permitted to access it, OR if it's not available
+             * but there is some available info text which explains the reason & should display,
+             * OR it is hidden but the course has a setting to display hidden sections as unavilable.
+             */
             $showsection = $thissection->uservisible ||
                 ($thissection->visible && !$thissection->available && !empty($thissection->availableinfo)) ||
                 (!$thissection->visible && !$course->hiddensections);
@@ -429,12 +431,12 @@ class format_topics2_renderer extends format_topics_renderer {
                 continue;
             }
 
-            $o .= $this->render_section($course, $thissection, $formatOptions);
+            $o .= $this->render_section($course, $thissection, $formatoptions);
         }
         return $o;
     }
 
-    public function render_section($course, $section, $formatOptions) {
+    public function render_section($course, $section, $formatoptions) {
         global $PAGE;
         $o = '';
         if (!$PAGE->user_is_editing() && $course->coursedisplay == COURSE_DISPLAY_MULTIPAGE) {
@@ -466,10 +468,10 @@ class format_topics2_renderer extends format_topics_renderer {
     protected function section_header($section, $course, $onsectionpage, $sectionreturn=null) {
         $o = '';
         $sectionstyle = '';
-        if (isset($this->toggle_seq)) {
-            $toggle_seq = str_split($this->toggle_seq);
+        if (isset($this->toggleseq)) {
+            $toggleseq = str_split($this->toggleseq);
         } else {
-            $toggle_seq = '';
+            $toggleseq = '';
         }
 
         if ($section->section != 0) {
@@ -482,56 +484,50 @@ class format_topics2_renderer extends format_topics_renderer {
             }
         }
 
-        // When rendering section-0 check if it is on top and adjust classes
+        // When rendering section-0 check if it is on top and adjust classes.
         if ($section->section === 0 && $course->section0_ontop) {
             $classes = 'section clearfix'; // On top is not main
         } else {
             $classes = 'section main clearfix';
         }
 
-        // start the section
-        $o.= html_writer::start_tag('li', array(
+        // Start the section.
+        $o .= html_writer::start_tag('li', array(
             'id' => 'section-'.$section->section,
             'section-id' => $section->id,
             'class' => $classes.$sectionstyle,
-            'role'=>'region',
+            'role' => 'region',
             'aria-label' => get_section_name($course, $section),
             'tabindex' => '0'
         ));
 
-        // Create a span that contains the section title to be used to create the keyboard section move menu.
-//        $o .= html_writer::tag('span', get_section_name($course, $section), array('class' => 'hidden sectionname'));
-
-        // the left and right elements
+        // The left and right elements.
         $leftcontent = $this->section_left_content($section, $course, $onsectionpage);
-        $o.= html_writer::tag('div', $leftcontent, array('class' => 'left side'));
+        $o .= html_writer::tag('div', $leftcontent, array('class' => 'left side'));
 
         $rightcontent = $this->section_right_content($section, $course, $onsectionpage);
-        $o.= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
+        $o .= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
 
-        // start the content
-        $o.= html_writer::start_tag('div', array('class' => 'content'));
+        // Start the content.
+        $o .= html_writer::start_tag('div', array('class' => 'content'));
 
-        // the sectionhead
+        // The sectionhead.
         if (($section->section !== 0 || ($section->name !== '' && $section->name !== null)) && !$onsectionpage) {
-            //$o.= html_writer::start_tag('div', array('class' => 'sectionhead'));
-
-            // the sectionname
+            // The sectionname.
             if (($section->section !== 0 || $section->name != '')) {
                 $o .= html_writer::tag('h' . 3, $this->section_title($section, $course), array('class' => renderer_base::prepare_classes('sectionname')));
             }
 
             $o .= $this->section_availability($section);
 
-            //$o .= html_writer::end_tag('div'); // ending the sectionhead
         }
 
         // the sectionbody
-//        if ($course->toggle && isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0' && ($section->section !== 0 || $section->name !== '')) {
-        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0' && ($section->section !== 0 || $section->name !== '')) {
-            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
+//        if ($course->toggle && isset($toggleseq[$section->section]) && $toggleseq[$section->section] === '0' && ($section->section !== 0 || $section->name !== '')) {
+        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && isset($toggleseq[$section->section]) && $toggleseq[$section->section] === '0' && ($section->section !== 0 || $section->name !== '')) {
+            $o .= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
         } else {
-            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
+            $o .= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
         }
         if ($section->uservisible || $section->visible) {
             // Show summary if section is available or has availability restriction information.
@@ -541,20 +537,19 @@ class format_topics2_renderer extends format_topics_renderer {
         return $o;
     }
 
-    // Section title either with toggle or straight
+    // Section title either with toggle or straight.
     public function section_title($section, $course) {
-//        if ($course->toggle) {
         if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
-            // prepare the toggle
-            if (isset($this->toggle_seq)) {
-                $toggle_seq = str_split($this->toggle_seq);
+            // Prepare the toggle.
+            if (isset($this->toggleseq)) {
+                $toggleseq = str_split($this->toggleseq);
             } else {
-                $toggle_seq = '';
+                $toggleseq = '';
             }
 
             $tooltip_open = get_string('tooltip_open','format_topics2');
             $tooltip_closed = get_string('tooltip_closed','format_topics2');
-            if (isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0') {
+            if (isset($toggleseq[$section->section]) && $toggleseq[$section->section] === '0') {
                 $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltip_open.'" style="cursor: pointer; display: none;"></i>';
                 $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'.$tooltip_closed.'" style="cursor: pointer;"></i>';
             } else {
@@ -569,7 +564,7 @@ class format_topics2_renderer extends format_topics_renderer {
         return $toggler.$this->render(course_get_format($course)->inplace_editable_render_section_name($section));
     }
 
-    // Render hidden sections for course editors only
+    // Render hidden sections for course editors only.
     public function render_hidden_sections($course, $sections, $context, $modinfo, $numsections) {
         global $PAGE;
         $o ='<div class="testing"></div>';
@@ -624,16 +619,16 @@ class format_topics2_renderer extends format_topics_renderer {
         }
 
         $options = $DB->get_records('course_format_options', array('courseid' => $course->id));
-        $formatOptions=array();
+        $formatoptions=array();
         foreach ($options as $option) {
-            $formatOptions[$option->name] =$option->value;
+            $formatoptions[$option->name] =$option->value;
         }
 
-        if (isset($formatOptions['maxtabs'])){
-            $max_tabs = $formatOptions['maxtabs'];
+        if (isset($formatoptions['maxtabs'])){
+            $maxtabs = $formatoptions['maxtabs'];
         } else {
-            // allow up to 5 tabs  by default if nothing else is set in the config file
-            $max_tabs = (isset($CFG->max_tabs) ? $CFG->max_tabs : 5);
+            // Allow up to 5 tabs  by default if nothing else is set in the config file.
+            $maxtabs = (isset($CFG->max_tabs) ? $CFG->max_tabs : 5);
         }
         $coursecontext = context_course::instance($course->id);
 
@@ -646,7 +641,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
         $controls = array();
 
-        // add move to/from top for section0 only
+        // Add move to/from top for section0 only.
         if ($section->section === 0) {
             $controls['ontop'] = array(
                 "icon" => 't/up',
@@ -672,7 +667,7 @@ class format_topics2_renderer extends format_topics_renderer {
             );
         }
 
-        // Insert tab moving menu items
+        // Insert tab moving menu items.
         $controls['no_tab'] = array(
             "icon" => 't/left',
             'name' => 'Remove from Tabs',
@@ -687,7 +682,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
         $itemtitle = "Move to Tab ";
 
-        for($i = 1; $i <= $max_tabs; $i++) {
+        for($i = 1; $i <= $maxtabs; $i++) {
             $tabname = 'tab'.$i.'_title';
             $itemname = 'To Tab '.(isset($course->$tabname) && $course->$tabname !='' && $course->$tabname !='Tab '.$i ? '"'.$course->$tabname.'"' : $i);
 

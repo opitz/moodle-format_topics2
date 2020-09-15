@@ -22,18 +22,18 @@
  * Updating the course format options with a new sequence in which the tabs are displayed
  */
 require_once('../../../../config.php');
+require_login();
 
-function update_tab_name($courseid, $tabid, $tabName)
-{
+function update_tab_name($courseid, $tabid, $tabname) {
     global $DB;
 
     $context = context_course::instance($courseid);
 
     if (has_capability('moodle/course:update', $context)) {
-        $formatOptions = $DB->get_records('course_format_options', array('courseid' => $courseid));
-        foreach ($formatOptions as $option) {
-            if ($option->name == $tabid . '_title' && $option->value !== $tabName) {
-                $option->value = $tabName;
+        $formatoptions = $DB->get_records('course_format_options', array('courseid' => $courseid));
+        foreach ($formatoptions as $option) {
+            if ($option->name == $tabid . '_title' && $option->value !== $tabname) {
+                $option->value = $tabname;
                 $DB->update_record('course_format_options', $option);
                 return $option->id;
             }

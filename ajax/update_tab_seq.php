@@ -23,27 +23,28 @@
  * Updating the course format options with a new sequence in which the tabs are displayed
  */
 require_once('../../../../config.php');
+require_login();
 
-function update_tab_seq($courseid, $tabSeq) {
+function update_tab_seq($courseid, $tabseq) {
     global $DB;
 
     if ($DB->record_exists('course_format_options', array('courseid' => $courseid, 'name' => 'tab_seq'))) {
-        $tabSeqRecord = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab_seq'));
-        $tabSeqRecord->value = $tabSeq;
-        $DB->update_record('course_format_options', $tabSeqRecord);
+        $tabseqrecord = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab_seq'));
+        $tabseqrecord->value = $tabseq;
+        $DB->update_record('course_format_options', $tabseqrecord);
     } else {
-        $tabSeqRecord = new \stdClass();
-        $tabSeqRecord->courseid = $courseid;
-        $tabSeqRecord->format = $_POST['course_format_name'];
-        $tabSeqRecord->sectionid = 0;
-        $tabSeqRecord->name = 'tab_seq';
-        $tabSeqRecord->value = $tabSeq;
-        $DB->insert_record('course_format_options', $tabSeqRecord);
+        $tabseqrecord = new \stdClass();
+        $tabseqrecord->courseid = $courseid;
+        $tabseqrecord->format = $_POST['course_format_name'];
+        $tabseqrecord->sectionid = 0;
+        $tabseqrecord->name = 'tab_seq';
+        $tabseqrecord->value = $tabseq;
+        $DB->insert_record('course_format_options', $tabseqrecord);
     }
-    return $tabSeq;
+    return $tabseq;
 }
 
-if (!isset($_POST['tab_seq']) || sizeof($_POST['tab_seq']) === 0) {
+if (!isset($_POST['tab_seq']) || count($_POST['tab_seq']) === 0) {
     exit;
 }
 

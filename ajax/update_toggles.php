@@ -23,26 +23,27 @@
  * Updating the user preferences with the current toggle state of all sections in the course
  */
 require_once('../../../../config.php');
+require_login();
 
-function update_toggle_status($courseid, $toggleSeq) {
+function update_toggle_status($courseid, $toggleseq) {
     global $DB, $USER;
 
     $name = "toggle_seq_".$courseid;
     if ($DB->record_exists('user_preferences', array('userid' => $USER->id, 'name' => $name))) {
-        $toggleSeqRecord = $DB->get_record('user_preferences', array('userid' => $USER->id, 'name' => $name));
-        $toggleSeqRecord->value = $toggleSeq;
-        $DB->update_record('user_preferences', $toggleSeqRecord);
+        $toggleseqrecord = $DB->get_record('user_preferences', array('userid' => $USER->id, 'name' => $name));
+        $toggleseqrecord->value = $toggleseq;
+        $DB->update_record('user_preferences', $toggleseqrecord);
     } else {
-        $toggleSeqRecord = new \stdClass();
-        $toggleSeqRecord->userid = $USER->id;
-        $toggleSeqRecord->name = $name;
-        $toggleSeqRecord->value = $toggleSeq;
-        $DB->insert_record('user_preferences', $toggleSeqRecord);
+        $toggleseqrecord = new \stdClass();
+        $toggleseqrecord->userid = $USER->id;
+        $toggleseqrecord->name = $name;
+        $toggleseqrecord->value = $toggleseq;
+        $DB->insert_record('user_preferences', $toggleseqrecord);
     }
-    return $toggleSeq;
+    return $toggleseq;
 }
 
-if (!isset($_POST['toggle_seq']) || sizeof(str_split($_POST['toggle_seq'])) === 0) {
+if (!isset($_POST['toggle_seq']) || count(str_split($_POST['toggle_seq'])) === 0) {
     exit;
 }
 
