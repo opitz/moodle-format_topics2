@@ -38,6 +38,9 @@ require_once($CFG->dirroot. '/course/format/topics/lib.php');
  */
 class format_topics2 extends format_topics {
 
+    /*
+     * Add some options
+     */
     public function course_format_options($foreditform = false) {
         global $CFG, $COURSE, $DB;
         $fo = $DB->get_records('course_format_options', array('courseid' => $COURSE->id));
@@ -154,6 +157,9 @@ class format_topics2 extends format_topics {
         return $courseformatoptions;
     }
 
+    /*
+     * Turning numbers into text
+     */
     public function words2numbers($string) {
         $numwords = array(
             0 => 'zero',
@@ -173,6 +179,9 @@ class format_topics2 extends format_topics {
         return $string;
     }
 
+    /*
+     * Tab action for sections
+     */
     public function section_action($section, $action, $sr) {
         global $PAGE;
 
@@ -208,7 +217,9 @@ class format_topics2 extends format_topics {
         return $rv;
     }
 
-    // Move section ID and section number to tab format settings of a given tab.
+    /*
+     * Move section ID and section number to tab format settings of a given tab.
+     */
     public function move2tab($tabnum, $section2move, $settings) {
 
         // Remove section number from all tab format settings.
@@ -224,7 +235,9 @@ class format_topics2 extends format_topics {
         return $settings;
     }
 
-    // Remove section id from all tab format settings.
+    /*
+     * Remove section id from all tab format settings.
+     */
     public function removefromtabs($section2remove, $settings) {
         global $CFG;
 
@@ -257,7 +270,9 @@ class format_topics2 extends format_topics {
         return $settings;
     }
 
-    // Switch to show section0 always on top of the tabs.
+    /*
+     * Switch to show section0 always on top of the tabs.
+     */
     public function sectionzeroswitch($settings, $value) {
         $settings['section0_ontop'] = $value;
         $this->update_course_format_options($settings);
@@ -282,7 +297,9 @@ class format_topics2 extends format_topics {
         return $whatparentssay;
     }
 
-    // Remove traces of a deleted section from tabs where needed.
+    /*
+     * Remove traces of a deleted section from tabs where needed.
+     */
     public function remove_from_tabs($section = false, $sectionid = false) {
         global $DB;
         if (!$section || !$sectionid) {
@@ -323,7 +340,9 @@ class format_topics2 extends format_topics {
 
     }
 
-    // Remove the section ID from tabs.
+    /*
+     * Remove the section ID from tabs.
+     */
     public function remove_sectionid($option, $sectionid) {
         global $DB;
         $tabsections = explode(',', $option->value);
@@ -339,7 +358,9 @@ class format_topics2 extends format_topics {
         }
     }
 
-    // Remove the section number from tabs.
+    /*
+     * Remove the section number from tabs.
+     */
     public function remove_sectionnum($option, $sectionnum) {
         global $DB;
         $tabsectionnums = explode(',', $option->value);

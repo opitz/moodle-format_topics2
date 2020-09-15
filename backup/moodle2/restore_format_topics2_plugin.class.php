@@ -75,12 +75,6 @@ class restore_format_topics2_plugin extends restore_format_plugin {
         return [new restore_path_element('dummy_course', $this->get_pathfor('/dummycourse'))];
     }
 
-    public function process_format_topics2() {
-
-    }
-    public function process_topics2() {
-
-    }
     /**
      * Dummy process method
      */

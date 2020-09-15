@@ -14,17 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Created by PhpStorm.
- * User: Matthias Opitz
- * Date: 04/10/18
- * Time: 14:46
- *
+/*
  * Updating the user preferences with the current toggle state of all sections in the course
  */
 require_once('../../../../config.php');
 require_login();
 
+/*
+ * Update the toggle status for each topic of the course to the users preferences
+ */
 function update_toggle_status($courseid, $toggleseq) {
     global $DB, $USER;
 

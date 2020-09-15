@@ -122,13 +122,21 @@ class format_topics2_renderer extends format_topics_renderer {
 
     }
 
-    // Require the jQuery files for this class.
+    /*
+     * Require the jQuery files for this class.
+     */
     public function require_js() {
         $this->page->requires->js_call_amd('format_topics2/tabs', 'init', array());
         $this->page->requires->js_call_amd('format_topics2/toggle', 'init', array());
     }
 
-    // Get the toggle sequence of a given course for the current user.
+    /**
+     * Get the toggle sequence of a given course for the current user.
+     *
+     * @param $course
+     * @return string
+     * @throws dml_exception
+     */
     public function get_toggle_seq($course) {
         global $DB, $USER;
 
@@ -139,7 +147,16 @@ class format_topics2_renderer extends format_topics_renderer {
         return $record->value;
     }
 
-    // Prepare the tabs for rendering.
+    /**
+     * Prepare the tabs for rendering.
+     *
+     * @param $course
+     * @param $formatoptions
+     * @param $sections
+     * @return array
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     public function prepare_tabs($course, $formatoptions, $sections) {
         global $CFG, $DB;
 
@@ -197,7 +214,12 @@ class format_topics2_renderer extends format_topics_renderer {
         return $tabs;
     }
 
-    // Render the tabs in sequence order if present or ascending otherwise.
+    /**
+     * Render the tabs in sequence order if present or ascending otherwise.
+     *
+     * @param $formatoptions
+     * @return string
+     */
     public function render_tabs($formatoptions) {
         $o = html_writer::start_tag('ul', array('class' => 'tabs nav nav-tabs row'));
 
@@ -227,7 +249,14 @@ class format_topics2_renderer extends format_topics_renderer {
         return $o;
     }
 
-    // Render a standard tab.
+    /**
+     * Render a standard tab.
+     *
+     * @param $tab
+     * @return bool|string
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     public function render_tab($tab) {
         global $DB, $PAGE, $OUTPUT;
 
@@ -310,7 +339,17 @@ class format_topics2_renderer extends format_topics_renderer {
         return $o;
     }
 
-    // Check section IDs used in tabs and repair them if they have changed - most probably because a course was imported.
+    /**
+     * Check section IDs used in tabs and repair them if they have changed - most probably because a course was imported.
+     *
+     * @param $courseid
+     * @param $sectionids
+     * @param $tabsectionids
+     * @param $tabsectionnums
+     * @param $i
+     * @return array|string
+     * @throws dml_exception
+     */
     public function check_tab_section_ids($courseid, $sectionids, $tabsectionids, $tabsectionnums, $i) {
         global $DB;
         $idhaschanged = false;
@@ -363,7 +402,15 @@ class format_topics2_renderer extends format_topics_renderer {
         return $tabsectionids;
     }
 
-    // Display section-0 on top of tabs if option has been checked.
+    /**
+     * Display section-0 on top of tabs if option has been checked.
+     *
+     * @param $course
+     * @param $sections
+     * @param $formatoptions
+     * @param $modinfo
+     * @return string
+     */
     public function render_section0_ontop($course, $sections, $formatoptions, $modinfo) {
         $o = '';
         if ($formatoptions['section0_ontop']) {
@@ -380,7 +427,16 @@ class format_topics2_renderer extends format_topics_renderer {
         return $o;
     }
 
-    // Render the sections of a course.
+    /**
+     * Render the sections of a course.
+     *
+     * @param $course
+     * @param $sections
+     * @param $formatoptions
+     * @param $modinfo
+     * @param $numsections
+     * @return string
+     */
     public function render_sections($course, $sections, $formatoptions, $modinfo, $numsections) {
         $o = '';
         foreach ($sections as $section => $thissection) {
@@ -415,6 +471,13 @@ class format_topics2_renderer extends format_topics_renderer {
         return $o;
     }
 
+    /**
+     * Render a single section of a course
+     * @param $course
+     * @param $section
+     * @param $formatoptions
+     * @return string
+     */
     public function render_section($course, $section, $formatoptions) {
         global $PAGE;
         $o = '';
@@ -516,7 +579,14 @@ class format_topics2_renderer extends format_topics_renderer {
         return $o;
     }
 
-    // Section title either with toggle or straight.
+    /**
+     * Section title either with toggle or straight.
+     *
+     * @param stdClass $section
+     * @param stdClass $course
+     * @return string
+     * @throws coding_exception
+     */
     public function section_title($section, $course) {
         if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
             // Prepare the toggle.
@@ -547,7 +617,17 @@ class format_topics2_renderer extends format_topics_renderer {
         return $toggler.$this->render(course_get_format($course)->inplace_editable_render_section_name($section));
     }
 
-    // Render hidden sections for course editors only.
+    /**
+     * Render hidden sections for course editors only.
+     *
+     * @param $course
+     * @param $sections
+     * @param $context
+     * @param $modinfo
+     * @param $numsections
+     * @return string
+     * @throws coding_exception
+     */
     public function render_hidden_sections($course, $sections, $context, $modinfo, $numsections) {
         global $PAGE;
         $o = '<div class="testing"></div>';
@@ -567,6 +647,11 @@ class format_topics2_renderer extends format_topics_renderer {
         return $o;
     }
 
+    /**
+     * Convert all numbers found in a given string into words
+     * @param $string
+     * @return mixed
+     */
     public function numbers2words($string) {
         $numwords = array(
             0 => 'zero',
@@ -726,6 +811,10 @@ class format_topics2_renderer extends format_topics_renderer {
         }
     }
 
+    /**
+     * print the section footer
+     * @return string
+     */
     protected function section_footer() {
         $o = html_writer::end_tag('div'); // Ending the sectionbody.
         $o .= html_writer::end_tag('div'); // Ending the content.

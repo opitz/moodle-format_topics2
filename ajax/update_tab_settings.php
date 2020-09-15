@@ -14,16 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Created by PhpStorm.
- * User: opitz
- * Date: 2019-09-20
- *
+/*
  * Updating the course format options for a tab
  */
 require_once('../../../../config.php');
 require_login();
 
+/*
+ * Save the position of each section of a tab to the database.
+ * Both section ID and sectionnum of each section is preserved.
+ */
 function update_tab_settings($courseid, $tabid, $sections, $sectionnums) {
     global $DB;
 

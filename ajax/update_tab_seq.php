@@ -14,17 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Created by PhpStorm.
- * User: Matthias Opitz
- * Date: 04/10/18
- * Time: 14:46
- *
+/*
  * Updating the course format options with a new sequence in which the tabs are displayed
  */
 require_once('../../../../config.php');
 require_login();
 
+/*
+ * Save the order of the tabs in a course to the database
+ */
 function update_tab_seq($courseid, $tabseq) {
     global $DB;
 
