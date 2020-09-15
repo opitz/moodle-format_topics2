@@ -116,7 +116,7 @@ class format_topics2 extends format_topics {
                 'element_type' => 'hidden'
             );
 
-            // now loop through the tabs but don't show them as we only need the DB records...
+            // Now loop through the tabs but don't show them as we only need the DB records...
             $courseformatoptions['tab0_title'] = array(
                 'default' => get_string('tabzero_title',
                 'format_topics2'),
@@ -168,7 +168,7 @@ class format_topics2 extends format_topics {
             9 => 'nine'
         );
         for ($i = 0; $i < 10; $i++) {
-            $string = str_replace($numwords[$i], $i,$string);
+            $string = str_replace($numwords[$i], $i, $string);
         }
         return $string;
     }
@@ -217,7 +217,8 @@ class format_topics2 extends format_topics {
         // Add section number to new tab format settings if not tab0.
         if ($tabnum > 0) {
             $settings['tab'.$tabnum] .= ($settings['tab'.$tabnum] === '' ? '' : ',').$section2move->id;
-            $settings['tab'.$tabnum.'_sectionnums'] .= ($settings['tab'.$tabnum.'_sectionnums'] === '' ? '' : ',').$section2move->section;
+            $settings['tab'.$tabnum.'_sectionnums'] .= ($settings['tab'.$tabnum.'_sectionnums'] === '' ? '' : ',').
+                $section2move->section;
             $this->update_course_format_options($settings);
         }
         return $settings;
@@ -300,9 +301,9 @@ class format_topics2 extends format_topics {
                 case 'tab7':
                 case 'tab8':
                 case 'tab9':
-                if (strstr($option->value, $sectionid)) {
-                    $this->remove_sectionid($option, $sectionid);
-                }
+                    if (strstr($option->value, $sectionid)) {
+                        $this->remove_sectionid($option, $sectionid);
+                    }
                     break;
                 case 'tab1_sectionnums':
                 case 'tab2_sectionnums':
@@ -325,7 +326,7 @@ class format_topics2 extends format_topics {
     // Remove the section ID from tabs.
     public function remove_sectionid($option, $sectionid) {
         global $DB;
-        $tabsections = explode(',',$option->value);
+        $tabsections = explode(',', $option->value);
         $newtabsections = array();
         foreach ($tabsections as $tabsectionid) {
             if ($tabsectionid !== $sectionid) {
@@ -341,7 +342,7 @@ class format_topics2 extends format_topics {
     // Remove the section number from tabs.
     public function remove_sectionnum($option, $sectionnum) {
         global $DB;
-        $tabsectionnums = explode(',',$option->value);
+        $tabsectionnums = explode(',', $option->value);
         $newtabsectionnums = array();
         foreach ($tabsectionnums as $tabsectionnum) {
             if ($tabsectionnum !== $sectionnum) {
