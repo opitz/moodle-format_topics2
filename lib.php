@@ -14,11 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-defined('COURSE_DISPLAY_COLLAPSE') || define('COURSE_DISPLAY_COLLAPSE', 2); // Legacy support - no longer used.
-defined('COURSE_DISPLAY_NOCOLLAPSE') || define('COURSE_DISPLAY_NOCOLLAPSE', 3);
-require_once($CFG->dirroot. '/course/format/topics/lib.php');
-
 /**
  * Main class for the topics2 course format
  * with added tab-ability
@@ -27,6 +22,12 @@ require_once($CFG->dirroot. '/course/format/topics/lib.php');
  * @copyright  2018 Matthias Opitz
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
+defined('COURSE_DISPLAY_COLLAPSE') || define('COURSE_DISPLAY_COLLAPSE', 2); // Legacy support - no longer used.
+defined('COURSE_DISPLAY_NOCOLLAPSE') || define('COURSE_DISPLAY_NOCOLLAPSE', 3);
+require_once($CFG->dirroot. '/course/format/topics/lib.php');
+
 class format_topics2 extends format_topics {
 
     /**
@@ -249,8 +250,8 @@ class format_topics2 extends format_topics {
     /**
      * Remove section id from all tab format settings.
      *
-     * @param array|stdClass$section2remove
-     * @param array|stdClass$settings
+     * @param array|stdClass $section2remove
+     * @param array|stdClass $settings
      * @return mixed
      */
     public function removefromtabs($section2remove, $settings) {
@@ -288,7 +289,7 @@ class format_topics2 extends format_topics {
     /**
      * Switch to show section0 always on top of the tabs.
      *
-     * @param array|stdClass$settings
+     * @param array|stdClass $settings
      * @param string $value
      * @return mixed
      */
@@ -375,8 +376,8 @@ class format_topics2 extends format_topics {
     /**
      * Remove the section ID from tabs.
      *
-     * @param $option
-     * @param $sectionid
+     * @param array|stdClass $option
+     * @param int $sectionid
      * @throws dml_exception
      */
     public function remove_sectionid($option, $sectionid) {
@@ -397,8 +398,8 @@ class format_topics2 extends format_topics {
     /**
      * Remove the section number from tabs.
      *
-     * @param $option
-     * @param $sectionnum
+     * @param array|stdClass $option
+     * @param int $sectionnum
      * @throws dml_exception
      */
     public function remove_sectionnum($option, $sectionnum) {
