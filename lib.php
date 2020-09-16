@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * This file contains main class for the course format Topics2
- *
- * @since     Moodle 2.0
- * @package   format_topics2
- * @copyright 2018 Matthias Opitz
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die();
 defined('COURSE_DISPLAY_COLLAPSE') || define('COURSE_DISPLAY_COLLAPSE', 2); // Legacy support - no longer used.
 defined('COURSE_DISPLAY_NOCOLLAPSE') || define('COURSE_DISPLAY_NOCOLLAPSE', 3);
@@ -190,9 +181,9 @@ class format_topics2 extends format_topics {
     /**
      * Tab action for sections
      *
-     * @param $section
-     * @param $action
-     * @param $sr
+     * @param stdClass|section_info $section
+     * @param string $action
+     * @param int $sr
      * @return array|stdClass|null
      * @throws moodle_exception
      * @throws required_capability_exception
@@ -235,9 +226,9 @@ class format_topics2 extends format_topics {
     /**
      * Move section ID and section number to tab format settings of a given tab.
      *
-     * @param $tabnum
-     * @param $section2move
-     * @param $settings
+     * @param int $tabnum
+     * @param array|stdClass $section2move
+     * @param array|stdClass $settings
      * @return mixed
      */
     public function move2tab($tabnum, $section2move, $settings) {
@@ -258,8 +249,8 @@ class format_topics2 extends format_topics {
     /**
      * Remove section id from all tab format settings.
      *
-     * @param $section2remove
-     * @param $settings
+     * @param array|stdClass$section2remove
+     * @param array|stdClass$settings
      * @return mixed
      */
     public function removefromtabs($section2remove, $settings) {
@@ -297,8 +288,8 @@ class format_topics2 extends format_topics {
     /**
      * Switch to show section0 always on top of the tabs.
      *
-     * @param $settings
-     * @param $value
+     * @param array|stdClass$settings
+     * @param string $value
      * @return mixed
      */
     public function sectionzeroswitch($settings, $value) {
