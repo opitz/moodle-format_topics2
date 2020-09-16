@@ -20,8 +20,15 @@
 require_once('../../../../config.php');
 require_login();
 
-/*
+/**
  * Update the tab name to the database
+ *
+ * @param int $courseid
+ * @param int $tabid
+ * @param string $tabname
+ * @return string
+ * @throws coding_exception
+ * @throws dml_exception
  */
 function update_tab_name($courseid, $tabid, $tabname) {
     global $DB;

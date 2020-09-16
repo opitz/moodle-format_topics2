@@ -14,15 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
  * Updating the course format options for a tab
  */
 require_once('../../../../config.php');
 require_login();
 
-/*
+/**
  * Save the position of each section of a tab to the database.
  * Both section ID and sectionnum of each section is preserved.
+ *
+ * @param int $courseid
+ * @param int $tabid
+ * @param array|stdClass $sections
+ * @param int $sectionnums
+ * @return string
+ * @throws coding_exception
+ * @throws dml_exception
  */
 function update_tab_settings($courseid, $tabid, $sections, $sectionnums) {
     global $DB;

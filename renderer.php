@@ -122,7 +122,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
     }
 
-    /*
+    /**
      * Require the jQuery files for this class.
      */
     public function require_js() {
@@ -133,7 +133,7 @@ class format_topics2_renderer extends format_topics_renderer {
     /**
      * Get the toggle sequence of a given course for the current user.
      *
-     * @param $course
+     * @param array|stdClass $course
      * @return string
      * @throws dml_exception
      */
@@ -150,9 +150,9 @@ class format_topics2_renderer extends format_topics_renderer {
     /**
      * Prepare the tabs for rendering.
      *
-     * @param $course
-     * @param $formatoptions
-     * @param $sections
+     * @param array|stdClass $course
+     * @param array|stdClass $formatoptions
+     * @param array|stdClass $sections
      * @return array
      * @throws coding_exception
      * @throws dml_exception
@@ -217,7 +217,7 @@ class format_topics2_renderer extends format_topics_renderer {
     /**
      * Render the tabs in sequence order if present or ascending otherwise.
      *
-     * @param $formatoptions
+     * @param array|stdClass $formatoptions
      * @return string
      */
     public function render_tabs($formatoptions) {
@@ -252,7 +252,7 @@ class format_topics2_renderer extends format_topics_renderer {
     /**
      * Render a standard tab.
      *
-     * @param $tab
+     * @param array|stdClass $tab
      * @return bool|string
      * @throws coding_exception
      * @throws dml_exception
@@ -342,11 +342,11 @@ class format_topics2_renderer extends format_topics_renderer {
     /**
      * Check section IDs used in tabs and repair them if they have changed - most probably because a course was imported.
      *
-     * @param $courseid
-     * @param $sectionids
-     * @param $tabsectionids
-     * @param $tabsectionnums
-     * @param $i
+     * @param int $courseid
+     * @param array|stdClass $sectionids
+     * @param array|stdClass $tabsectionids
+     * @param array|stdClass $tabsectionnums
+     * @param int $i
      * @return array|string
      * @throws dml_exception
      */
@@ -405,10 +405,10 @@ class format_topics2_renderer extends format_topics_renderer {
     /**
      * Display section-0 on top of tabs if option has been checked.
      *
-     * @param $course
-     * @param $sections
-     * @param $formatoptions
-     * @param $modinfo
+     * @param array|stdClass $course
+     * @param array|stdClass $sections
+     * @param array|stdClass $formatoptions
+     * @param array|stdClass $modinfo
      * @return string
      */
     public function render_section0_ontop($course, $sections, $formatoptions, $modinfo) {
@@ -430,11 +430,11 @@ class format_topics2_renderer extends format_topics_renderer {
     /**
      * Render the sections of a course.
      *
-     * @param $course
-     * @param $sections
-     * @param $formatoptions
-     * @param $modinfo
-     * @param $numsections
+     * @param array|stdClass $course
+     * @param array|stdClass $sections
+     * @param array|stdClass $formatoptions
+     * @param array|stdClass $modinfo
+     * @param int $numsections
      * @return string
      */
     public function render_sections($course, $sections, $formatoptions, $modinfo, $numsections) {
@@ -473,9 +473,9 @@ class format_topics2_renderer extends format_topics_renderer {
 
     /**
      * Render a single section of a course
-     * @param $course
-     * @param $section
-     * @param $formatoptions
+     * @param array|stdClass $course
+     * @param array|stdClass $section
+     * @param array|stdClass $formatoptions
      * @return string
      */
     public function render_section($course, $section, $formatoptions) {
@@ -620,11 +620,11 @@ class format_topics2_renderer extends format_topics_renderer {
     /**
      * Render hidden sections for course editors only.
      *
-     * @param $course
-     * @param $sections
-     * @param $context
-     * @param $modinfo
-     * @param $numsections
+     * @param array|stdClass $course
+     * @param array|stdClass $sections
+     * @param array|stdClass $context
+     * @param array|stdClass $modinfo
+     * @param int $numsections
      * @return string
      * @throws coding_exception
      */
@@ -649,7 +649,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
     /**
      * Convert all numbers found in a given string into words
-     * @param $string
+     * @param string $string
      * @return mixed
      */
     public function numbers2words($string) {

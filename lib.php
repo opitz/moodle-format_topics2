@@ -28,6 +28,9 @@ defined('COURSE_DISPLAY_COLLAPSE') || define('COURSE_DISPLAY_COLLAPSE', 2); // L
 defined('COURSE_DISPLAY_NOCOLLAPSE') || define('COURSE_DISPLAY_NOCOLLAPSE', 3);
 require_once($CFG->dirroot. '/course/format/topics/lib.php');
 
+/**
+ * Class format_topics2
+ */
 class format_topics2 extends format_topics {
 
     /**

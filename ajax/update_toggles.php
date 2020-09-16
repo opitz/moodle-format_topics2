@@ -20,8 +20,13 @@
 require_once('../../../../config.php');
 require_login();
 
-/*
+/**
  * Update the toggle status for each topic of the course to the users preferences
+ *
+ * @param int $courseid
+ * @param string $toggleseq
+ * @return mixed
+ * @throws dml_exception
  */
 function update_toggle_status($courseid, $toggleseq) {
     global $DB, $USER;
