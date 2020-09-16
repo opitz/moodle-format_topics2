@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains main class for the course format TabbedTopic
+ * This file contains main class for the course format Topics2
  *
  * @since     Moodle 2.0
  * @package   format_topics2
@@ -33,7 +33,7 @@ require_once($CFG->dirroot. '/course/format/topics/lib.php');
  * with added tab-ability
  *
  * @package    format_topics2
- * @copyright  2012 Marina Glancy / 2018 Matthias Opitz
+ * @copyright  2018 Matthias Opitz
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_topics2 extends format_topics {
@@ -165,7 +165,7 @@ class format_topics2 extends format_topics {
     /**
      * Turning numbers into text
      *
-     * @param $string
+     * @param string $string
      * @return mixed
      */
     public function words2numbers($string) {
@@ -405,7 +405,7 @@ class format_topics2 extends format_topics {
 
     /**
      * Remove the section number from tabs.
-     * 
+     *
      * @param $option
      * @param $sectionnum
      * @throws dml_exception
