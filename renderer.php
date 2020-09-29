@@ -477,11 +477,6 @@ class format_topics2_renderer extends format_topics_renderer {
     protected function section_header($section, $course, $onsectionpage, $sectionreturn=null) {
         $o = '';
         $sectionstyle = '';
-        if(isset($this->toggle_seq)) {
-            $toggle_seq = str_split($this->toggle_seq);
-        } else {
-            $toggle_seq = '';
-        }
 
         if ($section->section != 0) {
             // Only in the non-general sections.
@@ -538,22 +533,12 @@ class format_topics2_renderer extends format_topics_renderer {
         }
 
         // the sectionbody
-//        if($course->toggle && isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0' && ($section->section !== 0 || $section->name !== '')) {
-        if($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0' && ($section->section !== 0 || $section->name !== '')) {
-            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
-        } else {
-            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
-        }
-        if ($section->uservisible || $section->visible) {
-            // Show summary if section is available or has availability restriction information.
-            // Do not show summary if section is hidden but we still display it because of course setting
-            $o .= $this->format_summary_text($section);
-        }
+        $o .= $this->section_body($section, $course);
         return $o;
     }
 
     // Section title either with toggle or straight
-    public function section_title($section, $course) {
+    public function section_title0($section, $course) {
 //        if($course->toggle) {
         if($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
             // prepare the toggle
@@ -578,6 +563,55 @@ class format_topics2_renderer extends format_topics_renderer {
         }
 
         return $toggler.$this->render(course_get_format($course)->inplace_editable_render_section_name($section));
+    }
+    public function section_title($section, $course) {
+//        if($course->toggle) {
+        if($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
+            // prepare the toggle
+            if(isset($this->toggle_seq)) {
+                $toggle_seq = (array) json_decode($this->toggle_seq);
+            } else {
+                $toggle_seq = '';
+            }
+
+            $tooltip_open = get_string('tooltip_open','format_topics2');
+            $tooltip_closed = get_string('tooltip_closed','format_topics2');
+            if(isset($toggle_seq[$section->id]) && $toggle_seq[$section->id] === '0') {
+                $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltip_open.'" style="cursor: pointer; display: none;"></i>';
+                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'.$tooltip_closed.'" style="cursor: pointer;"></i>';
+            } else {
+                $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltip_open.'" style="cursor: pointer;"></i>';
+                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'.$tooltip_closed.'" style="cursor: pointer; display: none;"></i>';
+            }
+            $toggler .= ' ';
+        } else {
+            $toggler = '';
+        }
+
+        return $toggler.$this->render(course_get_format($course)->inplace_editable_render_section_name($section));
+    }
+
+    public function section_body($section, $course) {
+        $o = '';
+
+        if(isset($this->toggle_seq)) {
+            $toggle_seq = (array) json_decode($this->toggle_seq);
+        } else {
+            $toggle_seq = '';
+        }
+
+        if($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && isset($toggle_seq[$section->id]) && $toggle_seq[$section->id] === '0' && ($section->section !== 0 || $section->name !== '')) {
+            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
+        } else {
+            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
+        }
+        if ($section->uservisible || $section->visible) {
+            // Show summary if section is available or has availability restriction information.
+            // Do not show summary if section is hidden but we still display it because of course setting
+            $o .= $this->format_summary_text($section);
+        }
+        return $o;
+
     }
 
     // Render hidden sections for course editors only

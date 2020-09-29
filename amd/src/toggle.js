@@ -5,25 +5,26 @@ define(['jquery', 'jqueryui'], function($) {
 // ---------------------------------------------------------------------------------------------------------------------
             var updateToggleSeq = function() {
                 console.log("no of sections = " + $('li.section').length);
-                var toggle_seq = '';
+                var toggle_seq = {};
                 $("li.section").each(function() {
+//                    console.log($(this).attr('section-id'));
                     if ( $(this).find('.toggle_area').hasClass('hidden')) {
-                        toggle_seq = toggle_seq + '0';
+                        toggle_seq[$(this).attr('section-id')] = '0';
                     } else
 //                    if ( $(this).find('.toggle_area').hasClass('showing')) {
                     {
-                        toggle_seq = toggle_seq + '1';
+                        toggle_seq[$(this).attr('section-id')] = '1';
                     }
 
                     });
-                console.log('toggle_seq = ' + toggle_seq);
+                console.log('toggle_seq = ' + JSON.stringify(toggle_seq));
 
                 // Now write the sequence for this course into the user preference
                 var courseid = $('#courseid').attr('courseid');
                 $.ajax({
                     url: "format/topics2/ajax/update_toggles.php",
                     type: "POST",
-                    data: {'courseid': courseid, 'toggle_seq': toggle_seq},
+                    data: {'courseid': courseid, 'toggle_seq': JSON.stringify(toggle_seq)},
                     success: function(result) {
                         if(result !== '') {
                             console.log('New toggle sequence: ' + result);

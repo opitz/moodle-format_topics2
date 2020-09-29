@@ -1,4 +1,4 @@
-define(['jquery', 'jqueryui', 'core/str'], function($, str) {
+define(['jquery', 'jqueryui', 'core/str'], function($) {
     /* eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
     return {
         init: function() {
@@ -508,11 +508,6 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                     // X console.log('--> Updating menu options with current tab names');
                     $(this).parent().find('.tab_mover').each(function() {
                         var tabnr = $(this).attr('tabnr');
-                        var tabtext = $(this).find('.menu-action-text').html();
-                        // X console.log(tabnr + ' --> ' + tabtext.trim() + ' ==> ' + tabArray[tabnr]);
-//                        Var newMenuText = 'To Tab "' + tabArray[tabnr] +
-//                            ( (tabArray[tabnr] === 'Tab ' + tabnr || tabnr === '0') ? '"' : '" (Tab ' + tabnr + ')');
-
                         var newMenuText = 'To Tab ' +
                             (tabArray[tabnr] === '' || tabArray[tabnr] === 'Tab ' + tabnr ? tabnr : '"' + tabArray[tabnr] +
                             ((tabArray[tabnr] === 'Tab ' + tabnr || tabnr === '0') ? '"' : '" (Tab ' + tabnr + ')'));
@@ -587,11 +582,6 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                 var draggedTab = ui.draggable.find('.topictab').first();
                 var targetTab = $(this).find('.topictab').first();
 
-// For development purposes only - not used in production environments
-                var draggedTab_id = draggedTab.attr('id');
-                var targetTab_id = targetTab.attr('id');
-                // X console.log('The tab with ID "' + draggedTab_id + '" was dropped onto tab with the ID "' + targetTab_id + '"');
-
                 // Swap both tabs
                 var zwischenspeicher = draggedTab.parent().html();
                 draggedTab.parent().html(targetTab.parent().html());
@@ -622,8 +612,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($, str) {
                     url: "format/topics2/ajax/update_tab_seq.php",
                     type: "POST",
                     data: {'courseid': courseid, 'tab_seq': tabSeq, 'course_format_name': course_format_name},
-//                    Success: function() {
-                    success: function(result) {
+                    success: function() {
                         // X console.log('the new tab sequence: ' + result);
                     }});
             };
