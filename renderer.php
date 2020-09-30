@@ -310,35 +310,6 @@ class format_topics2_renderer extends format_topics_renderer {
     }
 
     // Check section IDs used in tabs and repair them if they have changed - most probably because a course was imported
-    public function check_tab_section_ids0($courseid, $section_ids, $tab_section_ids, $tab_section_nums, $i) {
-        global $DB;
-        $has_changed = false;
-
-        $new_tab_section_ids = array();
-        $tab_format_record = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i));
-
-        if($tab_section_ids != "") {
-            $tab_section_ids = explode(',',$tab_section_ids);
-        } else {
-            $tab_section_ids = array();
-        }
-        $tab_section_nums = explode(',',$tab_section_nums);
-        foreach($tab_section_ids as $key => $tab_section_id) {
-            if(!in_array($tab_section_id, $section_ids) && isset($section_ids[$tab_section_nums[$key]])){ // the tab_section_id is not among the sections of that course - the ID needs to be corrected
-                $new_tab_section_ids[] = $section_ids[$tab_section_nums[$key]];
-                $has_changed = true;
-            } else {
-                $new_tab_section_ids[] = $tab_section_id;
-            }
-        }
-
-        $tab_section_ids = implode(',', $new_tab_section_ids);
-        if($has_changed) {
-            $DB->update_record('course_format_options', array('id' => $tab_format_record->id, 'value' => $tab_section_ids));
-        }
-
-        return $tab_section_ids;
-    }
     public function check_tab_section_ids($courseid, $section_ids, $tab_section_ids, $tab_section_nums, $i) {
         global $DB;
         $id_has_changed = false;
@@ -538,34 +509,7 @@ class format_topics2_renderer extends format_topics_renderer {
     }
 
     // Section title either with toggle or straight
-    public function section_title0($section, $course) {
-//        if($course->toggle) {
-        if($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
-            // prepare the toggle
-            if(isset($this->toggle_seq)) {
-                $toggle_seq = str_split($this->toggle_seq);
-            } else {
-                $toggle_seq = '';
-            }
-
-            $tooltip_open = get_string('tooltip_open','format_topics2');
-            $tooltip_closed = get_string('tooltip_closed','format_topics2');
-            if(isset($toggle_seq[$section->section]) && $toggle_seq[$section->section] === '0') {
-                $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltip_open.'" style="cursor: pointer; display: none;"></i>';
-                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'.$tooltip_closed.'" style="cursor: pointer;"></i>';
-            } else {
-                $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltip_open.'" style="cursor: pointer;"></i>';
-                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'.$tooltip_closed.'" style="cursor: pointer; display: none;"></i>';
-            }
-            $toggler .= ' ';
-        } else {
-            $toggler = '';
-        }
-
-        return $toggler.$this->render(course_get_format($course)->inplace_editable_render_section_name($section));
-    }
     public function section_title($section, $course) {
-//        if($course->toggle) {
         if($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
             // prepare the toggle
             if(isset($this->toggle_seq)) {
@@ -597,7 +541,7 @@ class format_topics2_renderer extends format_topics_renderer {
         if(isset($this->toggle_seq)) {
             $toggle_seq = (array) json_decode($this->toggle_seq);
         } else {
-            $toggle_seq = '';
+            $toggle_seq = [];
         }
 
         if($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && isset($toggle_seq[$section->id]) && $toggle_seq[$section->id] === '0' && ($section->section !== 0 || $section->name !== '')) {
