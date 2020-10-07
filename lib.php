@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains main class for the course format TabbedTopic
+ * This file contains main class for the course format Topic2
  *
  * @since     Moodle 2.0
  * @package   format_topics2
@@ -33,15 +33,21 @@ require_once($CFG->dirroot. '/course/format/topics/lib.php');
  * with added tab-ability
  *
  * @package    format_topics2
- * @copyright  2012 Marina Glancy / 2018 Matthias Opitz
+ * @copyright  2018 Matthias Opitz
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_topics2 extends format_topics {
 
+    /**
+     * The course format options
+     *
+     * @param bool $foreditform
+     * @return array|bool
+     * @throws coding_exception
+     * @throws dml_exception
+     */
     public function course_format_options($foreditform = false) {
         global $CFG, $COURSE, $DB;
-//        $max_tabs = (isset($CFG->max_tabs) ? $CFG->max_tabs : 5);
-//        $max_tabs = 9; // Currently there is a maximum of 9 tabs!
         $fo = $DB->get_records('course_format_options', array('courseid' => $COURSE->id));
         $format_options = array();
         foreach($fo as $o) {
@@ -59,7 +65,6 @@ class format_topics2 extends format_topics {
                     'help_component' => 'format_topics2',
                     'default' => (isset($CFG->max_tabs) ? $CFG->max_tabs : 5),
                     'type' => PARAM_INT,
-//                    'element_type' => 'hidden',
                 ),
                 'limittabname' => array(
                     'label' => get_string('limittabname_label', 'format_topics2'),
@@ -67,7 +72,6 @@ class format_topics2 extends format_topics {
                     'help_component' => 'format_topics2',
                     'default' => 0,
                     'type' => PARAM_INT,
-//                    'element_type' => 'hidden',
                 ),
 
                 'hiddensections' => array(
@@ -95,19 +99,6 @@ class format_topics2 extends format_topics {
                     'help' => 'coursedisplay',
                     'help_component' => 'moodle',
                 ),
-//                'toggle' => array(
-//                    'label' => get_string('toggle_label', 'format_topics2'),
-//                    'element_type' => 'advcheckbox',
-//                    'help' => 'toggle',
-//                    'help_component' => 'format_topics2',
-//                ),
-//                'toggle_all' => array(
-//                    'label' => get_string('toggle_all_label', 'format_topics2'),
-//                    'element_type' => 'advcheckbox',
-//                    'help' => 'toggle_all',
-//                    'help_component' => 'format_topics2',
-//                ),
-
                 'section0_ontop' => array(
                     'label' => get_string('section0_label', 'format_topics2'),
                     'element_type' => 'advcheckbox',
@@ -136,11 +127,16 @@ class format_topics2 extends format_topics {
                 $courseformatoptions['tab'.$i] = array('default' => "",'type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
                 $courseformatoptions['tab'.$i.'_sectionnums'] = array('default' => "",'type' => PARAM_TEXT,'label' => '','element_type' => 'hidden',);
             }
-
         }
         return $courseformatoptions;
     }
 
+    /**
+     * Convert number words into numbers
+     *
+     * @param $string
+     * @return mixed
+     */
     public function words2numbers($string) {
         $numwords = array(
             0 => 'zero',
@@ -160,6 +156,16 @@ class format_topics2 extends format_topics {
         return $string;
     }
 
+    /**
+     * Extend the section action menu to handle tabs
+     *
+     * @param $section
+     * @param $action
+     * @param $sr
+     * @return array|stdClass|null
+     * @throws moodle_exception
+     * @throws required_capability_exception
+     */
     public function section_action($section, $action, $sr) {
         global $PAGE;
 
@@ -195,8 +201,15 @@ class format_topics2 extends format_topics {
         return $rv;
     }
 
-    // move section ID and section number to tab format settings of a given tab
-    public function move2tab($tabnum, $section2move, $settings) {
+    /**
+     * Move section ID and section number to tab format settings of a given tab
+     *
+     * @param $tabnum
+     * @param $section2move
+     * @param $settings
+     * @return mixed
+     */
+    protected function move2tab($tabnum, $section2move, $settings) {
         global $PAGE;
         global $DB;
 
@@ -214,7 +227,14 @@ class format_topics2 extends format_topics {
         return $settings;
     }
 
-    // remove section id from all tab format settings
+    /**
+     * Remove section id from all tab format settings
+     *
+     * @param $course
+     * @param $section2remove
+     * @param $settings
+     * @return mixed
+     */
     public function removefromtabs($course, $section2remove, $settings) {
         global $CFG;
         global $DB;
@@ -246,7 +266,13 @@ class format_topics2 extends format_topics {
         return $settings;
     }
 
-    // switch to show section0 always on top of the tabs
+    /**
+     * Switch to show section0 always on top of the tabs
+     *
+     * @param $settings
+     * @param $value
+     * @return mixed
+     */
     public function sectionzeroswitch($settings, $value) {
         $settings['section0_ontop'] = $value;
         $this->update_course_format_options($settings);
@@ -254,6 +280,14 @@ class format_topics2 extends format_topics {
         return $settings;
     }
 
+    /**
+     * Delete a section and remove its traces in tabs
+     *
+     * @param int|section_info|stdClass $section
+     * @param bool $forcedeleteifnotempty
+     * @return bool
+     * @throws dml_exception
+     */
     public function delete_section($section, $forcedeleteifnotempty = false) {
         global $DB;
 
@@ -271,7 +305,14 @@ class format_topics2 extends format_topics {
         return $what_parents_say;
     }
 
-    // Remove traces of a deleted section from tabs where needed
+    /**
+     * Remove traces of a deleted section from tabs where needed
+     *
+     * @param bool $section
+     * @param bool $sectionid
+     * @return bool
+     * @throws dml_exception
+     */
     public function remove_from_tabs($section = false, $sectionid = false) {
         global $DB;
         if(!$section || !$sectionid) {
@@ -312,8 +353,14 @@ class format_topics2 extends format_topics {
 
     }
 
-    // Remove the section ID from tabs
-    public function remove_sectionid($option, $sectionid) {
+    /**
+     * Remove the section ID from tabs
+     *
+     * @param $option
+     * @param $sectionid
+     * @throws dml_exception\
+     */
+    protected function remove_sectionid($option, $sectionid) {
         global $DB;
         $tabsections = explode(',',$option->value);
         $new_tabsections = array();
@@ -328,8 +375,14 @@ class format_topics2 extends format_topics {
         }
     }
 
-    // Remove the section number from tabs
-    public function remove_sectionnum($option, $sectionnum) {
+    /**
+     * Remove the section number from tabs
+     *
+     * @param $option
+     * @param $sectionnum
+     * @throws dml_exception
+     */
+    protected function remove_sectionnum($option, $sectionnum) {
         global $DB;
         $tabsectionnums = explode(',',$option->value);
         $new_tabsectionnums = array();
