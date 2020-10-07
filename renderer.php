@@ -510,11 +510,6 @@ class format_topics2_renderer extends format_topics_renderer {
     protected function section_header($section, $course, $onsectionpage, $sectionreturn=null) {
         $o = '';
         $sectionstyle = '';
-        if (isset($this->toggleseq)) {
-            $toggleseq = str_split($this->toggleseq);
-        } else {
-            $toggleseq = '';
-        }
 
         if ($section->section != 0) {
             // Only in the non-general sections.
@@ -563,19 +558,9 @@ class format_topics2_renderer extends format_topics_renderer {
             $o .= $this->section_availability($section);
         }
 
-        // The sectionbody.
-        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && isset($toggleseq[$section->section])
-            && $toggleseq[$section->section] === '0' && ($section->section !== 0 || $section->name !== '')) {
-            $o .= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area hidden',
-                'style' => 'display: none;'));
-        } else {
-            $o .= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
-        }
-        if ($section->uservisible || $section->visible) {
-            // Show summary if section is available or has availability restriction information.
-            // Do not show summary if section is hidden but we still display it because of course setting.
-            $o .= $this->format_summary_text($section);
-        }
+        // The sectionbody
+        $o .= $this->section_body($section, $course);
+
         return $o;
     }
 
@@ -588,17 +573,17 @@ class format_topics2_renderer extends format_topics_renderer {
      * @throws coding_exception
      */
     public function section_title($section, $course) {
-        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
-            // Prepare the toggle.
-            if (isset($this->toggleseq)) {
-                $toggleseq = str_split($this->toggleseq);
+        if($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
+            // prepare the toggle
+            if(isset($this->toggle_seq)) {
+                $toggleseq = (array) json_decode($this->toggle_seq);
             } else {
                 $toggleseq = '';
             }
 
             $tooltipopen = get_string('tooltip_open', 'format_topics2');
             $tooltipclosed = get_string('tooltip_closed', 'format_topics2');
-            if (isset($toggleseq[$section->section]) && $toggleseq[$section->section] === '0') {
+            if (isset($toggleseq[$section->id]) && $toggleseq[$section->id] === '0') {
                 $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltipopen
                     .'" style="cursor: pointer; display: none;"></i>';
                 $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'.$tooltipclosed
@@ -615,6 +600,36 @@ class format_topics2_renderer extends format_topics_renderer {
         }
 
         return $toggler.$this->render(course_get_format($course)->inplace_editable_render_section_name($section));
+    }
+
+    /**
+     * Render the body of a section
+     *
+     * @param array|stdClass $section
+     * @param array|stdClass $course
+     * @return string
+     */
+    public function section_body($section, $course) {
+        $o = '';
+
+        if(isset($this->toggle_seq)) {
+            $toggle_seq = (array) json_decode($this->toggle_seq);
+        } else {
+            $toggle_seq = [];
+        }
+
+        if($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && isset($toggle_seq[$section->id]) && $toggle_seq[$section->id] === '0' && ($section->section !== 0 || $section->name !== '')) {
+            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
+        } else {
+            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
+        }
+        if ($section->uservisible || $section->visible) {
+            // Show summary if section is available or has availability restriction information.
+            // Do not show summary if section is hidden but we still display it because of course setting
+            $o .= $this->format_summary_text($section);
+        }
+        return $o;
+
     }
 
     /**
