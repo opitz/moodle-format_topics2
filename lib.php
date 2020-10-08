@@ -28,8 +28,7 @@ defined('COURSE_DISPLAY_NOCOLLAPSE') || define('COURSE_DISPLAY_NOCOLLAPSE', 3);
 require_once($CFG->dirroot. '/course/format/topics/lib.php');
 
 /**
- * Main class for the topics2 course format
- * with added tab-ability
+ * Main class for the topics2 course format with added tab-ability
  *
  * @package    format_topics2
  * @copyright  2018 Matthias Opitz
