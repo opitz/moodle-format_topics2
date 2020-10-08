@@ -18,7 +18,7 @@
  * Class format_topics2
  *
  * @package    format_topics2
- * @copyright  2018 Matthias Opitz
+ * @copyright  2020 Matthias Opitz
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
