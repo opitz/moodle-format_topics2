@@ -558,7 +558,7 @@ class format_topics2_renderer extends format_topics_renderer {
             $o .= $this->section_availability($section);
         }
 
-        // The sectionbody
+        // The sectionbody.
         $o .= $this->section_body($section, $course);
 
         return $o;
@@ -573,9 +573,9 @@ class format_topics2_renderer extends format_topics_renderer {
      * @throws coding_exception
      */
     public function section_title($section, $course) {
-        if($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
-            // prepare the toggle
-            if(isset($this->toggle_seq)) {
+        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
+            // Prepare the toggle.
+            if (isset($this->toggle_seq)) {
                 $toggleseq = (array) json_decode($this->toggle_seq);
             } else {
                 $toggleseq = '';
@@ -605,23 +605,27 @@ class format_topics2_renderer extends format_topics_renderer {
     /**
      * Render the body of a section
      *
-     * @param array|stdClass $section
+     * @param array|stdClass $section,.`.z.z
      * @param array|stdClass $course
      * @return string
      */
     public function section_body($section, $course) {
         $o = '';
 
-        if(isset($this->toggle_seq)) {
-            $toggle_seq = (array) json_decode($this->toggle_seq);
+        if (isset($this->toggle_seq)) {
+            $toggleseq = (array) json_decode($this->toggle_seq);
         } else {
-            $toggle_seq = [];
+            $toggleseq = [];
         }
 
-        if($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && isset($toggle_seq[$section->id]) && $toggle_seq[$section->id] === '0' && ($section->section !== 0 || $section->name !== '')) {
-            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
+        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE &&
+            isset($toggleseq[$section->id]) &&
+            $toggleseq[$section->id] === '0' &&
+            ($section->section !== 0 || $section->name !== '')) {
+            $o .= html_writer::start_tag('div',
+                array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
         } else {
-            $o.= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
+            $o .= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
         }
         if ($section->uservisible || $section->visible) {
             // Show summary if section is available or has availability restriction information.
