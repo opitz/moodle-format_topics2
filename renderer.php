@@ -22,14 +22,11 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.3
  */
-
-
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/format/topics/renderer.php');
 
 /**
- * Basic renderer for topics2 format.
- * with added tab-ability
+ * Basic renderer for topics2 format with added tab-ability.
  *
  * @copyright 2018 Matthias Opitz
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -37,7 +34,7 @@ require_once($CFG->dirroot.'/course/format/topics/renderer.php');
 class format_topics2_renderer extends format_topics_renderer {
 
     /**
-     * Generate the starting container html for a list of sections
+     * Generate the starting container html for a list of sections.
      * @return string HTML to output.
      */
     protected function start_section_list() {

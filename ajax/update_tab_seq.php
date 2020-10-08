@@ -16,6 +16,10 @@
 
 /*
  * Updating the course format options with a new sequence in which the tabs are displayed
+ *
+ * @package    format_topics2
+ * @copyright  2020 Matthias Opitz
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('../../../../config.php');
 require_login();
