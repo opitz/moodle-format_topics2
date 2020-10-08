@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Main class for the topics2 course format
- * with added tab-ability
- *
- * @package    format_topics2
- * @copyright  2018 Matthias Opitz
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 defined('MOODLE_INTERNAL') || die();
 defined('COURSE_DISPLAY_COLLAPSE') || define('COURSE_DISPLAY_COLLAPSE', 2); // Legacy support - no longer used.
 defined('COURSE_DISPLAY_NOCOLLAPSE') || define('COURSE_DISPLAY_NOCOLLAPSE', 3);
@@ -30,6 +21,12 @@ require_once($CFG->dirroot. '/course/format/topics/lib.php');
 
 /**
  * Class format_topics2
+ * Main class for the topics2 course format
+ * with added tab-ability
+ *
+ * @package    format_topics2
+ * @copyright  2018 Matthias Opitz
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_topics2 extends format_topics {
 
