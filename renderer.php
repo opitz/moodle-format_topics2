@@ -347,7 +347,7 @@ class format_topics2_renderer extends format_topics_renderer {
      * @return array|string
      * @throws dml_exception
      */
-    public function check_tab_section_ids($courseid, $sectionids, $tabsectionids, $tabsectionnums, $i) {
+    protected function check_tab_section_ids($courseid, $sectionids, $tabsectionids, $tabsectionnums, $i) {
         global $DB;
         $idhaschanged = false;
 
@@ -606,7 +606,7 @@ class format_topics2_renderer extends format_topics_renderer {
      * @param array|stdClass $course
      * @return string
      */
-    public function section_body($section, $course) {
+    protected function section_body($section, $course) {
         $o = '';
 
         if (isset($this->toggle_seq)) {
@@ -626,7 +626,7 @@ class format_topics2_renderer extends format_topics_renderer {
         }
         if ($section->uservisible || $section->visible) {
             // Show summary if section is available or has availability restriction information.
-            // Do not show summary if section is hidden but we still display it because of course setting
+            // Do not show summary if section is hidden but we still display it because of course setting.
             $o .= $this->format_summary_text($section);
         }
         return $o;
@@ -838,7 +838,6 @@ class format_topics2_renderer extends format_topics_renderer {
 
         return $o;
     }
-
-
+    
 }
 
