@@ -838,6 +838,5 @@ class format_topics2_renderer extends format_topics_renderer {
 
         return $o;
     }
-    
 }
 
