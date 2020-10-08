@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
  * Updating the user preferences with the current toggle state of all sections in the course
  *
  * @package    format_topics2

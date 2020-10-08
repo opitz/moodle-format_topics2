@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/*
+/**
  * Updating the course format options with a new sequence in which the tabs are displayed
  *
  * @package    format_topics2

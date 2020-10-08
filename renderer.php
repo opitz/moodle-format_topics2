@@ -602,7 +602,7 @@ class format_topics2_renderer extends format_topics_renderer {
     /**
      * Render the body of a section
      *
-     * @param array|stdClass $section,.`.z.z
+     * @param array|stdClass $section
      * @param array|stdClass $course
      * @return string
      */
