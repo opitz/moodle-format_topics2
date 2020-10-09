@@ -4,9 +4,9 @@ notifications:
 
 language: php
 
-os: linux
+#os: linux
 
-dist: bionic
+#dist: bionic
 
 addons:
   postgresql: "9.4"
