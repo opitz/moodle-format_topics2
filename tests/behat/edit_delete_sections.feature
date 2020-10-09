@@ -1,4 +1,4 @@
-@format @format_topics2
+@format @format_topics2xxx
 Feature: Sections can be edited and deleted in topics2 format
   In order to rearrange my course contents
   As a teacher
