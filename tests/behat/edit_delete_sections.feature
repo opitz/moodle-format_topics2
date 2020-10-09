@@ -51,7 +51,6 @@ Feature: Sections can be edited and deleted in topics2 format
     Then I should see "This is the second topic" in the "li#section-2" "css_element"
     And I should not see "Topic 2" in the "li#section-2" "css_element"
 
-  #@javascript
   Scenario: Inline edit section name in topics2 format
     When I click on "Edit topic name" "link" in the "li#section-1" "css_element"
     And I set the field "New name for topic Topic 1" to "Midterm evaluation"
@@ -78,7 +77,6 @@ Feature: Sections can be edited and deleted in topics2 format
     And I should see "Test choice name" in the "li#section-4" "css_element"
     And I should see "Topic 4"
 
-  #@javascript
   Scenario: Adding sections in topics2 format
     When I follow "Add Topics"
     Then the field "Number of sections" matches value "1"
