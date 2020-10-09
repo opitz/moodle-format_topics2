@@ -1,13 +1,19 @@
-dist: bionic
+notifications:
+  email:
+    if: env(MOODLE_EMAIL) != no
 
 language: php
+
+os: linux
+
+dist: bionic
 
 addons:
   postgresql: "9.4"
 
 services:
   - mysql
-  - postgresql
+#  - postgresql
   - docker
 
 cache:
