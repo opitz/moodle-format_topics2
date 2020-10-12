@@ -5,7 +5,7 @@ addons:
 
 services:
   - mysql
-  - postgresql
+#  - postgresql
   - docker
 
 cache:
@@ -14,15 +14,15 @@ cache:
     - $HOME/.npm
 
 php:
-#  - 7.2
-#  - 7.3
+  #  - 7.2
+  #  - 7.3
   - 7.4
 
 env:
   global:
     - MOODLE_BRANCH=MOODLE_39_STABLE
   matrix:
-#    - DB=pgsql
+    #    - DB=pgsql
     - DB=mysqli
 
 before_install:
@@ -45,4 +45,4 @@ script:
 #  - moodle-plugin-ci grunt
 #  - moodle-plugin-ci phpdoc
 #  - moodle-plugin-ci phpunit
-#  - moodle-plugin-ci behat
+  - moodle-plugin-ci behat
