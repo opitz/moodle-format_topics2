@@ -80,13 +80,13 @@ Feature: Sections can be edited and deleted in topics2 format
 
 #  @javascript
   Scenario: Adding sections in topics2 format
-    When I follow "Add Topics"
-    Then the field "Number of topics" matches value "1"
+    When I click on "Add Topics"
+    Then the field "Number of sections" matches value "1"
     And I press "Add Topics"
     And I should see "Topic 6" in the "li#section-6" "css_element"
     And "li#section-7" "css_element" should not exist
     And I follow "Add Topics"
-    And I set the field "Number of topics" to "3"
+    And I set the field "Number of sections" to "3"
     And I press "Add Topics"
     And I should see "Topic 7" in the "li#section-7" "css_element"
     And I should see "Topic 8" in the "li#section-8" "css_element"
