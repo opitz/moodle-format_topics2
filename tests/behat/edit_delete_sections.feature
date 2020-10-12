@@ -51,17 +51,17 @@ Feature: Sections can be edited and deleted in topics2 format
     Then I should see "This is the second topic" in the "li#section-2" "css_element"
     And I should not see "Topic 2" in the "li#section-2" "css_element"
 
-#  @javascript
-#  Scenario: Inline edit section name in topics2 format
-#    When I click on "Edit topic name" "link" in the "li#section-1" "css_element"
-#    And I set the field "New name for topic Topic 1" to "Midterm evaluation"
-#    And I press key "13" in the field "New name for topic Topic 1"
-#    Then I should not see "Topic 1" in the "region-main" "region"
-#    And "New name for topic" "field" should not exist
-#    And I should see "Midterm evaluation" in the "li#section-1" "css_element"
-#    And I am on "Course 1" course homepage
-#    And I should not see "Topic 1" in the "region-main" "region"
-#    And I should see "Midterm evaluation" in the "li#section-1" "css_element"
+  @javascript
+  Scenario: Inline edit section name in topics2 format
+    When I click on "Edit topic name" "link" in the "li#section-1" "css_element"
+    And I set the field "New name for topic Topic 1" to "Midterm evaluation"
+    And I press key "13" in the field "New name for topic Topic 1"
+    Then I should not see "Topic 1" in the "region-main" "region"
+    And "New name for topic" "field" should not exist
+    And I should see "Midterm evaluation" in the "li#section-1" "css_element"
+    And I am on "Course 1" course homepage
+    And I should not see "Topic 1" in the "region-main" "region"
+    And I should see "Midterm evaluation" in the "li#section-1" "css_element"
 
   Scenario: Deleting the last section in topics2 format
     When I delete section "5"
@@ -78,17 +78,17 @@ Feature: Sections can be edited and deleted in topics2 format
     And I should see "Test choice name" in the "li#section-4" "css_element"
     And I should see "Topic 4"
 
-#  @javascript
-#  Scenario: Adding sections in topics2 format
-#    When I follow "Add Topics"
-#    Then the field "Number of sections" matches value "1"
-#    And I press "Add Topics"
-#    And I should see "Topic 6" in the "li#section-6" "css_element"
-#    And "li#section-7" "css_element" should not exist
-#    And I follow "Add Topics"
-#    And I set the field "Number of sections" to "3"
-#    And I press "Add Topics"
-#    And I should see "Topic 7" in the "li#section-7" "css_element"
-#    And I should see "Topic 8" in the "li#section-8" "css_element"
-#    And I should see "Topic 9" in the "li#section-9" "css_element"
-#    And "li#section-10" "css_element" should not exist
+  @javascript
+  Scenario: Adding sections in topics2 format
+    When I follow "Add Topics"
+    Then the field "Number of sections" matches value "1"
+    And I press "Add Topics"
+    And I should see "Topic 6" in the "li#section-6" "css_element"
+    And "li#section-7" "css_element" should not exist
+    And I follow "Add Topics"
+    And I set the field "Number of sections" to "3"
+    And I press "Add Topics"
+    And I should see "Topic 7" in the "li#section-7" "css_element"
+    And I should see "Topic 8" in the "li#section-8" "css_element"
+    And I should see "Topic 9" in the "li#section-9" "css_element"
+    And "li#section-10" "css_element" should not exist
