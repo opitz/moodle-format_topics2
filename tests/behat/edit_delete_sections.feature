@@ -19,7 +19,7 @@ Feature: Sections can be edited and deleted in topics2 format
       | choice     | Test choice name       | Test choice description       | C1     | choice1     | 5       |
     And the following "course enrolments" exist:
       | user     | course | role           |
-      | teacher1 | C1     | teacher |
+      | teacher1 | C1     | editingteacher |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
 
