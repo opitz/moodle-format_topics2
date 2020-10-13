@@ -572,8 +572,8 @@ class format_topics2_renderer extends format_topics_renderer {
     public function section_title($section, $course) {
         if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
             // Prepare the toggle.
-            if (isset($this->toggle_seq)) {
-                $toggleseq = (array) json_decode($this->toggle_seq);
+            if (isset($this->toggleseq)) {
+                $toggleseq = (array) json_decode($this->toggleseq);
             } else {
                 $toggleseq = '';
             }
@@ -609,8 +609,8 @@ class format_topics2_renderer extends format_topics_renderer {
     protected function section_body($section, $course) {
         $o = '';
 
-        if (isset($this->toggle_seq)) {
-            $toggleseq = (array) json_decode($this->toggle_seq);
+        if (isset($this->toggleseq)) {
+            $toggleseq = (array) json_decode($this->toggleseq);
         } else {
             $toggleseq = [];
         }
