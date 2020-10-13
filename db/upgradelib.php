@@ -17,7 +17,9 @@
 /**
  * Upgrade scripts for course format "Topics2"
  *
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package format_topics2
+ * @copyright 2018-2020 Matthias Opitz
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -27,9 +29,9 @@ defined('MOODLE_INTERNAL') || die();
  * different than their 'numsections' course format option.
  *
  * For courses where there are more sections than numsections, we call
- * {@see format_topics2_upgrade_hide_extra_sections()} and
+ * format_topics2_upgrade_hide_extra_sections() and
  * either delete or hide "orphaned" sections. For courses where there are fewer sections
- * than numsections, we call {@see format_topics2_upgrade_add_empty_sections()} to add
+ * than numsections, we call format_topics2_upgrade_add_empty_sections() to add
  * these sections.
  */
 function format_topics2_upgrade_remove_numsections() {

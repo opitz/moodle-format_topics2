@@ -18,7 +18,7 @@
  * Renderer for outputting the topics2 course format.
  *
  * @package format_topics2
- * @copyright 2012 Dan Poltawski / 2018 Matthias Opitz
+ * @copyright 2018-2020 Matthias Opitz
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.3
  */
@@ -255,7 +255,7 @@ class format_topics2_renderer extends format_topics_renderer {
      * @throws dml_exception
      */
     public function render_tab($tab) {
-        global $DB, $OUTPUT;
+        global $DB;
 
         if (!isset($tab)) {
             return false;
@@ -278,7 +278,8 @@ class format_topics2_renderer extends format_topics_renderer {
         if ($this->page->user_is_editing()) {
             // Get the format option record for the given tab - we need the id.
             // If the record does not exist, create it first.
-            if (!$DB->record_exists('course_format_options', array('courseid' => $this->page->course->id, 'name' => $tab->id.'_title'))) {
+            if (!$DB->record_exists('course_format_options',
+                array('courseid' => $this->page->course->id, 'name' => $tab->id.'_title'))) {
                 $format = course_get_format($this->page->course);
                 $format = $format->get_format();
 
@@ -330,7 +331,7 @@ class format_topics2_renderer extends format_topics_renderer {
             format_string($tab->title), $tab->title,
             get_string('tabtitle_edithint', 'format_topics2'),
             get_string('tabtitle_editlabel', 'format_topics2', format_string($tab->title)));
-        $o .= $OUTPUT->render($tmpl);
+        $o .= $this->output->render($tmpl);
         $o .= "</span>";
         $o .= html_writer::end_tag('li');
         return $o;
