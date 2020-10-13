@@ -27,5 +27,5 @@ Feature: Tabs can be used in topics2 format
     When I edit the section "0"
     Then the field "Custom" matches value "0"
     And the field "New value for Section name" matches value "General"
-    And I click on "Custom"
+    And I click on "Custom" "Link"
     Then the field "Custom" matches value "1"
