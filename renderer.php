@@ -255,7 +255,7 @@ class format_topics2_renderer extends format_topics_renderer {
      * @throws dml_exception
      */
     public function render_tab($tab) {
-        global $DB, $PAGE, $OUTPUT;
+        global $DB, $OUTPUT;
 
         if (!isset($tab)) {
             return false;
@@ -275,15 +275,15 @@ class format_topics2_renderer extends format_topics_renderer {
             }
         }
 
-        if ($PAGE->user_is_editing()) {
+        if ($this->page->user_is_editing()) {
             // Get the format option record for the given tab - we need the id.
             // If the record does not exist, create it first.
-            if (!$DB->record_exists('course_format_options', array('courseid' => $PAGE->course->id, 'name' => $tab->id.'_title'))) {
-                $format = course_get_format($PAGE->course);
+            if (!$DB->record_exists('course_format_options', array('courseid' => $this->page->course->id, 'name' => $tab->id.'_title'))) {
+                $format = course_get_format($this->page->course);
                 $format = $format->get_format();
 
                 $record = new stdClass();
-                $record->courseid = $PAGE->course->id;
+                $record->courseid = $this->page->course->id;
                 $record->format = $format;
                 $record->section = 0;
                 $record->name = $tab->id.'_title';
@@ -294,7 +294,7 @@ class format_topics2_renderer extends format_topics_renderer {
                 $DB->insert_record('course_format_options', $record);
             }
 
-            $formatoptiontab = $DB->get_record('course_format_options', array('courseid' => $PAGE->course->id,
+            $formatoptiontab = $DB->get_record('course_format_options', array('courseid' => $this->page->course->id,
                 'name' => $tab->id.'_title'
             ));
             $itemid = $formatoptiontab->id;
@@ -322,11 +322,11 @@ class format_topics2_renderer extends format_topics_renderer {
                 tab_title="'.$tab->title.'"
                 generic_title = "'.$tab->generic_title.'"
                 tabindex = "'.$tabindex.'"
-                style="'.($PAGE->user_is_editing() ? 'cursor: move;' : '').'">';
+                style="'.($this->page->user_is_editing() ? 'cursor: move;' : '').'">';
         }
         // Render the tab name as inplace_editable.
         $tmpl = new \core\output\inplace_editable('format_topics2', 'tabname', $itemid,
-            $PAGE->user_is_editing(),
+            $this->page->user_is_editing(),
             format_string($tab->title), $tab->title,
             get_string('tabtitle_edithint', 'format_topics2'),
             get_string('tabtitle_editlabel', 'format_topics2', format_string($tab->title)));
@@ -476,9 +476,8 @@ class format_topics2_renderer extends format_topics_renderer {
      * @return string
      */
     public function render_section($course, $section, $formatoptions) {
-        global $PAGE;
         $o = '';
-        if (!$PAGE->user_is_editing() && $course->coursedisplay == COURSE_DISPLAY_MULTIPAGE) {
+        if (!$this->page->user_is_editing() && $course->coursedisplay == COURSE_DISPLAY_MULTIPAGE) {
             // Display section summary only.
             $o .= $this->section_summary($section, $course, null);
         } else {
@@ -645,9 +644,8 @@ class format_topics2_renderer extends format_topics_renderer {
      * @throws coding_exception
      */
     public function render_hidden_sections($course, $sections, $context, $modinfo, $numsections) {
-        global $PAGE;
         $o = '<div class="testing"></div>';
-        if ($PAGE->user_is_editing() and has_capability('moodle/course:update', $context)) {
+        if ($this->page->user_is_editing() and has_capability('moodle/course:update', $context)) {
             // Print stealth sections if present.
             foreach ($sections as $section => $thissection) {
                 if ($section <= $numsections or empty($modinfo->sections[$section])) {
@@ -696,9 +694,9 @@ class format_topics2_renderer extends format_topics_renderer {
      * @return array of edit control items
      */
     protected function section_edit_control_items($course, $section, $onsectionpage = false) {
-        global $DB, $CFG, $PAGE;
+        global $DB, $CFG;
 
-        if (!$PAGE->user_is_editing()) {
+        if (!$this->page->user_is_editing()) {
             return array();
         }
 
