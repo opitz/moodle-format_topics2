@@ -372,7 +372,7 @@ class format_topics2_renderer extends format_topics_renderer {
         }
 
         foreach ($tabsectionids as $key => $tabsectionid) {
-            if (!in_array($tabsectionid, $sectionids) && isset($sectionids[$tabsectionnums[$key]])) {
+            if (!in_array($tabsectionid, $sectionids) && isset($tabsectionnums[$key]) && isset($sectionids[$tabsectionnums[$key]])) {
                 // The tab_section_id is not among the (new) section ids of that course.
                 // This is most likely because the course has been restored - so use the sectionnums to determine the new id.
                 $newtabsectionids[] = $sectionids[$tabsectionnums[$key]];
