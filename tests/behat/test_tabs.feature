@@ -23,9 +23,9 @@ Feature: Tabs can be used in topics2 format
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
 
-  Scenario: View the default name of the general section in topics2 format
-    When I edit the section "0"
-    Then the field "Custom" matches value "0"
-    And the field "New value for Section name" matches value "General"
-    When I click on "Custom" "checkbox"
-    Then the field "Custom" matches value "1"
+  @javascript
+  Scenario: Put section 1 under tab 1
+    When I edit the section "1"
+    And I move the section to tab "tab1"
+    Then I should not see "Topic 1"
+    And I should not see "Test book name"
