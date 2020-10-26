@@ -763,11 +763,11 @@ class format_topics2_renderer extends format_topics_renderer {
             )
         );
 
-        $itemtitle = "Move to Tab ";
+        $itemtitle = get_string('movetotab', 'format_topics2');
 
         for ($i = 1; $i <= $maxtabs; $i++) {
             $tabname = 'tab'.$i.'_title';
-            $itemname = 'To Tab '.(isset($course->$tabname) && $course->$tabname != ''
+            $itemname = get_string('totab', 'format_topics2').(isset($course->$tabname) && $course->$tabname != ''
                 && $course->$tabname != 'Tab '.$i ? '"'.$course->$tabname.'"' : $i);
 
             $controls['to_tab'.$i] = array(
