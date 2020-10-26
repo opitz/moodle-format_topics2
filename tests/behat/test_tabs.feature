@@ -26,6 +26,6 @@ Feature: Tabs can be used in topics2 format
   @javascript
   Scenario: Put section 1 under tab 1
     When I edit the section "1"
-    And I move the section to tab "tab1"
+    And I move section "1" to tab "2"
     Then I should not see "Topic 1"
     And I should not see "Test book name"

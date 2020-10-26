@@ -39,30 +39,23 @@ class behat_format_topics2 extends behat_course {
     /**
      * Moves the current section to the specified tab. You need to be in the course page and on editing mode.
      *
-     * @Given /^I move the section to tab "(?P<sectionnumber_string>(?:[^"]|\\")*)" to tab "(?P<tabnumber_string>(?:[^"]|\\")*)"$/
+     * @Given /^I move section "(?P<sectionnumber_string>(?:[^"]|\\")*)" to tab "(?P<tabnumber_string>(?:[^"]|\\")*)"$/
      * @param string $sectionnumber
      * @param string $tabnumber
      */
-    public function i_move_the_section_to_tab($sectionnumber, $tabnumber) {
+    public function i_move_section_to_tab($sectionnumber, $tabnumber) {
         // Ensures the section exists.
         $xpath = $this->section_exists($sectionnumber);
-
-        // We need to know the course format as the text strings depends on them.
-        $courseformat = $this->get_course_format();
-        if (get_string_manager()->string_exists('hidefromothers', $courseformat)) {
-            $strhide = get_string('hidefromothers', $courseformat);
-        } else {
-            $strhide = get_string('hidesection');
-        }
+        $strtotab = get_string('totab', 'format_topics2');
 
         // If javascript is on, link is inside a menu.
         if ($this->running_javascript()) {
             $this->i_open_section_edit_menu($sectionnumber);
         }
 
-        // Click on delete link.
+        // Click on move to tab link.
         $this->execute('behat_general::i_click_on_in_the',
-            array($strhide, "link", $this->escape($xpath), "xpath_element")
+            array($strtotab.$tabnumber, "link", $this->escape($xpath), "xpath_element")
         );
 
         if ($this->running_javascript()) {
