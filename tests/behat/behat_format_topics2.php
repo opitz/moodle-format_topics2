@@ -109,10 +109,10 @@ class behat_format_topics2 extends behat_base {
      * @param int $sectionnumber
      * @return string The xpath of the section.
      */
-    protected function section_exists0($sectionnumber) {
+    protected function section_exists($sectionnumber) {
 
         // Just to give more info in case it does not exist.
-        $xpath = "//li[@id='section-" . (int)$sectionnumber . "']";
+        $xpath = "//li[@id='section-" . $sectionnumber . "']";
         $exception = new ElementNotFoundException($this->getSession(), "Section $sectionnumber ");
         $this->find('xpath', $xpath, $exception);
 
