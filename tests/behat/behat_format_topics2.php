@@ -107,6 +107,10 @@ class behat_format_topics2 extends behat_base {
             array($strtotab.$tabnumber, "link", $this->escape($xpath), "xpath_element")
         );
 
+        if ($this->running_javascript()) {
+            $this->getSession()->wait(self::get_timeout() * 1000, self::PAGE_READY_JS);
+//            $this->i_wait_until_section_is_available($sectionnumber);
+        }
     }
 
     /**

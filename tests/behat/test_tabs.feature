@@ -27,5 +27,5 @@ Feature: Tabs can be used in topics2 format
     When I move section "5" to tab "2"
     Then I should not see "Topic 5"
     And I should see "Topic 4"
-    
+
 
