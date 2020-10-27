@@ -91,31 +91,6 @@ class behat_format_topics2 extends behat_course {
     }
 
     /**
-     * Opens a section edit menu if it is not already opened.
-     *
-     * @Given /^I open section "(?P<section_number>\d+)" edit menu$/
-     * @throws DriverException The step is not available when Javascript is disabled
-     * @param string $sectionnumber
-     */
-    public function i_open_section_edit_menu($sectionnumber) {
-        if (!$this->running_javascript()) {
-            throw new DriverException('Section edit menu not available when Javascript is disabled');
-        }
-
-        // Wait for section to be available, before clicking on the menu.
-        $this->i_wait_until_section_is_available($sectionnumber);
-
-        // If it is already opened we do nothing.
-        $xpath = $this->section_exists($sectionnumber);
-        $xpath .= "/descendant::div[contains(@class, 'section-actions')]/descendant::a[contains(@data-toggle, 'dropdown')]";
-
-        $exception = new ExpectationException('Section "' . $sectionnumber . '" was not found', $this->getSession());
-        $menu = $this->find('xpath', $xpath, $exception);
-        $menu->click();
-        $this->i_wait_until_section_is_available($sectionnumber);
-    }
-
-    /**
      * Waits until the section is available to interact with it. Useful when the section is performing an action and the section is overlayed with a loading layout.
      *
      * Using the protected method as this method will be usually
