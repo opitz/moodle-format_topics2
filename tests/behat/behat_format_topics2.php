@@ -42,6 +42,9 @@ class behat_format_topics2_behat_course extends behat_course {
      * @Given /^I move section "(?P<sectionnumber_string>(?:[^"]|\\")*)" to tab "(?P<tabnumber_string>(?:[^"]|\\")*)"$/
      * @param string $sectionnumber
      * @param string $tabnumber
+     * @throws \Behat\Mink\Exception\DriverException
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
+     * @throws coding_exception
      */
     public function i_move_section_to_tab($sectionnumber, $tabnumber) {
         // Ensures the section exists.

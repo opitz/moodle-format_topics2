@@ -34,7 +34,7 @@ require_once(__DIR__ . '/../../../../../course/tests/behat/behat_course.php');
  * @copyright 2020 Matthias Opitz
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class behat_format_topics2_behat_course extends behat_course {
+class behat_format_topics2_behat_course0 extends behat_course {
 
     /**
      * Moves the current section to the specified tab. You need to be in the course page and on editing mode.
@@ -42,6 +42,9 @@ class behat_format_topics2_behat_course extends behat_course {
      * @Given /^I move section "(?P<sectionnumber_string>(?:[^"]|\\")*)" to tab "(?P<tabnumber_string>(?:[^"]|\\")*)"$/
      * @param string $sectionnumber
      * @param string $tabnumber
+     * @throws \Behat\Mink\Exception\DriverException
+     * @throws \Behat\Mink\Exception\ElementNotFoundException
+     * @throws coding_exception
      */
     public function i_move_section_to_tab($sectionnumber, $tabnumber) {
         // Ensures the section exists.
