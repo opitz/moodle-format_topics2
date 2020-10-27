@@ -42,6 +42,36 @@ require_once(__DIR__ . '/../../../../../course/tests/behat/behat_course.php');
 class behat_format_topics2 extends behat_base {
 
     /**
+     * Deletes course section.
+     *
+     * @Given /^I gnupf section "(?P<section_number>\d+)"$/
+     * @param int $sectionnumber The section number
+     */
+    public function i_gnupf_section($sectionnumber) {
+        // Ensures the section exists.
+        $xpath = $this->section_exists($sectionnumber);
+
+        // We need to know the course format as the text strings depends on them.
+        $courseformat = $this->get_course_format();
+        if (get_string_manager()->string_exists('deletesection', $courseformat)) {
+            $strdelete = get_string('deletesection', $courseformat);
+        } else {
+            $strdelete = get_string('deletesection');
+        }
+
+        // If javascript is on, link is inside a menu.
+        if ($this->running_javascript()) {
+            $this->i_open_section_edit_menu($sectionnumber);
+        }
+
+        // Click on delete link.
+        $this->execute('behat_general::i_click_on_in_the',
+            array($strdelete, "link", $this->escape($xpath), "xpath_element")
+        );
+
+    }
+
+    /**
      * Moves the current section to the specified tab. You need to be in the course page and on editing mode.
      *
      * @Given /^I move section "(?P<section_number>\d+)" to tab "(?P<tab_number>\d+)"$/
