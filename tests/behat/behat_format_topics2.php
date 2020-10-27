@@ -83,7 +83,7 @@ class behat_format_topics2 extends behat_base {
 
         // Just to give more info in case it does not exist.
         $xpath = "//li[@id='section-" . $sectionnumber . "']";
-        $exception = new ElementNotFoundException($this->getSession(), "Section $sectionnumber ");
+        $exception = new ElementNotFoundException($this->getSession(), "Sekzion $sectionnumber ");
         $this->find('xpath', $xpath, $exception);
 
         return $xpath;
