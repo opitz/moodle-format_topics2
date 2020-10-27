@@ -22,8 +22,7 @@ Feature: Tabs can be used in topics2 format
       | teacher1 | C1     | editingteacher |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-
-  @javascript
+    
   Scenario: Highlight section 2
     When I edit the section "1"
     And I turn section "2" highlighting on
