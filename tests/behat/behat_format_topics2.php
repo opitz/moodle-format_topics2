@@ -52,7 +52,7 @@ class behat_format_topics2 extends behat_base {
         $xpath = $this->section_exists($sectionnumber);
 
         // We need to know the course format as the text strings depends on them.
-        $courseformat = $this->get_course_format();
+        $courseformat = 'format_topics2';
         if (get_string_manager()->string_exists('deletesection', $courseformat)) {
             $strdelete = get_string('deletesection', $courseformat);
         } else {
