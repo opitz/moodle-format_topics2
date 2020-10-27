@@ -44,9 +44,9 @@ class behat_format_topics2 extends behat_base {
     /**
      * Moves the current section to the specified tab. You need to be in the course page and on editing mode.
      *
-     * @Given /^I move section "(?P<sectionnumber_string>\d+)" to tab "(?P<tabnumber_string>\d+)"$/
-     * @param string $sectionnumber
-     * @param string $tabnumber
+     * @Given /^I move section "(?P<section_number>\d+)" to tab "(?P<tab_number>\d+)"$/
+     * @param int $sectionnumber
+     * @param int $tabnumber
      * @throws \Behat\Mink\Exception\DriverException
      * @throws \Behat\Mink\Exception\ElementNotFoundException
      * @throws coding_exception
@@ -79,7 +79,7 @@ class behat_format_topics2 extends behat_base {
      * @param int $sectionnumber
      * @return string The xpath of the section.
      */
-    protected function section_exists($sectionnumber) {
+    protected function section_exists0($sectionnumber) {
 
         // Just to give more info in case it does not exist.
         $xpath = "//li[@id='section-" . (int)$sectionnumber . "']";
