@@ -22,8 +22,11 @@ Feature: Tabs can be used in topics2 format
       | teacher1 | C1     | editingteacher |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
-    
-  Scenario: Highlight section 2
-    When I edit the section "1"
-    And I turn section "2" highlighting on
-    And section "2" should be highlighted
+
+  Scenario: Deleting the last section in topics2 format
+    When I delete section "5"
+    Then I should see "Are you absolutely sure you want to completely delete \"Topic 5\" and all the activities it contains?"
+    And I press "Delete"
+    And I should not see "Topic 5"
+    And I should see "Topic 4"
+
