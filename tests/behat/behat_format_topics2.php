@@ -91,14 +91,20 @@ class behat_format_topics2 extends behat_base {
         }
         */
         $strdelete = get_string('deletesection', $courseformat);
+        $strtotab = get_string('totab', 'format_topics2');
         // If javascript is on, link is inside a menu.
         if ($this->running_javascript()) {
             $this->i_open_section_edit_menu($sectionnumber);
         }
 
         // Click on delete link.
+//        $this->execute('behat_general::i_click_on_in_the',
+//            array($strdelete, "link", $this->escape($xpath), "xpath_element")
+//        );
+
+        // Click on move to tab link.
         $this->execute('behat_general::i_click_on_in_the',
-            array($strdelete, "link", $this->escape($xpath), "xpath_element")
+            array($strtotab.$tabnumber, "link", $this->escape($xpath), "xpath_element")
         );
 
     }
