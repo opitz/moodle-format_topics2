@@ -72,16 +72,48 @@ class behat_format_topics2 extends behat_base {
     }
 
     /**
-     * Moves the current section to the specified tab. You need to be in the course page and on editing mode.
+     * Moves course section to a tab.
      *
      * @Given /^I move section "(?P<section_number>\d+)" to tab "(?P<tab_number>\d+)"$/
+     * @param int $sectionnumber The section number
+     */
+    public function i_move_section_to_tab($sectionnumber, $tabnumber) {
+        // Ensures the section exists.
+        $xpath = $this->section_exists($sectionnumber);
+
+        // We need to know the course format as the text strings depends on them.
+        $courseformat = 'format_topics2';
+        /*
+        if (get_string_manager()->string_exists('deletesection', $courseformat)) {
+            $strdelete = get_string('deletesection', $courseformat);
+        } else {
+            $strdelete = get_string('deletesection');
+        }
+        */
+        $strdelete = get_string('deletesection', $courseformat);
+        // If javascript is on, link is inside a menu.
+        if ($this->running_javascript()) {
+            $this->i_open_section_edit_menu($sectionnumber);
+        }
+
+        // Click on delete link.
+        $this->execute('behat_general::i_click_on_in_the',
+            array($strdelete, "link", $this->escape($xpath), "xpath_element")
+        );
+
+    }
+
+    /**
+     * Moves the current section to the specified tab. You need to be in the course page and on editing mode.
+     *
+     * @Given /^I xxxx section "(?P<section_number>\d+)" to tabxxx "(?P<tab_number>\d+)"$/
      * @param int $sectionnumber
      * @param int $tabnumber
      * @throws \Behat\Mink\Exception\DriverException
      * @throws \Behat\Mink\Exception\ElementNotFoundException
      * @throws coding_exception
      */
-    public function i_move_section_to_tab($sectionnumber, $tabnumber) {
+    public function i_xxxx_section_to_tabxx($sectionnumber, $tabnumber) {
         // Ensures the section exists.
         $xpath = $this->section_exists($sectionnumber);
         $strtotab = get_string('totab', 'format_topics2');

@@ -24,7 +24,7 @@ Feature: Tabs can be used in topics2 format
     And I am on "Course 1" course homepage with editing mode on
 
   Scenario: Deleting the last section in topics2 format
-    When I gnupf section "5"
+    When I move section "5" to tab "2"
     Then I should see "Are you absolutely sure you want to completely delete \"Topic 5\" and all the activities it contains?"
     And I press "Delete"
     And I should not see "Topic 5"
