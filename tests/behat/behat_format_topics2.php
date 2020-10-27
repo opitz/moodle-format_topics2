@@ -44,7 +44,7 @@ class behat_format_topics2 extends behat_base {
     /**
      * Moves the current section to the specified tab. You need to be in the course page and on editing mode.
      *
-     * @Given /^I move section "(?P<sectionnumber_string>(?:[^"]|\\")*)" to tab "(?P<tabnumber_string>(?:[^"]|\\")*)"$/
+     * @Given /^I move section "(?P<sectionnumber_string>\d+)" to tab "(?P<tabnumber_string>\d+)"$/
      * @param string $sectionnumber
      * @param string $tabnumber
      * @throws \Behat\Mink\Exception\DriverException

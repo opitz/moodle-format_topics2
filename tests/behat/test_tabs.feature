@@ -24,7 +24,7 @@ Feature: Tabs can be used in topics2 format
     And I am on "Course 1" course homepage with editing mode on
 
   @javascript
-  Scenario: Put section 1 under tab 1
+  Scenario: Put section 1 under tab 2
     When I edit the section "1"
     And I move section "1" to tab "2"
     Then I should not see "Topic 1"
