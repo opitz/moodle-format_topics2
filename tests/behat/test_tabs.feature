@@ -23,6 +23,7 @@ Feature: Tabs can be used in topics2 format
     And I log in as "teacher1"
     And I am on "Course 1" course homepage with editing mode on
 
+  @javascript
   Scenario: Move section 5 to tab 2 in topics2 format
     When I move section "5" to tab "2"
     Then I should not see "Topic 5"
