@@ -120,7 +120,7 @@ class behat_format_topics2 extends behat_base {
      * @throws DriverException The step is not available when Javascript is disabled
      * @param string $sectionnumber
      */
-    public function i_open_section_edit_menu($sectionnumber) {
+    protected function i_open_section_edit_menu($sectionnumber) {
         if (!$this->running_javascript()) {
             throw new DriverException('Section edit menu not available when Javascript is disabled');
         }
@@ -153,7 +153,7 @@ class behat_format_topics2 extends behat_base {
      * @param int $sectionnumber
      * @return void
      */
-    public function i_wait_until_section_is_available($sectionnumber) {
+    protected function i_wait_until_section_is_available($sectionnumber) {
 
         // Looks for a hidden lightbox or a non-existent lightbox in that section.
         $sectionxpath = $this->section_exists($sectionnumber);
