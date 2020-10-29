@@ -83,24 +83,11 @@ class behat_format_topics2 extends behat_base {
 
         // We need to know the course format as the text strings depends on them.
         $courseformat = 'format_topics2';
-        /*
-        if (get_string_manager()->string_exists('deletesection', $courseformat)) {
-            $strdelete = get_string('deletesection', $courseformat);
-        } else {
-            $strdelete = get_string('deletesection');
-        }
-        */
-        $strdelete = get_string('deletesection', $courseformat);
-        $strtotab = get_string('totab', 'format_topics2');
+        $strtotab = get_string('totab', $courseformat);
         // If javascript is on, link is inside a menu.
         if ($this->running_javascript()) {
             $this->i_open_section_edit_menu($sectionnumber);
         }
-
-        // Click on delete link.
-//        $this->execute('behat_general::i_click_on_in_the',
-//            array($strdelete, "link", $this->escape($xpath), "xpath_element")
-//        );
 
         // Click on move to tab link.
         $this->execute('behat_general::i_click_on_in_the',
@@ -135,7 +122,7 @@ class behat_format_topics2 extends behat_base {
         $exception = new ExpectationException('Section "' . $sectionnumber . '" was not found', $this->getSession());
         $menu = $this->find('xpath', $xpath, $exception);
         $menu->click();
-        $this->i_wait_until_section_is_available($sectionnumber);
+//        $this->i_wait_until_section_is_available($sectionnumber);
     }
 
     /**
@@ -163,6 +150,27 @@ class behat_format_topics2 extends behat_base {
 
         $this->ensure_element_exists($hiddenlightboxxpath, 'xpath_element');
     }
+
+    /**
+     * Check if a section is hidden
+     *
+     * @Given /^section "(?P<section_number>\d+)" is hidden$/
+     *
+     * @param $sectionnumber
+     */
+    public function section_is_hidden($sectionnumber) {
+        $xpath = $this->section_exists($sectionnumber);
+
+        $node = $this->get_selected_node("xpath_element", $xpath);
+        if ($node) {
+            if (!$node->isVisible()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
 
     /**
      * Moves the current section to the specified tab. You need to be in the course page and on editing mode.
