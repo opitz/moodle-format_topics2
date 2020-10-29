@@ -26,7 +26,8 @@ Feature: Tabs can be used in topics2 format
   @javascript
   Scenario: Move section 5 to tab 2 in topics2 format
     When I move section "5" to tab "2"
-    Then I should not see "Topic 5"
+    Then section "5" is hidden
+    And I should not see "Topic 5"
     And I should see "Topic 4"
 
 
