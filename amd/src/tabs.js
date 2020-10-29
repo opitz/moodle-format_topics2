@@ -283,10 +283,10 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                         });
                     } else { // Hide all sections - then show those found in sectionArray
                         $("#changenumsections").show();
-                        $("li.section").addClass('hidden').hide();
+                        $("li.section").hide();
                         $.each(sectionArray, function(index, value) {
                             var target = $(".section[section-id='" + value + "']");
-                            target.removeClass('hidden').show();
+                            target.show();
                         });
                     }
 

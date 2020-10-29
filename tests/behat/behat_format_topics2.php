@@ -154,21 +154,26 @@ class behat_format_topics2 extends behat_base {
     /**
      * Check if a section is hidden
      *
-     * @Given /^section "(?P<section_number>\d+)" is hidden$/
+     * @Given /^section "(?P<section_number>\d+)" is not visible$/
      *
      * @param $sectionnumber
      */
-    public function section_is_hidden($sectionnumber) {
-        $xpath = $this->section_exists($sectionnumber);
+    public function section_is_not_visible($sectionnumber) {
+        $sectionxpath = $this->section_exists($sectionnumber);
 
-        $node = $this->get_selected_node("xpath_element", $xpath);
-        if ($node) {
-            if (!$node->isVisible()) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+        // Preventive in case there is any action in progress.
+        // Adding it here because we are interacting (click) with
+        // the elements, not necessary when we just find().
+        $this->i_wait_until_section_is_available($sectionnumber);
+
+        // Section should be hidden.
+        $exception = new ExpectationException('The section is visible', $this->getSession());
+        $this->find('xpath', $sectionxpath . "[contains(concat(' ', normalize-space(@class), ' '), ' display: none; ')]", $exception);
+
+
+
+
+
     }
 
 
