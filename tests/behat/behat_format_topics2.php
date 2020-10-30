@@ -168,7 +168,7 @@ class behat_format_topics2 extends behat_base {
 
         // Section should be hidden.
         $exception = new ExpectationException('The section is visible', $this->getSession());
-        $this->find('xpath', $sectionxpath . "[contains(concat(' ', normalize-space(@class), ' '), ' display: none; ')]", $exception);
+        $this->find('xpath', $sectionxpath . "[contains('display: none;')]", $exception);
 
 
 
