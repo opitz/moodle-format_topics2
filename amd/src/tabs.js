@@ -270,28 +270,28 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 
                     if (tabid === 'tab0') { // Show all sections - then hide each section shown in other tabs
                         $("#changenumsections").show();
-                        $("li.section").show();
+                        $("li.section").removeClass('hidden').show();
                         $(".topictab:visible").each(function() {
                             if ($(this).attr('sections').length > 0) {
                                 // If any split sections into an array, loop through it and hide section with the found ID
                                 $.each($(this).attr('sections').split(","), function(index, value) {
                                     var target = $(".section[section-id='" + value + "']");
-                                    target.hide();
+                                    target.addClass('hidden').hide();
                                      // X console.log("--> hiding section " + value);
                                 });
                             }
                         });
                     } else { // Hide all sections - then show those found in sectionArray
                         $("#changenumsections").show();
-                        $("li.section").hide();
+                        $("li.section").addClass('hidden').hide();
                         $.each(sectionArray, function(index, value) {
                             var target = $(".section[section-id='" + value + "']");
-                            target.show();
+                            target.removeClass('hidden').show();
                         });
                     }
 
                     // Show section-0 always when it should be shown always
-                    $('#ontop_area #section-0').show();
+                    $('#ontop_area #section-0').removeClass('hidden').show();
 
                     var visibleSections = $('li.section:visible').length;
                     var hiddenSections = $('li.section.hidden:visible').length;
