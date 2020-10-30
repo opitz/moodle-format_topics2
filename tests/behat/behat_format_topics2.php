@@ -152,63 +152,6 @@ class behat_format_topics2 extends behat_base {
     }
 
     /**
-     * Check if a section is hidden
-     *
-     * @Given /^section "(?P<section_number>\d+)" is not visible$/
-     *
-     * @param $sectionnumber
-     */
-    public function section_is_not_visible($sectionnumber) {
-        $sectionxpath = $this->section_exists($sectionnumber);
-
-        // Preventive in case there is any action in progress.
-        // Adding it here because we are interacting (click) with
-        // the elements, not necessary when we just find().
-        $this->i_wait_until_section_is_available($sectionnumber);
-
-        // Section should be hidden.
-        $exception = new ExpectationException('The section is visible', $this->getSession());
-        $this->find('xpath', $sectionxpath . "[contains('display: none;')]", $exception);
-
-
-
-
-
-    }
-
-
-    /**
-     * Moves the current section to the specified tab. You need to be in the course page and on editing mode.
-     *
-     * @Given /^I xxxx section "(?P<section_number>\d+)" to tabxxx "(?P<tab_number>\d+)"$/
-     * @param int $sectionnumber
-     * @param int $tabnumber
-     * @throws \Behat\Mink\Exception\DriverException
-     * @throws \Behat\Mink\Exception\ElementNotFoundException
-     * @throws coding_exception
-     */
-    public function i_xxxx_section_to_tabxx($sectionnumber, $tabnumber) {
-        // Ensures the section exists.
-        $xpath = $this->section_exists($sectionnumber);
-        $strtotab = get_string('totab', 'format_topics2');
-
-        // If javascript is on, link is inside a menu.
-        if ($this->running_javascript()) {
-            $this->i_open_section_edit_menu($sectionnumber);
-        }
-
-        // Click on move to tab link.
-        $this->execute('behat_general::i_click_on_in_the',
-            array($strtotab.$tabnumber, "link", $this->escape($xpath), "xpath_element")
-        );
-
-        if ($this->running_javascript()) {
-            $this->getSession()->wait(self::get_timeout() * 1000, self::PAGE_READY_JS);
-            $this->i_wait_until_section_is_available($sectionnumber);
-        }
-    }
-
-    /**
      * Checks if the course section exists.
      *
      * @throws ElementNotFoundException Thrown by behat_base::find
@@ -225,4 +168,18 @@ class behat_format_topics2 extends behat_base {
         return $xpath;
     }
 
+    /**
+     * @Then /^I click on "([^"]*)"$/
+     */
+    public function i_click_on($selector)
+    {
+        $page = $this->getSession()->getPage();
+        $element = $page->find('css', $selector);
+
+        if (empty($element)) {
+            throw new Exception("No html element found for the selector ('$selector')");
+        }
+
+        $element->click();
+    }
 }
