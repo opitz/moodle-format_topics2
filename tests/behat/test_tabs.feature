@@ -35,3 +35,15 @@ Feature: Tabs can be used in topics2 format
     And section "3" should be hidden
     And section "5" should be hidden
 
+  @javascript
+  Scenario: Inline edit tab name in topics2 format
+    When I click on "Edit tab name" "link" in the "span#tab1" "css_element"
+    And I set the field "New value for {a}" to "Test Tab"
+    And I press key "13" in the field "New value for {a}"
+    Then I should not see "Tab 1" in the "region-main" "region"
+    And "New value for {a}" "field" should not exist
+    And I should see "Test Tab" in the "span#tab1" "css_element"
+    And I am on "Course 1" course homepage
+    And I should not see "Tab 1" in the "region-main" "region"
+    And I should see "Test Tab" in the "span#tab1" "css_element"
+
