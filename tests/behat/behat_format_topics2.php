@@ -81,23 +81,22 @@ class behat_format_topics2 extends behat_base {
         // Ensures the section exists.
         $xpath = $this->section_exists($sectionnumber);
 
-        // We need to know the course format as the text strings depends on them.
-        $courseformat = 'format_topics2';
-        $strtotab = get_string('totab', $courseformat);
+        // Get the text for the menu item to click
+        $strtotab = get_string('totab', 'format_topics2');
+
         // If javascript is on, link is inside a menu.
         if ($this->running_javascript()) {
             $this->i_open_section_edit_menu($sectionnumber);
         }
 
-        // Click on move to tab link.
+        // Click on move to tab menu item.
         $this->execute('behat_general::i_click_on_in_the',
             array($strtotab.$tabnumber, "link", $this->escape($xpath), "xpath_element")
         );
 
-        if ($this->running_javascript()) {
-            $this->getSession()->wait(self::get_timeout() * 1000, self::PAGE_READY_JS);
-//            $this->i_wait_until_section_is_available($sectionnumber);
-        }
+//        if ($this->running_javascript()) {
+//            $this->getSession()->wait(self::get_timeout() * 1000, self::PAGE_READY_JS);
+//        }
     }
 
     /**
