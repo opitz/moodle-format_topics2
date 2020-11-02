@@ -28,7 +28,10 @@ Feature: Tabs can be used in topics2 format
     When I move section "4" to tab "3"
     Then section "4" should be hidden
     And section "5" should be visible
-    And I click on "#tab3"
+    And I click on tab "3"
     Then section "4" should be visible
+    And section "1" should be hidden
+    And section "2" should be hidden
+    And section "3" should be hidden
     And section "5" should be hidden
 

@@ -168,9 +168,21 @@ class behat_format_topics2 extends behat_base {
     }
 
     /**
-     * @Then /^I click on "([^"]*)"$/
+     * Click on the tab with the specified tab number
+     *
+     * @Then /^I click on tab "(?P<tab_number>\d+)$/
      */
-    public function i_click_on($selector)
+    public function i_click_on_tab($tabnumber) {
+        $selector = '#tab'.$tabnumber;
+        $this->i_click_on_element($selector);
+    }
+
+    /**
+     * Click in the given DOM element
+     *
+     * @Then /^I click on element "([^"]*)"$/
+     */
+    public function i_click_on_element($selector)
     {
         $page = $this->getSession()->getPage();
         $element = $page->find('css', $selector);
@@ -181,4 +193,5 @@ class behat_format_topics2 extends behat_base {
 
         $element->click();
     }
+
 }
