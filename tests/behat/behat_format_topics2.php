@@ -170,7 +170,7 @@ class behat_format_topics2 extends behat_base {
     /**
      * Click on the tab with the specified tab number
      *
-     * @Then /^I click on tab "(?P<tab_number>\d+)$/
+     * @Then /^I click on tab "(?P<tab_number>\d+)"$/
      */
     public function i_click_on_tab($tabnumber) {
         $selector = '#tab'.$tabnumber;
