@@ -24,9 +24,10 @@ Feature: Tabs can be used in topics2 format
     And I am on "Course 1" course homepage with editing mode on
 
   @javascript
-  Scenario: Move section 4 to tab 3 in topics2 format
+  Scenario: Move section 4 to tab 3 in topics2 format and back again
     When I move section "4" to tab "3"
-    Then section "4" should be hidden
+    Then I should see "tab 3"
+    And section "4" should be hidden
     And section "5" should be visible
     And I click on tab "3"
     Then section "4" should be visible
@@ -34,6 +35,14 @@ Feature: Tabs can be used in topics2 format
     And section "2" should be hidden
     And section "3" should be hidden
     And section "5" should be hidden
+    And I move section "4" to tab "0"
+    And I click on tab "0"
+    Then I should not see "Tab 3"
+    And section "1" should be visible
+    And section "2" should be visible
+    And section "3" should be visible
+    And section "4" should be visible
+    And section "5" should be visible
 
   @javascript
   Scenario: Inline edit tab name in topics2 format
