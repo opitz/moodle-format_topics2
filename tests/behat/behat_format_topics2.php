@@ -200,11 +200,11 @@ class behat_format_topics2 extends behat_base {
 
         // Ensure the destination is valid.
         $targettabxpath = $this->tab_exists($targettabnumber);
-        $destinationxpath = $targettabxpath . "//li[contains(concat(' ', normalize-space(@class), ' '), ' ui-droppable ')]";
+//        $destinationxpath = $targettabxpath . "//li[contains(concat(' ', normalize-space(@class), ' '), ' ui-droppable ')]";
 
         $this->execute("behat_general::i_drag_and_i_drop_it_in",
             array($this->escape($movingtabxpath), "xpath_element",
-                $this->escape($destinationxpath), "xpath_element")
+                $this->escape($targettabxpath), "xpath_element")
         );
     }
 
