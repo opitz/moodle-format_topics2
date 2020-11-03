@@ -60,9 +60,16 @@ class behat_format_topics2 extends behat_base {
         }
 
         // Click on move to tab menu item.
-        $this->execute('behat_general::i_click_on_in_the',
-            array($strtotab.$tabnumber, "link", $this->escape($xpath), "xpath_element")
-        );
+        if ($tabnumber === 0) {
+            $strtab0 = get_string('tab0_generic_name', 'format_topics2');
+            $this->execute('behat_general::i_click_on_in_the',
+                array($strtotab.'"'.$strtab0.'"', "link", $this->escape($xpath), "xpath_element")
+            );
+        }else {
+            $this->execute('behat_general::i_click_on_in_the',
+                array($strtotab.$tabnumber, "link", $this->escape($xpath), "xpath_element")
+            );
+        }
 
 //        if ($this->running_javascript()) {
 //            $this->getSession()->wait(self::get_timeout() * 1000, self::PAGE_READY_JS);
