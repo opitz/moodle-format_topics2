@@ -48,3 +48,13 @@ Feature: Tabs can be used in topics2 format
     And I should not see "Tab 3" in the "region-main" "region"
     And I should see "Test Tab" in the "#tab3" "css_element"
 
+  @javascript
+  Scenario: Swap tab 1 and 2
+    When I move section "4" to tab "1"
+    And I move section "5" to tab "2"
+    And I swap tab "1" with tab "2"
+    And I click on tab "2"
+    Then I should see "Test chat name"
+    
+
+

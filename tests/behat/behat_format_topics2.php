@@ -42,36 +42,6 @@ require_once(__DIR__ . '/../../../../../course/tests/behat/behat_course.php');
 class behat_format_topics2 extends behat_base {
 
     /**
-     * Deletes course section.
-     *
-     * @Given /^I gnupf section "(?P<section_number>\d+)"$/
-     * @param int $sectionnumber The section number
-     */
-    public function i_gnupf_section($sectionnumber) {
-        // Ensures the section exists.
-        $xpath = $this->section_exists($sectionnumber);
-
-        // We need to know the course format as the text strings depends on them.
-        $courseformat = 'format_topics2';
-        if (get_string_manager()->string_exists('deletesection', $courseformat)) {
-            $strdelete = get_string('deletesection', $courseformat);
-        } else {
-            $strdelete = get_string('deletesection');
-        }
-
-        // If javascript is on, link is inside a menu.
-        if ($this->running_javascript()) {
-            $this->i_open_section_edit_menu($sectionnumber);
-        }
-
-        // Click on delete link.
-        $this->execute('behat_general::i_click_on_in_the',
-            array($strdelete, "link", $this->escape($xpath), "xpath_element")
-        );
-
-    }
-
-    /**
      * Moves course section to a tab.
      *
      * @Given /^I move section "(?P<section_number>\d+)" to tab "(?P<tab_number>\d+)"$/
@@ -168,6 +138,23 @@ class behat_format_topics2 extends behat_base {
     }
 
     /**
+     * Checks if the tab exists.
+     *
+     * @throws ElementNotFoundException Thrown by behat_base::find
+     * @param int $tabnumber
+     * @return string The xpath of the tab.
+     */
+    protected function tab_exists($tabnumber) {
+
+        // Just to give more info in case it does not exist.
+        $xpath = "//span[@id='tab" . $tabnumber . "']";
+        $exception = new ElementNotFoundException($this->getSession(), "Tab $tabnumber ");
+        $this->find('xpath', $xpath, $exception);
+
+        return $xpath;
+    }
+
+    /**
      * Click on the tab with the specified tab number
      *
      * @Then /^I click on tab "(?P<tab_number>\d+)"$/
@@ -192,6 +179,33 @@ class behat_format_topics2 extends behat_base {
         }
 
         $element->click();
+    }
+
+    /**
+     * Swapping two tabs
+     *
+     * @Given /^I swap tab "(?P<movingtab_number>\d+)" with tab "(?P<targettab_number>\d+)"$/
+     * @throws DriverException The step is not available when Javascript is disabled
+     * @param int $movingtabnumber The number of the moving tab
+     * @param int $targettabnumber The number of the target tab
+     */
+    public function i_swap_tab_with_tab($movingtabnumber, $targettabnumber) {
+        if (!$this->running_javascript()) {
+            throw new DriverException('Section edit menu not available when Javascript is disabled');
+        }
+
+        // Ensure the moving tab is valid
+//        $movingtabnode = $this->get_tab_element($movingtabnumber);
+        $movingtabxpath = $this->tab_exists($movingtabnumber);
+
+        // Ensure the destination is valid.
+        $targettabxpath = $this->tab_exists($targettabnumber);
+        $destinationxpath = $targettabxpath . "li[contains(concat(' ', normalize-space(@class), ' '), ' ui-droppable ')]";
+
+        $this->execute("behat_general::i_drag_and_i_drop_it_in",
+            array($this->escape($movingtabxpath), "xpath_element",
+                $this->escape($destinationxpath), "xpath_element")
+        );
     }
 
 }
