@@ -53,7 +53,7 @@ Feature: Tabs can be used in topics2 format
     When I move section "4" to tab "1"
     And I move section "5" to tab "2"
     And I swap tab "1" with tab "2"
-    And I click on element "li.tabitem:nth(2)"
+    And I click on element "li.tabitem:nth-child(2)"
     Then I should see "Test chat name"
 
 
