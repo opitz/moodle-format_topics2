@@ -37,6 +37,7 @@ Feature: Tabs can be used in topics2 format
     And section "5" should be hidden
     And I reload the page
     And I move section "4" to tab "0"
+    And I wait "2" seconds
     Then I should not see "Tab 3"
     And section "1" should be visible
     And section "2" should be visible
