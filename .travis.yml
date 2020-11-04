@@ -16,11 +16,11 @@ cache:
 php:
   - 7.2
   #  - 7.3
-  #  - 7.4
+  - 7.4
 
 env:
   global:
-    - MOODLE_BRANCH=MOODLE_38_STABLE
+    - MOODLE_BRANCH=MOODLE_39_STABLE
   matrix:
     #    - DB=pgsql
     - DB=mysqli
