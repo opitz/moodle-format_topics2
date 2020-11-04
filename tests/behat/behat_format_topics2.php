@@ -60,6 +60,7 @@ class behat_format_topics2 extends behat_base {
         }
 
         // Click on move to tab menu item.
+        // If the tabnumber is 0 the menu item is somehow different
         if ($tabnumber == 0) {
             $strtab0 = get_string('tab0_generic_name', 'format_topics2');
             $this->execute('behat_general::i_click_on_in_the',
