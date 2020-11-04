@@ -60,7 +60,7 @@ class behat_format_topics2 extends behat_base {
         }
 
         // Click on move to tab menu item.
-        if ($tabnumber === 0) {
+        if ($tabnumber == 0) {
             $strtab0 = get_string('tab0_generic_name', 'format_topics2');
             $this->execute('behat_general::i_click_on_in_the',
                 array($strtotab.'"'.$strtab0.'"', "link", $this->escape($xpath), "xpath_element")
