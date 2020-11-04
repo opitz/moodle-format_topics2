@@ -20,7 +20,7 @@ php:
 
 env:
   global:
-    - master
+    - MOODLE_BRANCH=master
   matrix:
     #    - DB=pgsql
     - DB=mysqli
