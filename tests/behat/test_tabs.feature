@@ -64,6 +64,3 @@ Feature: Tabs can be used in topics2 format
     And I swap tab "1" with tab "2"
     And I click on element ".tabitem:nth-child(2)"
     Then I should see "Test choice name"
-
-
-

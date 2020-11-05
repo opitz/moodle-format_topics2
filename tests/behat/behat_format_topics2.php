@@ -46,6 +46,7 @@ class behat_format_topics2 extends behat_base {
      *
      * @Given /^I move section "(?P<section_number>\d+)" to tab "(?P<tab_number>\d+)"$/
      * @param int $sectionnumber The section number
+     * @param int $tabnumber The tab number
      */
     public function i_move_section_to_tab($sectionnumber, $tabnumber) {
         // Ensures the section exists.
@@ -166,6 +167,7 @@ class behat_format_topics2 extends behat_base {
      * Click on the tab with the specified tab number
      *
      * @Then /^I click on tab "(?P<tab_number>\d+)"$/
+     * @param int $tabnumber
      */
     public function i_click_on_tab($tabnumber) {
         $selector = '#tab'.$tabnumber;
@@ -176,6 +178,8 @@ class behat_format_topics2 extends behat_base {
      * Click in the given DOM element
      *
      * @Then /^I click on element "([^"]*)"$/
+     * @param string $selector
+     * @throws Exception
      */
     public function i_click_on_element($selector)
     {
