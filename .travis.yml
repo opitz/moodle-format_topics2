@@ -14,15 +14,15 @@ cache:
     - $HOME/.npm
 
 php:
-  #  - 7.2
+  - 7.2
   #  - 7.3
   - 7.4
 
 env:
   global:
-    - MOODLE_BRANCH=MOODLE_38_STABLE
+#    - MOODLE_BRANCH=MOODLE_38_STABLE
     - MOODLE_BRANCH=MOODLE_39_STABLE
-    - MOODLE_BRANCH=MOODLE_310_STABLE
+#    - MOODLE_BRANCH=MOODLE_310_STABLE
 #    - MOODLE_BRANCH=master
   matrix:
     #    - DB=pgsql
@@ -38,14 +38,14 @@ install:
   - moodle-plugin-ci install
 
 script:
-#  - moodle-plugin-ci phplint
-#  - moodle-plugin-ci phpcpd
-#  - moodle-plugin-ci phpmd
-#  - moodle-plugin-ci codechecker
-#  - moodle-plugin-ci validate
-#  - moodle-plugin-ci savepoints
-#  - moodle-plugin-ci mustache
-#  - moodle-plugin-ci grunt
-#  - moodle-plugin-ci phpdoc
-#  - moodle-plugin-ci phpunit
+  - moodle-plugin-ci phplint
+  - moodle-plugin-ci phpcpd
+  - moodle-plugin-ci phpmd
+  - moodle-plugin-ci codechecker
+  - moodle-plugin-ci validate
+  - moodle-plugin-ci savepoints
+  - moodle-plugin-ci mustache
+  - moodle-plugin-ci grunt
+  - moodle-plugin-ci phpdoc
+  - moodle-plugin-ci phpunit
   - moodle-plugin-ci behat
