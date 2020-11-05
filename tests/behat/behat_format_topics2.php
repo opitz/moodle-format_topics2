@@ -52,7 +52,7 @@ class behat_format_topics2 extends behat_base {
         // Ensures the section exists.
         $xpath = $this->section_exists($sectionnumber);
 
-        // Get the text for the menu item to click
+        // Get the text for the menu item to click.
         $strtotab = get_string('totab', 'format_topics2');
 
         // If javascript is on, link is inside a menu.
@@ -61,21 +61,17 @@ class behat_format_topics2 extends behat_base {
         }
 
         // Click on move to tab menu item.
-        // If the tabnumber is 0 the menu item is somehow different
+        // If the tabnumber is 0 the menu item is somehow different.
         if ($tabnumber == 0) {
             $strtab0 = get_string('tab0_generic_name', 'format_topics2');
             $this->execute('behat_general::i_click_on_in_the',
                 array($strtotab.'"'.$strtab0.'"', "link", $this->escape($xpath), "xpath_element")
             );
-        }else {
+        } else {
             $this->execute('behat_general::i_click_on_in_the',
                 array($strtotab.$tabnumber, "link", $this->escape($xpath), "xpath_element")
             );
         }
-
-//        if ($this->running_javascript()) {
-//            $this->getSession()->wait(self::get_timeout() * 1000, self::PAGE_READY_JS);
-//        }
     }
 
     /**
@@ -100,11 +96,11 @@ class behat_format_topics2 extends behat_base {
         $exception = new ExpectationException('Section "' . $sectionnumber . '" was not found', $this->getSession());
         $menu = $this->find('xpath', $xpath, $exception);
         $menu->click();
-//        $this->i_wait_until_section_is_available($sectionnumber);
     }
 
     /**
-     * Waits until the section is available to interact with it. Useful when the section is performing an action and the section is overlayed with a loading layout.
+     * Waits until the section is available to interact with it.
+     * Useful when the section is performing an action and the section is overlayed with a loading layout.
      *
      * Using the protected method as this method will be usually
      * called by other methods which are not returning a set of
@@ -122,7 +118,8 @@ class behat_format_topics2 extends behat_base {
 
         // Looks for a hidden lightbox or a non-existent lightbox in that section.
         $sectionxpath = $this->section_exists($sectionnumber);
-        $hiddenlightboxxpath = $sectionxpath . "/descendant::div[contains(concat(' ', @class, ' '), ' lightbox ')][contains(@style, 'display: none')]" .
+        $hiddenlightboxxpath = $sectionxpath .
+            "/descendant::div[contains(concat(' ', @class, ' '), ' lightbox ')][contains(@style, 'display: none')]" .
             " | " .
             $sectionxpath . "[count(child::div[contains(@class, 'lightbox')]) = 0]";
 
@@ -181,8 +178,7 @@ class behat_format_topics2 extends behat_base {
      * @param string $selector
      * @throws Exception
      */
-    public function i_click_on_element($selector)
-    {
+    public function i_click_on_element($selector) {
         $page = $this->getSession()->getPage();
         $element = $page->find('css', $selector);
 
@@ -207,13 +203,10 @@ class behat_format_topics2 extends behat_base {
         }
 
         // Ensure the moving tab is valid
-//        $movingtabnode = $this->get_tab_element($movingtabnumber);
         $movingtabxpath = $this->tab_exists($movingtabnumber);
 
         // Ensure the destination is valid.
         $targettabxpath = $this->tab_exists($targettabnumber);
-//        $destinationxpath = $targettabxpath . "//li[contains(concat(' ', normalize-space(@class), ' '), ' ui-droppable ')]";
-
         $this->execute("behat_general::i_drag_and_i_drop_it_in",
             array($this->escape($movingtabxpath), "xpath_element",
                 $this->escape($targettabxpath), "xpath_element")
