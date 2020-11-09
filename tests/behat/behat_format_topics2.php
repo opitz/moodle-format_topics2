@@ -226,4 +226,24 @@ class behat_format_topics2 extends behat_base {
         $selector = '#section-'.$sectionnumber.' .toggler_open';
         $this->i_click_on_element($selector);
     }
+
+    /**
+     * Checking if the sectionbody of the given section is hidden (i.e. collapsed).
+     *
+     * @Given /^the sectionbody of section "(?P<section_number>\d+)" should be hidden$/
+     * @param string $sectionnumber
+     * @throws ElementNotFoundException
+     */
+    public function the_sectionbody_of_section_should_be_hidden($sectionnumber) {
+        $sectionxpath = $this->section_exists($sectionnumber);
+
+        // Preventive in case there is any action in progress.
+        // Adding it here because we are interacting (click) with
+        // the elements, not necessary when we just find().
+        $this->i_wait_until_section_is_available($sectionnumber);
+
+        // Section should be hidden.
+        $exception = new ExpectationException('The section is not collapsed', $this->getSession());
+        $this->find('xpath', $sectionxpath . "[contains(concat(' ', normalize-space(@class), ' '), 'toggle_area hidden ')]", $exception);
+    }
 }
