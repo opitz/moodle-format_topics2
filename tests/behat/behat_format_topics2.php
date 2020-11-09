@@ -223,7 +223,7 @@ class behat_format_topics2 extends behat_base {
         // Ensures the section exists.
         $xpath = $this->section_exists($sectionnumber);
 
-        $selector = '#section-'.$sectionnumber.' .toggler_closed';
+        $selector = '#section-'.$sectionnumber.' .toggler_open';
         $this->i_click_on_element($selector);
     }
 }
