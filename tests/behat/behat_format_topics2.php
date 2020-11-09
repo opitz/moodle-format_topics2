@@ -243,7 +243,7 @@ class behat_format_topics2 extends behat_base {
         $this->i_wait_until_section_is_available($sectionnumber);
 
         // Section should be hidden.
-        $exception = new ExpectationException('The section is not collapsed', $this->getSession());
-        $this->find('xpath', $sectionxpath . "[contains(concat(' ', normalize-space(@class), ' '), 'toggle_area hidden ')]", $exception);
+        $exception = new ExpectationException('The sectionbody is not hidden', $this->getSession());
+        $this->find('xpath', $sectionxpath . "[contains(concat(' ', normalize-space(@class), ' '), 'toggle_area showing hidden ')]", $exception);
     }
 }
