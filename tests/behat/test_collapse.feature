@@ -28,4 +28,4 @@ Feature: Sections can be collapsed and expanded in topics2 format
   @javascript
   Scenario: Collapsing section 1
     When I collapse section "1"
-    Then sectionbody of section "1" should be hidden
+    Then the sectionbody of section "1" should be hidden

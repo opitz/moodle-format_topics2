@@ -213,4 +213,17 @@ class behat_format_topics2 extends behat_base {
         );
     }
 
+    /**
+     * Collapses a section if it is not already collapsed.
+     *
+     * @Given /^I collapse section "(?P<section_number>\d+)"$/
+     * @param string $sectionnumber
+     */
+    public function i_collapse_section($sectionnumber) {
+        // Ensures the section exists.
+        $xpath = $this->section_exists($sectionnumber);
+
+        $selector = '#section-'.$sectionnumber.' .toggler_closed';
+        $this->i_click_on_element($selector);
+    }
 }
