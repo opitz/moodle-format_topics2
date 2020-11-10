@@ -26,6 +26,9 @@ Feature: Sections can be collapsed and expanded in topics2 format
     And I am on "Course 1" course homepage
 
   @javascript
-  Scenario: Collapsing section 1
+  Scenario: Collapsing and uncollapsing section 1
     When I collapse section "1"
     Then the sectionbody of section "1" should be hidden
+    And the sectionbody of section "2" should be visible
+    And I uncollapse section "1"
+    Then the sectionbody of section "1" should be visible

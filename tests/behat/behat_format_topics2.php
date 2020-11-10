@@ -228,6 +228,20 @@ class behat_format_topics2 extends behat_base {
     }
 
     /**
+     * Uncollapses a section if it is not already uncollapsed.
+     *
+     * @Given /^I uncollapse section "(?P<section_number>\d+)"$/
+     * @param string $sectionnumber
+     */
+    public function i_uncollapse_section($sectionnumber) {
+        // Ensures the section exists.
+        $xpath = $this->section_exists($sectionnumber);
+
+        $selector = '#section-'.$sectionnumber.' .toggler_closed';
+        $this->i_click_on_element($selector);
+    }
+
+    /**
      * Checking if the sectionbody of the given section is hidden (i.e. collapsed).
      *
      * @Given /^the sectionbody of section "(?P<section_number>\d+)" should be hidden$/
@@ -236,6 +250,7 @@ class behat_format_topics2 extends behat_base {
      */
     public function the_sectionbody_of_section_should_be_hidden($sectionnumber) {
         $sectionxpath = $this->section_exists($sectionnumber);
+        $xpath = $sectionxpath."/descendant::div[contains(@class, 'hidden')]";
 
         // Preventive in case there is any action in progress.
         // Adding it here because we are interacting (click) with
@@ -244,6 +259,27 @@ class behat_format_topics2 extends behat_base {
 
         // Section should be hidden.
         $exception = new ExpectationException('The sectionbody is not hidden', $this->getSession());
-        $this->find('xpath', $sectionxpath . "[contains(concat(' ', normalize-space(@class), ' '), 'toggle_area showing hidden ')]", $exception);
+        $this->find('xpath', $xpath, $exception);
+    }
+
+    /**
+     * Checking if the sectionbody of the given section is visible (i.e. uncollapsed).
+     *
+     * @Given /^the sectionbody of section "(?P<section_number>\d+)" should be visible/
+     * @param string $sectionnumber
+     * @throws ElementNotFoundException
+     */
+    public function the_sectionbody_of_section_should_be_visible($sectionnumber) {
+        $sectionxpath = $this->section_exists($sectionnumber);
+        $xpath = $sectionxpath."/descendant::div[not(contains(@class, 'hidden'))]";
+
+        // Preventive in case there is any action in progress.
+        // Adding it here because we are interacting (click) with
+        // the elements, not necessary when we just find().
+        $this->i_wait_until_section_is_available($sectionnumber);
+
+        // Section should be visible.
+        $exception = new ExpectationException('The sectionbody is not visible', $this->getSession());
+        $this->find('xpath', $xpath, $exception);
     }
 }
