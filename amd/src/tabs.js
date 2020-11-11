@@ -615,7 +615,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 
 // ---------------------------------------------------------------------------------------------------------------------
             // A link to an URL is clicked - check if there is a section ID in it and if so reveal the corresponding tab
-            $("a").click(function() {
+            $("alt").click(function() {
                 if ($(this).attr('href') !== '#' && typeof $(this).attr('href') !== 'undefined') {
                     var sectionid = $(this).attr('href').split('#')[1];
                     // If the link contains a section ID (e.g. is NOT undefined) click the corresponding tab
@@ -625,6 +625,32 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                         var foundIt = false;
                         $('.tablink').each(function() {
                             if ($(this).attr('sections').indexOf(sectionnum) > -1) {
+                                $(this).click();
+                                foundIt = true;
+                                return false;
+                            }
+                        });
+                        if (!foundIt) {
+                            $('#tab0').click();
+                        }
+                    }
+                }
+            });
+
+// ---------------------------------------------------------------------------------------------------------------------
+            // A link to an URL is clicked - check if there is a section ID in it and if so reveal the corresponding tab
+            $("a").click(function() {
+                if ($(this).attr('href') !== '#' && typeof $(this).attr('href') !== 'undefined') {
+                    var sectionnum = $(this).attr('href').split('#')[1];
+                    // If the link contains a sectionnum (e.g. is NOT undefined) click the corresponding tab
+                    if (typeof sectionnum !== 'undefined') {
+                        var sectionid = $('#' + sectionnum).attr('section-id');
+                        console.log('Sectionid = ' + sectionid)
+                        console.log('Sectionnum = ' + sectionnum)
+                        // Find the tab in which the section is
+                        var foundIt = false;
+                        $('.tablink').each(function() {
+                            if ($(this).attr('sections').indexOf(sectionid) > -1) {
                                 $(this).click();
                                 foundIt = true;
                                 return false;
