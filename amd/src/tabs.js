@@ -557,6 +557,33 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                 });};
 
 // ---------------------------------------------------------------------------------------------------------------------
+            // A direct URL to a specific section is clicked - reveal the corresponding tab
+            var followTabUrl = function() {
+                $("a").click(function() {
+                    if ($(this).attr('href') !== '#' && typeof $(this).attr('href') !== 'undefined') {
+                        var sectionnum = $(this).attr('href').split('#')[1];
+                        // If the link contains a sectionnum (e.g. is NOT undefined) find and click the corresponding tab
+                        if (typeof sectionnum !== 'undefined') {
+                            // Find the corresponding section ID for the section number we found
+                            var sectionid = $('#' + sectionnum).attr('section-id');
+                            // Find the tab to which the section ID is related
+                            var foundIt = false;
+                            $('.tablink').each(function() {
+                                if ($(this).attr('sections').indexOf(sectionid) > -1) {
+                                    $(this).click();
+                                    foundIt = true;
+                                    return false;
+                                }
+                            });
+                            // If it has not been found related to any tab it has to be under tab0 - so click that
+                            if (!foundIt) {
+                                $('#tab0').click();
+                            }
+                        }
+                    }
+                });};
+
+// ---------------------------------------------------------------------------------------------------------------------
             var initFunctions = function() {
                 // Load all required functions above
                 tabClick();
@@ -567,6 +594,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                 set_numsections_cookie();
                 tabnav();
                 toggleAvailiability();
+                followTabUrl();
                 sandbox();
 //                Hover_tabname();
             };
@@ -612,56 +640,6 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                         // X console.log('the new tab sequence: ' + result);
                     }});
             };
-
-// ---------------------------------------------------------------------------------------------------------------------
-            // A link to an URL is clicked - check if there is a section ID in it and if so reveal the corresponding tab
-            $("alt").click(function() {
-                if ($(this).attr('href') !== '#' && typeof $(this).attr('href') !== 'undefined') {
-                    var sectionid = $(this).attr('href').split('#')[1];
-                    // If the link contains a section ID (e.g. is NOT undefined) click the corresponding tab
-                    if (typeof sectionid !== 'undefined') {
-                        var sectionnum = $('#' + sectionid).attr('section-id');
-                        // Find the tab in which the section is
-                        var foundIt = false;
-                        $('.tablink').each(function() {
-                            if ($(this).attr('sections').indexOf(sectionnum) > -1) {
-                                $(this).click();
-                                foundIt = true;
-                                return false;
-                            }
-                        });
-                        if (!foundIt) {
-                            $('#tab0').click();
-                        }
-                    }
-                }
-            });
-
-// ---------------------------------------------------------------------------------------------------------------------
-            // A link to an URL is clicked - check if there is a section ID in it and if so reveal the corresponding tab
-            $("a").click(function() {
-                if ($(this).attr('href') !== '#' && typeof $(this).attr('href') !== 'undefined') {
-                    var sectionnum = $(this).attr('href').split('#')[1];
-                    // If the link contains a sectionnum (e.g. is NOT undefined) click the corresponding tab
-                    if (typeof sectionnum !== 'undefined') {
-                        var sectionid = $('#' + sectionnum).attr('section-id');
-                        console.log('Sectionid = ' + sectionid)
-                        console.log('Sectionnum = ' + sectionnum)
-                        // Find the tab in which the section is
-                        var foundIt = false;
-                        $('.tablink').each(function() {
-                            if ($(this).attr('sections').indexOf(sectionid) > -1) {
-                                $(this).click();
-                                foundIt = true;
-                                return false;
-                            }
-                        });
-                        if (!foundIt) {
-                            $('#tab0').click();
-                        }
-                    }
-                }
-            });
 
 // ---------------------------------------------------------------------------------------------------------------------
             $(document).ready(function() {
