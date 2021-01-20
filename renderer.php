@@ -578,6 +578,16 @@ class format_topics2_renderer extends format_topics_renderer {
                 $toggleseq = '';
             }
 
+            // Weird rearranging the array due to error with PHP below version 7.2.
+            // NO idea why this is needed - but it works.
+            if(version_compare(PHP_VERSION, '7.2.0') < 0) {
+                $toggleseq2 = array();
+                foreach ($toggleseq as $key => $value) {
+                    $toggleseq2[$key] = $value;
+                }
+                $toggleseq = $toggleseq2;
+            }
+
             $tooltipopen = get_string('tooltip_open', 'format_topics2');
             $tooltipclosed = get_string('tooltip_closed', 'format_topics2');
             if (isset($toggleseq[$section->id]) && $toggleseq[$section->id] === '0') {
@@ -613,6 +623,16 @@ class format_topics2_renderer extends format_topics_renderer {
             $toggleseq = (array) json_decode($this->toggleseq);
         } else {
             $toggleseq = [];
+        }
+
+        // Weird rearranging the array due to error with PHP below version 7.2.
+        // NO idea why this is needed - but it works.
+        if(version_compare(PHP_VERSION, '7.2.0') < 0) {
+            $toggleseq2 = array();
+            foreach ($toggleseq as $key => $value) {
+                $toggleseq2[$key] = $value;
+            }
+            $toggleseq = $toggleseq2;
         }
 
         if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE &&
