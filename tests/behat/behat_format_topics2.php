@@ -202,7 +202,7 @@ class behat_format_topics2 extends behat_base {
             throw new DriverException('Section edit menu not available when Javascript is disabled');
         }
 
-        // Ensure the moving tab is valid
+        // Ensure the moving tab is valid.
         $movingtabxpath = $this->tab_exists($movingtabnumber);
 
         // Ensure the destination is valid.

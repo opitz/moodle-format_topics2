@@ -372,7 +372,8 @@ class format_topics2_renderer extends format_topics_renderer {
         }
 
         foreach ($tabsectionids as $key => $tabsectionid) {
-            if (!in_array($tabsectionid, $sectionids) && isset($tabsectionnums[$key]) && isset($sectionids[$tabsectionnums[$key]])) {
+            if (!in_array($tabsectionid, $sectionids) && isset($tabsectionnums[$key]) &&
+                isset($sectionids[$tabsectionnums[$key]])) {
                 // The tab_section_id is not among the (new) section ids of that course.
                 // This is most likely because the course has been restored - so use the sectionnums to determine the new id.
                 $newtabsectionids[] = $sectionids[$tabsectionnums[$key]];
@@ -580,7 +581,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
             // Weird rearranging the array due to error with PHP below version 7.2.
             // NO idea why this is needed - but it works.
-            if(version_compare(PHP_VERSION, '7.2.0') < 0) {
+            if (version_compare(PHP_VERSION, '7.2.0') < 0) {
                 $toggleseq2 = array();
                 foreach ($toggleseq as $key => $value) {
                     $toggleseq2[$key] = $value;
@@ -627,7 +628,7 @@ class format_topics2_renderer extends format_topics_renderer {
 
         // Weird rearranging the array due to error with PHP below version 7.2.
         // NO idea why this is needed - but it works.
-        if(version_compare(PHP_VERSION, '7.2.0') < 0) {
+        if (version_compare(PHP_VERSION, '7.2.0') < 0) {
             $toggleseq2 = array();
             foreach ($toggleseq as $key => $value) {
                 $toggleseq2[$key] = $value;
