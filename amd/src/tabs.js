@@ -270,28 +270,28 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 
                     if (tabid === 'tab0') { // Show all sections - then hide each section shown in other tabs
                         $("#changenumsections").show();
-                        $("li.section").removeClass('hidden').show();
+                        $("li.section").show();
                         $(".topictab:visible").each(function() {
                             if ($(this).attr('sections').length > 0) {
                                 // If any split sections into an array, loop through it and hide section with the found ID
                                 $.each($(this).attr('sections').split(","), function(index, value) {
                                     var target = $(".section[section-id='" + value + "']");
-                                    target.addClass('hidden').hide();
+                                    target.hide();
                                      // X console.log("--> hiding section " + value);
                                 });
                             }
                         });
                     } else { // Hide all sections - then show those found in sectionArray
                         $("#changenumsections").show();
-                        $("li.section").addClass('hidden').hide();
+                        $("li.section").hide();
                         $.each(sectionArray, function(index, value) {
                             var target = $(".section[section-id='" + value + "']");
-                            target.removeClass('hidden').show();
+                            target.show();
                         });
                     }
 
                     // Show section-0 always when it should be shown always
-                    $('#ontop_area #section-0').removeClass('hidden').show();
+                    $('#ontop_area #section-0').show();
 
                     var visibleSections = $('li.section:visible').length;
                     var hiddenSections = $('li.section.hidden:visible').length;
@@ -643,7 +643,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 
 // ---------------------------------------------------------------------------------------------------------------------
             $(document).ready(function() {
-                // X console.log('=================< topics2/tabs.js >=================');
+                console.log('=================< topics2/tabs.js >=================');
                 initFunctions();
 
                 // Show the edit menu for section-0
