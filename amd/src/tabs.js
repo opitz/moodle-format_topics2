@@ -294,17 +294,17 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                     $('#ontop_area #section-0').show();
 
                     var visibleSections = $('li.section:visible').length;
-                    var hiddenSections = $('li.section.hidden:visible').length;
+                    var hiddenSections = $('li.section:visible').find('.ishidden').length;
                     if ($('.section0_ontop').length > 0) {
-                       // X console.log('section0 is on top - so reducing the number of visible sections for this tab by 1');
+                        // Section 0 is on top - so reducing the number of visible sections for this tab by 1.
                         visibleSections--;
                     }
 
                     if (visibleSections < 1) {
-                        // X console.log('tab with no visible sections - hiding it');
+                        // Tab with no visible sections - hiding it.
                         $(this).parent().hide();
 
-                        // Restoring generic tab name
+                        // Restoring generic tab name if a tab is empty (again).
                         var genericTitle = $(this).attr('generic_title');
                         $.ajax({
                             url: "format/topics2/ajax/update_tab_name.php",
