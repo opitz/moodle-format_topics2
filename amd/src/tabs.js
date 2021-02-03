@@ -96,7 +96,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 // ---------------------------------------------------------------------------------------------------------------------
             var set_numsections_cookie = function() {
                 $('#changenumsections').on('click', function(){
-                   // store the number of current sections in a cookie - so we know how many have been added later
+                    // store the number of current sections in a cookie - so we know how many have been added later
                     var numSections = $('.section.main').length;
                     sessionStorage.setItem('numSections', numSections);
                 });
@@ -236,7 +236,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 //                $('.sectionname').find('.toggler').show();
                 $('.toggler_edit_only').removeClass('toggler_edit_only').show();
 
-                 // X console.log('--> restoring section headline ');
+                // X console.log('--> restoring section headline ');
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -266,32 +266,32 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                     if (typeof clickedTabName == 'undefined') {
                         clickedTabName = $(this).html();
                     }
-                     // X console.log('=====> Clicked tab "' + clickedTabName + '":');
+                    // X console.log('=====> Clicked tab "' + clickedTabName + '":');
 
                     if (tabid === 'tab0') { // Show all sections - then hide each section shown in other tabs
                         $("#changenumsections").show();
-                        $("li.section").show();
+                        $("li.section").removeClass('hidden').show();
                         $(".topictab:visible").each(function() {
                             if ($(this).attr('sections').length > 0) {
                                 // If any split sections into an array, loop through it and hide section with the found ID
                                 $.each($(this).attr('sections').split(","), function(index, value) {
                                     var target = $(".section[section-id='" + value + "']");
-                                    target.hide();
-                                     // X console.log("--> hiding section " + value);
+                                    target.addClass('hidden').hide();
+                                    // X console.log("--> hiding section " + value);
                                 });
                             }
                         });
                     } else { // Hide all sections - then show those found in sectionArray
                         $("#changenumsections").show();
-                        $("li.section").hide();
+                        $("li.section").addClass('hidden').hide();
                         $.each(sectionArray, function(index, value) {
                             var target = $(".section[section-id='" + value + "']");
-                            target.show();
+                            target.removeClass('hidden').show();
                         });
                     }
 
                     // Show section-0 always when it should be shown always
-                    $('#ontop_area #section-0').show();
+                    $('#ontop_area #section-0').removeClass('hidden').show();
 
                     var visibleSections = $('li.section:visible').length;
                     var hiddenSections = $('li.section:visible').find('.ishidden').length;
@@ -475,64 +475,65 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             // hide the the current tab from the tab move options of the section edit menu
             // if this is section0 do some extra stuff
             var dropdownToggle = function() {
- $(".menubar").on('click', function() {
-                if ($(this).parent().parent().hasClass('section_action_menu')) {
-                    var sectionid = $(this).closest('.section').attr('id');
-                    $('#' + sectionid + ' .tab_mover').show(); // 1st show all options
-                    // replace all tabnames with the current names shown in tabs
-                    // Get the current tab names
-                    var tabArray = [];
-                    var trackIds = []; // Tracking the tab IDs so to use each only once
-                    $('.tablink').each(function() {
-                        if (typeof $(this).attr('id') !== 'undefined') {
-                            var tabname = '';
-                            var tabid = $(this).attr('id').substr(3);
-                            if ($(this).hasClass('tabsectionname')) {
-                                tabname = $(this).html();
-                            } else {
-                                tabname = $(this).find('.inplaceeditable').attr('data-value');
-                            }
-                            if ($.inArray(tabid, trackIds) < 0) {
-                                if ($(this).hasClass('hidden-tab')) { // If this is a hidden tab remove all garnish from the name
-                                    tabname = $(this).find('a').clone();
-                                    tabname.find('span.quickediticon').remove();
-                                    tabname = $.trim(tabname.html());
+                $(".menubar").on('click', function() {
+                    if ($(this).parent().parent().hasClass('section_action_menu')) {
+                        var sectionid = $(this).closest('.section').attr('id');
+                        $('#' + sectionid + ' .tab_mover').show(); // 1st show all options
+                        // replace all tabnames with the current names shown in tabs
+                        // Get the current tab names
+                        var tabArray = [];
+                        var trackIds = []; // Tracking the tab IDs so to use each only once
+                        $('.tablink').each(function() {
+                            if (typeof $(this).attr('id') !== 'undefined') {
+                                var tabname = '';
+                                var tabid = $(this).attr('id').substr(3);
+                                if ($(this).hasClass('tabsectionname')) {
+                                    tabname = $(this).html();
+                                } else {
+                                    tabname = $(this).find('.inplaceeditable').attr('data-value');
                                 }
-                                tabArray[tabid] = tabname;
-                                trackIds.push(tabid);
+                                if ($.inArray(tabid, trackIds) < 0) {
+                                    // If this is a hidden tab remove all garnish from the name.
+                                    if ($(this).hasClass('hidden-tab')) {
+                                        tabname = $(this).find('a').clone();
+                                        tabname.find('span.quickediticon').remove();
+                                        tabname = $.trim(tabname.html());
+                                    }
+                                    tabArray[tabid] = tabname;
+                                    trackIds.push(tabid);
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    // Updating menu options with current tab names
-                    $(this).parent().find('.tab_mover').each(function() {
-                        var tabnr = $(this).attr('tabnr');
-                        var newMenuText = 'To Tab ' +
-                            (tabArray[tabnr] === '' || tabArray[tabnr] === 'Tab ' + tabnr ? tabnr : '"' + tabArray[tabnr] +
-                            ((tabArray[tabnr] === 'Tab ' + tabnr || tabnr === '0') ? '"' : '" (Tab ' + tabnr + ')'));
+                        // Updating menu options with current tab names
+                        $(this).parent().find('.tab_mover').each(function() {
+                            var tabnr = $(this).attr('tabnr');
+                            var newMenuText = 'To Tab ' +
+                                (tabArray[tabnr] === '' || tabArray[tabnr] === 'Tab ' + tabnr ? tabnr : '"' + tabArray[tabnr] +
+                                    ((tabArray[tabnr] === 'Tab ' + tabnr || tabnr === '0') ? '"' : '" (Tab ' + tabnr + ')'));
 
-                        $(this).find('.menu-action-text').html(newMenuText);
-                    });
-                    if (sectionid === 'section-0') {
-                        if ($('#ontop_area.section0_ontop').length === 1) { // If section0 is on top don't show tab options
-                            $("#section-0 .inline_mover").show();
-                            $("#section-0 .tab_mover").addClass('tab_mover_bak').removeClass('tab_mover').hide();
-                            $("#section-0 .ontop_mover").hide();
-                        } else {
-                            $("#section-0 .inline_mover").hide();
-                            $("#section-0 .tab_mover_bak").addClass('tab_mover').removeClass('tab_mover_bak').show();
-                            $("#section-0 .ontop_mover").show();
+                            $(this).find('.menu-action-text').html(newMenuText);
+                        });
+                        if (sectionid === 'section-0') {
+                            if ($('#ontop_area.section0_ontop').length === 1) { // If section0 is on top don't show tab options
+                                $("#section-0 .inline_mover").show();
+                                $("#section-0 .tab_mover").addClass('tab_mover_bak').removeClass('tab_mover').hide();
+                                $("#section-0 .ontop_mover").hide();
+                            } else {
+                                $("#section-0 .inline_mover").hide();
+                                $("#section-0 .tab_mover_bak").addClass('tab_mover').removeClass('tab_mover_bak').show();
+                                $("#section-0 .ontop_mover").show();
+                            }
+                        } else if (typeof $('.tablink.active').attr('id') !== 'undefined') {
+                            var tabnum = $('.tablink.active').attr('id').substring(3);
+                            $('#' + sectionid + ' .tab_mover[tabnr="' + tabnum + '"]').hide(); // Then hide the one not needed
                         }
-                    } else if (typeof $('.tablink.active').attr('id') !== 'undefined') {
-                        var tabnum = $('.tablink.active').attr('id').substring(3);
-                        $('#' + sectionid + ' .tab_mover[tabnr="' + tabnum + '"]').hide(); // Then hide the one not needed
+                        if ($('.tablink:visible').length === 0) {
+                            $('#' + sectionid + ' .tab_mover[tabnr="0"]').hide();
+                        }
                     }
-                    if ($('.tablink:visible').length === 0) {
-                        $('#' + sectionid + ' .tab_mover[tabnr="0"]').hide();
-                    }
-                }
-            });
-};
+                });
+            };
 
 // ---------------------------------------------------------------------------------------------------------------------
             // a section edit menu is clicked - to hide or show a section to students
@@ -643,7 +644,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 
 // ---------------------------------------------------------------------------------------------------------------------
             $(document).ready(function() {
-                console.log('=================< topics2/tabs.js >=================');
+                // X console.log('=================< topics2/tabs.js >=================');
                 initFunctions();
 
                 // Show the edit menu for section-0
