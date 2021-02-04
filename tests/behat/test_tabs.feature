@@ -49,7 +49,7 @@ Feature: Tabs can be used in topics2 format
     When I move section "4" to tab "3"
     And I click on "Edit tab name" "link" in the "#tab3" "css_element"
     And I set the field "New value for {a}" to "Test Tab"
-    And I press key "13" in the field "New value for {a}"
+    And I press enter
     Then I should not see "Tab 3" in the "region-main" "region"
     And "New value for {a}" "field" should not exist
     And I should see "Test Tab" in the "#tab3" "css_element"
