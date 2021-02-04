@@ -30,8 +30,8 @@ php:
 # This section sets up the environment variables for the build.
 env:
   global:
-    #    - MOODLE_BRANCH=MOODLE_38_STABLE
-    - MOODLE_BRANCH=MOODLE_39_STABLE
+   - MOODLE_BRANCH=MOODLE_38_STABLE
+    #- MOODLE_BRANCH=MOODLE_39_STABLE
   #    - MOODLE_BRANCH=MOODLE_310_STABLE
   #    - MOODLE_BRANCH=master
   matrix:
