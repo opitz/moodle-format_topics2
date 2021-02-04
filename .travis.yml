@@ -5,6 +5,7 @@ language: php
 # of PostgreSQL and extra APT packages. Java 8 is only required
 # for Mustache command.
 addons:
+  chrome: stable
   postgresql: "9.6"
 
 services:
