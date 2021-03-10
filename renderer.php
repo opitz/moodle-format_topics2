@@ -438,6 +438,19 @@ class format_topics2_renderer extends format_topics_renderer {
      */
     public function render_sections($course, $sections, $formatoptions, $modinfo, $numsections) {
         $o = '';
+        // Prepare the toggle sequence.
+        $this->toggleseq = (isset($this->toggleseq) ? (array) json_decode($this->toggleseq) : array());
+
+        // Weird rearranging the array due to error with PHP below version 7.2.
+        // NO idea why this is needed - but it works.
+        if (version_compare(PHP_VERSION, '7.2.0') < 0) {
+            $toggleseq2 = array();
+            foreach ($toggleseq as $key => $value) {
+                $toggleseq2[$key] = $value;
+            }
+            $this->toggleseq = $toggleseq2;
+        }
+
         foreach ($sections as $section => $thissection) {
             if ($section == 0) {
                 $o .= html_writer::start_tag('div', array('id' => 'inline_area'));
@@ -557,7 +570,7 @@ class format_topics2_renderer extends format_topics_renderer {
         }
 
         // The sectionbody.
-        $o .= $this->section_body($section, $course);
+        $o .= $this->section_body($section,$course);
 
         return $o;
     }
@@ -609,8 +622,8 @@ class format_topics2_renderer extends format_topics_renderer {
 
         return $toggler.$this->render(course_get_format($course)->inplace_editable_render_section_name($section));
     }
-    public function section_title($section, $course) {
-        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
+    public function section_title1($section, $course) {
+        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && $course->defaultcollapse != 2) {
             // Prepare the toggle.
             if (isset($this->toggleseq)) {
                 $toggleseq = (array) json_decode($this->toggleseq);
@@ -634,6 +647,34 @@ class format_topics2_renderer extends format_topics_renderer {
             if (isset($toggleseq[$section->id]) && $toggleseq[$section->id] === '1' ||
                 (!count($toggleseq) && isset($course->defaultcollapse) && $course->defaultcollapse)
             ) {
+                $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltipopen
+                    .'" style="cursor: pointer;"></i>';
+                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'
+                    .$tooltipclosed.'" style="cursor: pointer; display: none;"></i>';
+            } else {
+                $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltipopen
+                    .'" style="cursor: pointer; display: none;"></i>';
+                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'.$tooltipclosed
+                    .'" style="cursor: pointer;"></i>';
+            }
+
+            $toggler .= ' ';
+        } else {
+            $toggler = '';
+        }
+
+        return $toggler.$this->render(course_get_format($course)->inplace_editable_render_section_name($section));
+    }
+    public function section_title($section, $course) {
+        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE &&
+            (!isset($course->defaultcollapse) || $course->defaultcollapse != 2))
+        {
+
+            $togglestate = (isset($this->toggleseq[$section->id]) ? $this->toggleseq[$section->id] : 0);
+            $tooltipopen = get_string('tooltip_open', 'format_topics2');
+            $tooltipclosed = get_string('tooltip_closed', 'format_topics2');
+
+            if ($togglestate || (isset($course->defaultcollapse) && $course->defaultcollapse)) {
                 $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltipopen
                     .'" style="cursor: pointer;"></i>';
                 $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'
@@ -696,7 +737,7 @@ class format_topics2_renderer extends format_topics_renderer {
         return $o;
 
     }
-    protected function section_body($section, $course) {
+    protected function section_body1($section, $course) {
         $o = '';
 
         if (isset($this->toggleseq)) {
@@ -715,11 +756,33 @@ class format_topics2_renderer extends format_topics_renderer {
             $toggleseq = $toggleseq2;
         }
 
-        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE &&
-            isset($toggleseq[$section->id]) &&
-            $toggleseq[$section->id] === '1' ||
+        if ($course->defaultcollapse == 2 ||
+            ($course->coursedisplay != COURSE_DISPLAY_MULTIPAGE && isset($toggleseq[$section->id]) && $toggleseq[$section->id] === '1') ||
             ($section->section == 0 && $section->name == '') ||
             (!count($toggleseq) && isset($course->defaultcollapse) && $course->defaultcollapse)
+        ) {
+            $o .= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
+        } else {
+            $o .= html_writer::start_tag('div',
+                array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
+        }
+        if ($section->uservisible || $section->visible) {
+            // Show summary if section is available or has availability restriction information.
+            // Do not show summary if section is hidden but we still display it because of course setting.
+            $o .= $this->format_summary_text($section);
+        }
+        return $o;
+
+    }
+    protected function section_body($section, $course) {
+        $o = '';
+        $togglestate = (isset($this->toggleseq[$section->id]) ? $this->toggleseq[$section->id] : 0);
+
+        if ($course->defaultcollapse == 2 || // Collapsing has been switched off.
+            ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && $togglestate) ||
+            ($course->coursedisplay != COURSE_DISPLAY_SINGLEPAGE) ||
+            ($section->section == 0 && $section->name == '') ||
+            (!$togglestate && isset($course->defaultcollapse) && $course->defaultcollapse)
         ) {
             $o .= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
         } else {
