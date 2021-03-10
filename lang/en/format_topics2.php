@@ -89,3 +89,10 @@ $string['tooltip_close_all'] = 'Collapse all topics';
 $string['tooltip_goto_top'] = 'Go to the top of the page';
 
 $string['coursedisplay_nocollapse'] = 'Show noncollapsible sections on one page';
+
+// Toggle related
+$string['defaultcollapse'] = 'Default collapse status';
+$string['defaultcollapsed'] = 'All topics are collapsed';
+$string['defaultexpanded'] = 'All topics are expanded';
+$string['defaultcollapse_help'] = 'By default all topics will be shown collapsed to users who have not yet made an own selection. You may select to show all topics expanded instead.';
+
