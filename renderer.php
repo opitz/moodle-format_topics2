@@ -57,6 +57,7 @@ class format_topics2_renderer extends format_topics_renderer {
         $this->require_js();
 
         $this->toggleseq = $this->get_toggle_seq($course); // The toggle sequence for this user and course.
+
         $modinfo = get_fast_modinfo($course);
         $course = course_get_format($course)->get_course();
         $options = $DB->get_records('course_format_options', array('courseid' => $course->id));
@@ -131,7 +132,7 @@ class format_topics2_renderer extends format_topics_renderer {
      * Get the toggle sequence of a given course for the current user.
      *
      * @param array|stdClass $course
-     * @return string
+     * @return array
      * @throws dml_exception
      */
     public function get_toggle_seq($course) {
@@ -139,9 +140,22 @@ class format_topics2_renderer extends format_topics_renderer {
 
         $record = $DB->get_record('user_preferences', array('userid' => $USER->id, 'name' => 'toggle_seq_'.$course->id));
         if (!isset($record->value)) {
-            return '';
+            return array();
         }
-        return $record->value;
+        // Prepare the toggle sequence.
+        $toggleseq = (array) json_decode($record->value);
+
+        // Weird rearranging the array due to error with PHP below version 7.2.
+        // NO idea why this is needed - but it works.
+        if (version_compare(PHP_VERSION, '7.2.0') < 0) {
+            $toggleseq2 = array();
+            foreach ($toggleseq as $key => $value) {
+                $toggleseq2[$key] = $value;
+            }
+            $toggleseq = $toggleseq2;
+        }
+
+        return $toggleseq;
     }
 
     /**
@@ -438,6 +452,7 @@ class format_topics2_renderer extends format_topics_renderer {
      */
     public function render_sections($course, $sections, $formatoptions, $modinfo, $numsections) {
         $o = '';
+
         foreach ($sections as $section => $thissection) {
             if ($section == 0) {
                 $o .= html_writer::start_tag('div', array('id' => 'inline_area'));
@@ -557,7 +572,7 @@ class format_topics2_renderer extends format_topics_renderer {
         }
 
         // The sectionbody.
-        $o .= $this->section_body($section, $course);
+        $o .= $this->section_body($section,$course);
 
         return $o;
     }
@@ -571,37 +586,26 @@ class format_topics2_renderer extends format_topics_renderer {
      * @throws coding_exception
      */
     public function section_title($section, $course) {
-        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE) {
-            // Prepare the toggle.
-            if (isset($this->toggleseq)) {
-                $toggleseq = (array) json_decode($this->toggleseq);
-            } else {
-                $toggleseq = '';
-            }
+        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE &&
+            (!isset($course->defaultcollapse) || $course->defaultcollapse != 2))
+        {
 
-            // Weird rearranging the array due to error with PHP below version 7.2.
-            // NO idea why this is needed - but it works.
-            if (version_compare(PHP_VERSION, '7.2.0') < 0) {
-                $toggleseq2 = array();
-                foreach ($toggleseq as $key => $value) {
-                    $toggleseq2[$key] = $value;
-                }
-                $toggleseq = $toggleseq2;
-            }
-
+            $togglestate = (isset($this->toggleseq[$section->id]) ? $this->toggleseq[$section->id] : 0);
             $tooltipopen = get_string('tooltip_open', 'format_topics2');
             $tooltipclosed = get_string('tooltip_closed', 'format_topics2');
-            if (isset($toggleseq[$section->id]) && $toggleseq[$section->id] === '0') {
-                $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltipopen
-                    .'" style="cursor: pointer; display: none;"></i>';
-                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'.$tooltipclosed
-                    .'" style="cursor: pointer;"></i>';
-            } else {
+
+            if ($togglestate || (isset($course->defaultcollapse) && $course->defaultcollapse)) {
                 $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltipopen
                     .'" style="cursor: pointer;"></i>';
                 $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'
                     .$tooltipclosed.'" style="cursor: pointer; display: none;"></i>';
+            } else {
+                $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltipopen
+                    .'" style="cursor: pointer; display: none;"></i>';
+                $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'.$tooltipclosed
+                    .'" style="cursor: pointer;"></i>';
             }
+
             $toggler .= ' ';
         } else {
             $toggler = '';
@@ -619,31 +623,18 @@ class format_topics2_renderer extends format_topics_renderer {
      */
     protected function section_body($section, $course) {
         $o = '';
+        $togglestate = (isset($this->toggleseq[$section->id]) ? $this->toggleseq[$section->id] : 0);
 
-        if (isset($this->toggleseq)) {
-            $toggleseq = (array) json_decode($this->toggleseq);
+        if ($course->defaultcollapse == 2 || // Collapsing has been switched off.
+            ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && $togglestate) ||
+            ($course->coursedisplay != COURSE_DISPLAY_SINGLEPAGE) ||
+            ($section->section == 0 && $section->name == '') ||
+            (!$togglestate && isset($course->defaultcollapse) && $course->defaultcollapse)
+        ) {
+            $o .= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
         } else {
-            $toggleseq = [];
-        }
-
-        // Weird rearranging the array due to error with PHP below version 7.2.
-        // NO idea why this is needed - but it works.
-        if (version_compare(PHP_VERSION, '7.2.0') < 0) {
-            $toggleseq2 = array();
-            foreach ($toggleseq as $key => $value) {
-                $toggleseq2[$key] = $value;
-            }
-            $toggleseq = $toggleseq2;
-        }
-
-        if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE &&
-            isset($toggleseq[$section->id]) &&
-            $toggleseq[$section->id] === '0' &&
-            ($section->section !== 0 || $section->name !== '')) {
             $o .= html_writer::start_tag('div',
                 array('class' => 'sectionbody summary toggle_area hidden', 'style' => 'display: none;'));
-        } else {
-            $o .= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
         }
         if ($section->uservisible || $section->visible) {
             // Show summary if section is available or has availability restriction information.
