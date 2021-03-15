@@ -117,7 +117,6 @@ class format_topics2_renderer extends format_topics_renderer {
         echo $this->render_hidden_sections($course, $sections, $context, $modinfo, $numsections);
 
         echo $this->end_section_list();
-
     }
 
     /**
@@ -587,8 +586,7 @@ class format_topics2_renderer extends format_topics_renderer {
      */
     public function section_title($section, $course) {
         if ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE &&
-            (!isset($course->defaultcollapse) || $course->defaultcollapse != 2))
-        {
+            (!isset($course->defaultcollapse) || $course->defaultcollapse != 2)) {
 
             $togglestate = (isset($this->toggleseq[$section->id]) ? $this->toggleseq[$section->id] : 0);
             $tooltipopen = get_string('tooltip_open', 'format_topics2');
