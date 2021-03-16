@@ -594,7 +594,8 @@ class format_topics2_renderer extends format_topics_renderer {
             $tooltipopen = get_string('tooltip_open', 'format_topics2');
             $tooltipclosed = get_string('tooltip_closed', 'format_topics2');
 
-            if ($togglestate || (isset($course->defaultcollapse) && $course->defaultcollapse)) {
+            if ($togglestate ||
+                (!count($this->toggleseq) && isset($course->defaultcollapse) && $course->defaultcollapse)) {
                 $toggler = '<i class="toggler toggler_open fa fa-angle-down" title="'.$tooltipopen
                     .'" style="cursor: pointer;"></i>';
                 $toggler .= '<i class="toggler toggler_closed fa fa-angle-right" title="'
@@ -629,7 +630,7 @@ class format_topics2_renderer extends format_topics_renderer {
             ($course->coursedisplay == COURSE_DISPLAY_SINGLEPAGE && $togglestate) ||
             ($course->coursedisplay != COURSE_DISPLAY_SINGLEPAGE) ||
             ($section->section == 0 && $section->name == '') ||
-            (!$togglestate && isset($course->defaultcollapse) && $course->defaultcollapse)
+            (!count($this->toggleseq) && isset($course->defaultcollapse) && $course->defaultcollapse)
         ) {
             $o .= html_writer::start_tag('div', array('class' => 'sectionbody summary toggle_area showing'));
         } else {
