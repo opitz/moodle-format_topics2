@@ -4,10 +4,10 @@ define(['jquery', 'jqueryui'], function($) {
         init: function() {
 // ---------------------------------------------------------------------------------------------------------------------
             var updateToggleSeq = function() {
-                var toggle_seq = {};
+                var toggleSeq = {};
                 $("li.section").each(function() {
                     if (!$(this).find('.toggle_area').hasClass('hidden')) {
-                        toggle_seq[$(this).attr('section-id')] = '1';
+                        toggleSeq[$(this).attr('section-id')] = '1';
                     }
                 });
 
@@ -16,9 +16,9 @@ define(['jquery', 'jqueryui'], function($) {
                 $.ajax({
                     url: "format/topics2/ajax/update_toggles.php",
                     type: "POST",
-                    data: {'courseid': courseid, 'toggle_seq': JSON.stringify(toggle_seq)},
+                    data: {'courseid': courseid, 'toggle_seq': JSON.stringify(toggleSeq)},
                     success: function(result) {
-                        if(result !== '') {
+                        if (result !== '') {
                             console.log('New toggle sequence: ' + result);
                         }
                     }
@@ -28,59 +28,56 @@ define(['jquery', 'jqueryui'], function($) {
 
 // ---------------------------------------------------------------------------------------------------------------------
             // toggle a section content
-            var toggleSection = function() { $(".toggler").on('click', function(event) {
-                if (event.altKey) {
-                    console.log('ALT pressed...!');
-                    if ($(this).hasClass('toggler_closed')) {
-                        $('.toggler_open').show();
-                        $('.toggler_closed').hide();
-                        $('.toggle_area').removeClass('hidden').show();
+            var toggleSection = function() {
+                $(".toggler").on('click', function(event) {
+                    if (event.altKey) {
+                        console.log('ALT pressed...!');
+                        if ($(this).hasClass('toggler_closed')) {
+                            $('.toggler_open').show();
+                            $('.toggler_closed').hide();
+                            $('.toggle_area').removeClass('hidden').show();
+                        } else {
+                            $('.toggler_open').hide();
+                            $('.toggler_closed').show();
+                            $('.toggle_area').addClass('hidden').hide();
+                            // Do not hide section 0
+                            $('#section-0').find('.sectionbody').removeClass('hidden').show();
+                        }
                     } else {
-                        $('.toggler_open').hide();
-                        $('.toggler_closed').show();
-                        $('.toggle_area').addClass('hidden').hide();
-                        // Do not hide section 0
-                        $('#section-0').find('.sectionbody').removeClass('hidden').show();
+                        if ($(this).hasClass('toggler_closed')) {
+                            $(this).parent().find('.toggler_open').show();
+                            $(this).hide();
+                            $(this).parent().parent().parent().find('.toggle_area').removeClass('hidden').show();
+                        } else {
+                            $(this).parent().find('.toggler_closed').show();
+                            $(this).hide();
+                            $(this).parent().parent().parent().find('.toggle_area').addClass('hidden').hide();
+                        }
                     }
-                } else {
-                    if ($(this).hasClass('toggler_closed')) {
-                        $(this).parent().find('.toggler_open').show();
-                        $(this).hide();
-                        $(this).parent().parent().parent().find('.toggle_area').removeClass('hidden').show();
-                    } else {
-                        $(this).parent().find('.toggler_closed').show();
-                        $(this).hide();
-                        $(this).parent().parent().parent().find('.toggle_area').addClass('hidden').hide();
-                    }
-                }
-
-                // Now get the toggler status of each section
-                updateToggleSeq();
-            });};
+                    updateToggleSeq();
+                });
+            };
 
 // ---------------------------------------------------------------------------------------------------------------------
             // toggle a section content
-            var toggleSectionsOpen = function() { $("#btn_toggle_all_open")
-                .on('click', function() {
+            var toggleSectionsOpen = function() {
+                $("#btn_toggle_all_open").on('click', function() {
                     $('.toggler_closed').click();
-
-                    // Now get the toggler status of each section
                     updateToggleSeq();
-                });};
+                });
+            };
 
 // ---------------------------------------------------------------------------------------------------------------------
             // toggle a section content
-            var toggleSectionsClose = function() { $("#btn_toggle_all_close")
-                .on('click', function() {
+            var toggleSectionsClose = function() {
+                $("#btn_toggle_all_close").on('click', function() {
                     $('.toggler_open').click();
-
-                    // Now get the toggler status of each section
                     updateToggleSeq();
-                });};
-
+                });
+            };
 
 // ---------------------------------------------------------------------------------------------------------------------
-            var toggle_all = function() {
+            var toggleAll = function() {
                 $('#btn_open_all').on('click', function() {
                     $('.toggler_open').show();
                     $('.toggler_closed').hide();
@@ -103,7 +100,7 @@ define(['jquery', 'jqueryui'], function($) {
                 toggleSection();
                 toggleSectionsOpen();
                 toggleSectionsClose();
-                toggle_all();
+                toggleAll();
             };
 
 // ---------------------------------------------------------------------------------------------------------------------

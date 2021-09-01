@@ -5,18 +5,13 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 
 // ---------------------------------------------------------------------------------------------------------------------
             // eslint-disable-next-line require-jsdoc
-            function sandbox() {
-            }
-
-// ---------------------------------------------------------------------------------------------------------------------
-            // eslint-disable-next-line require-jsdoc
             function insertTabIndex(element) {
                 // Inserts the tabindex from any active tab to its visible sections to make sure they will follow
                 // directly after the tab when navigating using the TAB key
                 var tabtabindex = element.attr('tabindex');
                 if (tabtabindex > 0) {
-                    $('.section.main:visible').each( function() {
-                        $(this).attr('tabindex',tabtabindex);
+                    $('.section.main:visible').each(function() {
+                        $(this).attr('tabindex', tabtabindex);
                     });
                 }
             }
@@ -74,7 +69,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 // ---------------------------------------------------------------------------------------------------------------------
             // eslint-disable-next-line require-jsdoc
             function save2tab(tabid) {
-                // save the new tab data to the database
+                // Save the new tab data to the database
                 var courseid = $('#courseid').attr('courseid');
                 $.ajax({
                     url: "format/topics2/ajax/update_tab_settings.php",
@@ -94,9 +89,9 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             }
 
 // ---------------------------------------------------------------------------------------------------------------------
-            var set_numsections_cookie = function() {
-                $('#changenumsections').on('click', function(){
-                    // store the number of current sections in a cookie - so we know how many have been added later
+            var setNumsectionsCookie = function() {
+                $('#changenumsections').on('click', function() {
+                    // Store the number of current sections in a cookie - so we know how many have been added later
                     var numSections = $('.section.main').length;
                     sessionStorage.setItem('numSections', numSections);
                 });
@@ -123,17 +118,17 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 
                 if ($('.limittabname').length > 0) {
                     var x = $('.limittabname').attr('value');
-                    var orig_tab_title = tab.attr('tab_title');
-                    if (orig_tab_title.length > x) {
-                        var short_tab_title = orig_tab_title.substr(0, x) + String.fromCharCode(8230);
+                    var origTabTitle = tab.attr('tab_title');
+                    if (origTabTitle.length > x) {
+                        var shortTabTitle = origTabTitle.substr(0, x) + String.fromCharCode(8230);
                         if (tab.hasClass('tabsectionname')) { // A sectionname as tabname
-                            tab.html(short_tab_title);
+                            tab.html(shortTabTitle);
                         } else {
                             if ($('.inplaceeditingon').length === 0) { // Don't do this while editing the tab name
                                 if ($('.inplaceeditable').length > 0) { // We are in edit mode...
-                                    tab.find('a').html(tab.find('a').html().replace(escapeHtml(orig_tab_title), short_tab_title));
+                                    tab.find('a').html(tab.find('a').html().replace(escapeHtml(origTabTitle), shortTabTitle));
                                 } else {
-                                    tab.html(tab.html().replace(escapeHtml(orig_tab_title), short_tab_title));
+                                    tab.html(tab.html().replace(escapeHtml(origTabTitle), shortTabTitle));
                                 }
                             }
                         }
@@ -156,29 +151,29 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 
                 if ($('.limittabname').length > 0) {
                     var x = $('.limittabname').attr('value');
-                    var orig_tab_title = tab.attr('tab_title');
-                    // Console.log('expand => orig = ' + orig_tab_title);
+                    var origTabTitle = tab.attr('tab_title');
+                    // Console.log('expand => orig = ' + origTabTitle);
 
-                    if (orig_tab_title.length > x) {
-                        var short_tab_title = orig_tab_title.substr(0, x) + String.fromCharCode(8230);
-                        // Console.log('       => short = ' + short_tab_title);
+                    if (origTabTitle.length > x) {
+                        var shortTabTitle = origTabTitle.substr(0, x) + String.fromCharCode(8230);
+                        // Console.log('       => short = ' + shortTabTitle);
                         if (tab.hasClass('tabsectionname')) { // A sectionname as tabname
-                            tab.html(orig_tab_title);
+                            tab.html(origTabTitle);
                         } else {
                             if ($('.inplaceeditingon').length === 0) { // Don't do this while editing the tab name
                                 if ($('.inplaceeditable').length > 0) { // We are in edit mode...
 
                                     // Make sure that tab-tile matches data-value after the tab title was edited
                                     var dataValue = tab.find('.inplaceeditable').attr('data-value');
-                                    if (orig_tab_title !== dataValue) { // They do NOT match so make them
+                                    if (origTabTitle !== dataValue) { // They do NOT match so make them
                                         tab.attr('tab_title', dataValue);
-                                        orig_tab_title = dataValue;
-                                        short_tab_title = orig_tab_title.substr(0, x) + String.fromCharCode(8230);
+                                        origTabTitle = dataValue;
+                                        shortTabTitle = origTabTitle.substr(0, x) + String.fromCharCode(8230);
                                     }
 
-                                    tab.find('a').html(tab.find('a').html().replace(escapeHtml(short_tab_title), orig_tab_title));
+                                    tab.find('a').html(tab.find('a').html().replace(escapeHtml(shortTabTitle), origTabTitle));
                                 } else {
-                                    tab.html(tab.html().replace(escapeHtml(short_tab_title), orig_tab_title));
+                                    tab.html(tab.html().replace(escapeHtml(shortTabTitle), origTabTitle));
                                 }
                             }
                         }
@@ -361,7 +356,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                         // X console.log('--> tab0 is a single tab - hiding it');
                         $('.tabitem').hide();
                     }
-                    // this will make sure tab navigation goes from tab to its sections and then on to the next tab
+                    // This will make sure tab navigation goes from tab to its sections and then on to the next tab
                     insertTabIndex($(this));
                 });
             };
@@ -373,18 +368,17 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 
                 // Get the hint string and show the hint icon next to the tab name
                 require(['core/str'], function(str) {
-                    var get_the_string = str.get_string('hidden_tab_hint', 'format_qmultopics');
-                    $.when(get_the_string).done(function(theString) {
-                        tab.find('#not-shown-hint-'+tabid).remove();
-                        var theAppendix = '<i id="not-shown-hint-'+tabid+'" class="fa fa-info" title="'+theString+'"></i>';
+                    var getTheString = str.get_string('hidden_tab_hint', 'format_qmultopics');
+                    $.when(getTheString).done(function(theString) {
+                        tab.find('#not-shown-hint-' + tabid).remove();
+                        var theAppendix = '<i id="not-shown-hint-' + tabid + '" class="fa fa-info" title="' + theString+'"></i>';
                         if (tab.attr('sections').split(',').length == 1
                             && $('.single_section_tabs').length > 0) { // If there is a single topic
-                            tab.html(tab.html() + ' ' +theAppendix);
+                            tab.html(tab.html() + ' ' + theAppendix);
                         } else if ($('.tablink .fa-pencil').length > 0) { // When in edit mode ...
                             tab.find('.inplaceeditable').append(theAppendix);
                         } else {
-//                                self.append(theAppendix);
-                            tab.html(tab.html() + ' ' +theAppendix);
+                            tab.html(tab.html() + ' ' + theAppendix);
                         }
                     });
                 });
@@ -394,7 +388,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             var hideTabHint = function(tab) {
                 var tabid = tab.attr('id');
                 tab.removeClass('hidden-tab');
-                $('#not-shown-hint-'+tabid).remove();
+                $('#not-shown-hint-' + tabid).remove();
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -542,7 +536,6 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                 $(".section-actions .menubar .action-menu-trigger .dropdown .dropdown-menu .dropdown-item").on('click', function() {
                     var activeTab = $('.tablink.active');
                     var visibleSections = $('li.section:visible').length;
-//                    var hiddenSections = $('li.section.hidden:visible').length;
                     var hiddenSections = $('li.section:visible').find('.ishidden').length;
 
                     if ($(this).find('.menu-action-text').html().indexOf("Hide") >= 0) {
@@ -557,7 +550,8 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                             hideTabHint(activeTab);
                         }
                     }
-                });};
+                });
+            };
 
 // ---------------------------------------------------------------------------------------------------------------------
             // A direct URL to a specific section is clicked - reveal the corresponding tab
@@ -584,7 +578,8 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                             }
                         }
                     }
-                });};
+                });
+            };
 
 // ---------------------------------------------------------------------------------------------------------------------
             var initFunctions = function() {
@@ -594,18 +589,16 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                 moveOntop();
                 moveInline();
                 dropdownToggle();
-                set_numsections_cookie();
+                setNumsectionsCookie();
                 tabnav();
                 toggleAvailiability();
                 followTabUrl();
-                sandbox();
-//                Hover_tabname();
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
             // what to do if a tab has been dropped onto another
             var handleTabDropEvent = function(event, ui) {
-                var course_format_name = $(document).find('.course_format_name').html();
+                var courseFormatName = $(document).find('.course_format_name').html();
                 var draggedTab = ui.draggable.find('.topictab').first();
                 var targetTab = $(this).find('.topictab').first();
 
@@ -638,7 +631,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                 $.ajax({
                     url: "format/topics2/ajax/update_tab_seq.php",
                     type: "POST",
-                    data: {'courseid': courseid, 'tab_seq': tabSeq, 'course_format_name': course_format_name},
+                    data: {'courseid': courseid, 'tab_seq': tabSeq, 'course_format_name': courseFormatName},
                     success: function() {
                         // X console.log('the new tab sequence: ' + result);
                     }});
@@ -675,7 +668,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                 var courseid = $('#courseid').attr('courseid');
                 var originCourseid = sessionStorage.getItem('courseid');
                 var tabid = null;
-                if(originCourseid !== null && originCourseid == courseid) {
+                if (originCourseid !== null && originCourseid == courseid) {
                     tabid = sessionStorage.getItem('tabid');
                 } else {
                     sessionStorage.removeItem('courseid');
@@ -688,21 +681,19 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 
                 // If there are visible tabs click them all once to potentially reveal any section names as tab names
                 if ($(".topictab:visible").length > 0) {
-                    if(tabid !== null && tabid != 'tab0') {
-//                        console.log('Found tabid = ' + tabid);
-
-                        // if a 'numSections' cookie is set the changenumsections url has been clicked
-                        // while the particular tab was active and we have returned here
-                        // if the tabid is other than tab0 move the newly added sections to that tab
+                    if (tabid !== null && tabid != 'tab0') {
+                        // If a 'numSections' cookie is set the changenumsections url has been clicked.
+                        // While the particular tab was active and we have returned here.
+                        // If the tabid is other than tab0 move the newly added sections to that tab.
 
                         // Get the number of sections before new ones were added from another cookie
                         var numSections = sessionStorage.getItem('numSections');
                         sessionStorage.removeItem('numSections');
-                        if(numSections !== null) {
+                        if (numSections !== null) {
                             // Attach all new sections to the given tab
                             var tabnum = tabid.substring(3); // This is the tab number(!) where the section is moved to
                             var i = 0;
-                            $('.section.main').each(function(){
+                            $('.section.main').each(function() {
                                 i = i + 1;
                                 if (i > numSections) {
                                     // X console.log('new section id = ' + $(this).attr('id'));
