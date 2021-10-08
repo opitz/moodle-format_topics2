@@ -368,7 +368,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
 
                 // Get the hint string and show the hint icon next to the tab name
                 require(['core/str'], function(str) {
-                    var getTheString = str.get_string('hidden_tab_hint', 'format_qmultopics');
+                    var getTheString = str.get_string('hidden_tab_hint', 'format_topics2');
                     $.when(getTheString).done(function(theString) {
                         tab.find('#not-shown-hint-' + tabid).remove();
                         var theAppendix = '<i id="not-shown-hint-' + tabid + '" class="fa fa-info" title="' + theString+'"></i>';

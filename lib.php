@@ -108,7 +108,7 @@ class format_topics2 extends format_topics {
                         )
                     ),
                     'help' => 'defaultcollapse',
-                    'help_component' => 'format_qmultopics',
+                    'help_component' => 'format_topics2',
                 ),
                 'section0_ontop' => array(
                     'label' => get_string('section0_label', 'format_topics2'),
