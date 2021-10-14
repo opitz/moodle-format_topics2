@@ -37,9 +37,11 @@ if ($topic = optional_param('topic', 0, PARAM_INT)) {
 }
 // End backwards-compatible aliasing..
 
+$format = course_get_format($course);
+$course = $format->get_course();
 $context = context_course::instance($course->id);
 // Retrieve course format option fields and add them to the $course object.
-$course = course_get_format($course)->get_course();
+//$course = course_get_format($course)->get_course();
 
 if (($marker >= 0) && has_capability('moodle/course:setcurrentsection', $context) && confirm_sesskey()) {
     $course->marker = $marker;
