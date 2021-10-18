@@ -537,14 +537,13 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             };
 
 // ---------------------------------------------------------------------------------------------------------------------
-            // a section edit menu is clicked - to hide or show a section to students
+            // A section edit menu is clicked - to hide or show a section to students
             // if hiding the last section of a tab that is visible to students show a hint in the tab
             var toggleAvailiability = function() {
                 $(".section-actions .menubar .action-menu-trigger .dropdown .dropdown-menu .dropdown-item").on('click', function() {
                     var activeTab = $('.tablink.active');
                     var visibleSections = $('li.section:visible').length;
-//                    var hiddenSections = $('li.section.hidden:visible').length;
-                    var hiddenSections = $('li.section:visible').find('.ishidden').length;
+                    var hiddenSections = $('li.section:visible').find('.section_availability').find('.ishidden').length;
 
                     if ($(this).find('.menu-action-text').html().indexOf("Hide") >= 0) {
                         if (activeTab.attr('id') != undefined
