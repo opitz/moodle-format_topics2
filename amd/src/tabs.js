@@ -537,7 +537,7 @@ console.log('=====> Clicked tab "' + clickedTabName + '":');
                 $(".section-actions .menubar .action-menu-trigger .dropdown .dropdown-menu .dropdown-item").on('click', function() {
                     var activeTab = $('.tablink.active');
                     var visibleSections = $('li.section:visible').length;
-                    var hiddenSections = $('li.section:visible').find('.ishidden').length;
+                    var hiddenSections = $('li.section:visible').find('.section_availability').find('.ishidden').length;
 
                     if ($(this).find('.menu-action-text').html().indexOf("Hide") >= 0) {
                         if (activeTab.attr('id') != undefined
