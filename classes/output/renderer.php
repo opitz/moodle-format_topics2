@@ -17,11 +17,13 @@
 namespace format_topics2\output;
 
 use core_courseformat\output\section_renderer;
+use core_course\output\section_format;
 use context_course;
 use completion_info;
 use html_writer;
 use stdClass;
 use renderer_base;
+//use format_topics\output\renderer;
 
 use moodle_page;
 
@@ -43,7 +45,7 @@ defined('MOODLE_INTERNAL') || die();
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 //class format_topics2_renderer extends format_topics_renderer {
-class renderer extends section_renderer {
+class renderer extends \format_topics\output\renderer {
 
     /**
      * Generate the starting container html for a list of sections.
@@ -82,13 +84,13 @@ class renderer extends section_renderer {
         }
 
         $context = context_course::instance($course->id);
-        // Title with completion help icon.
-        $completioninfo = new completion_info($course);
-        echo $completioninfo->display_help_icon();
+        // Title without completion help icon.
+        // X $completioninfo = new completion_info($course);
+        // X echo $completioninfo->display_help_icon(); // Th
         echo $this->output->heading($this->page_title(), 2, 'accesshide');
 
         // Copy activity clipboard..
-        echo $this->course_activity_clipboard($course, 0);
+        // X echo $this->course_activity_clipboard($course, 0); // No longer supported
 
         // Now on to the main stage..
         $numsections = course_get_format($course)->get_last_section_number();
@@ -566,10 +568,11 @@ class renderer extends section_renderer {
         ));
 
         // The left and right elements.
-        $leftcontent = $this->section_left_content($section, $course, $onsectionpage);
+        $leftcontent = '';
+
         $o .= html_writer::tag('div', $leftcontent, array('class' => 'left side'));
 
-        $rightcontent = $this->section_right_content($section, $course, $onsectionpage);
+        $rightcontent = '';
         $o .= html_writer::tag('div', $rightcontent, array('class' => 'right side'));
 
         // Start the content.
@@ -582,7 +585,7 @@ class renderer extends section_renderer {
                 $o .= html_writer::tag('h' . 3, $this->section_title($section, $course),
                     array('class' => renderer_base::prepare_classes('sectionname')));
             }
-            $o .= $this->section_availability($section);
+            // $o .= $this->section_availability($section);
         }
 
         // The sectionbody.
