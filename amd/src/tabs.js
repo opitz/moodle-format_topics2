@@ -261,7 +261,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                     if (typeof clickedTabName == 'undefined') {
                         clickedTabName = $(this).html();
                     }
-                    // X console.log('=====> Clicked tab "' + clickedTabName + '":');
+console.log('=====> Clicked tab "' + clickedTabName + '":');
 
                     if (tabid === 'tab0') { // Show all sections - then hide each section shown in other tabs
                         $("#changenumsections").show();
@@ -289,9 +289,10 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                     $('#ontop_area #section-0').removeClass('hidden').show();
 
                     var visibleSections = $('li.section:visible').length;
-                    var hiddenSections = $('li.section:visible').find('.ishidden').length;
+                    var hiddenSections = $('li.section:visible').find('.section_availability').find('.ishidden').length;
+
+                    // Section 0 is on top - so reducing the number of visible sections for this tab by 1.
                     if ($('.section0_ontop').length > 0) {
-                        // Section 0 is on top - so reducing the number of visible sections for this tab by 1.
                         visibleSections--;
                     }
 
@@ -536,7 +537,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                 $(".section-actions .menubar .action-menu-trigger .dropdown .dropdown-menu .dropdown-item").on('click', function() {
                     var activeTab = $('.tablink.active');
                     var visibleSections = $('li.section:visible').length;
-                    var hiddenSections = $('li.section:visible').find('.ishidden').length;
+                    var hiddenSections = $('li.section:visible').find('.section_availability').find('.ishidden').length;
 
                     if ($(this).find('.menu-action-text').html().indexOf("Hide") >= 0) {
                         if (activeTab.attr('id') != undefined
