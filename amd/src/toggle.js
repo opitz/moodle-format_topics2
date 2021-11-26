@@ -16,7 +16,7 @@ define(['jquery', 'jqueryui'], function($) {
                 $.ajax({
                     url: "format/topics2/ajax/update_toggles.php",
                     type: "POST",
-                    data: {'courseid': courseid, 'toggle_seq': JSON.stringify(toggleSeq)},
+                    data: {'courseid': courseid, 'toggle_seq': JSON.stringify(toggleSeq), 'sesskey': M.cfg.sesskey},
                     success: function(result) {
                         if (result !== '') {
                             console.log('New toggle sequence: ' + result);

@@ -55,4 +55,5 @@ if (!isset($_POST['tab_seq']) || count($_POST['tab_seq']) === 0) {
     exit;
 }
 
+require_sesskey();
 echo update_tab_seq($_POST['courseid'], $_POST['tab_seq']);
