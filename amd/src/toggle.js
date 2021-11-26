@@ -1,5 +1,5 @@
 define(['jquery', 'jqueryui'], function($) {
-    /*eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
+    /* eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
     return {
         init: function() {
 

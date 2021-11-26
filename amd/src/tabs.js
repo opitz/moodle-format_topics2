@@ -113,6 +113,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
              * Escape some characters in HTML text
              *
              * @param {string} text
+             * @returns {*}
              */
             var escapeHtml = function(text) {
                 var map = {
@@ -416,7 +417,8 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                     var getTheString = str.get_string('hidden_tab_hint', 'format_topics2');
                     $.when(getTheString).done(function(theString) {
                         tab.find('#not-shown-hint-' + tabid).remove();
-                        var theAppendix = '<i id="not-shown-hint-' + tabid + '" class="fa fa-info" title="' + theString+'"></i>';
+                        var theAppendix = '<i id="not-shown-hint-' +
+                            tabid + '" class="fa fa-info" title="' + theString + '"></i>';
                         if (tab.attr('sections').split(',').length == 1
                             && $('.single_section_tabs').length > 0) { // If there is a single topic
                             tab.html(tab.html() + ' ' + theAppendix);
