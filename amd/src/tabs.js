@@ -7,7 +7,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
              * Inserts the tabindex from any active tab to its visible sections to make sure they will follow
              * directly after the tab when navigating using the TAB key
              *
-             * @param element
+             * @param {Object} element
              */
             function insertTabIndex(element) {
                 var tabtabindex = element.attr('tabindex');
@@ -42,9 +42,9 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             /**
              * Add a section ID and number to a given tab
              *
-             * @param tabnum
-             * @param sectionid
-             * @param sectionnum
+             * @param {number} tabnum
+             * @param {number} sectionid
+             * @param {number} sectionnum
              */
             function add2tab(tabnum, sectionid, sectionnum) {
                 // Remove the section id and section number from any tab
@@ -76,7 +76,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             /**
              * Save section ids (and numbers for backup reasons) in relation to given tab
              *
-             * @param tabid
+             * @param {number} tabid
              */
             function save2tab(tabid) {
                 // Save the new tab data to the database
@@ -112,7 +112,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             /**
              * Escape some characters in HTML text
              *
-             * @param text
+             * @param {string} text
              */
             var escapeHtml = function(text) {
                 var map = {
@@ -131,7 +131,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             /**
              * When a limit for the tabname is set truncate the name of the given tab to limit
              *
-             * @param tab
+             * @param {Object} tab
              */
             var truncateTabname = function(tab) {
 
@@ -169,7 +169,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             /**
              * When a limit for the tabname is set expand the name of the given tab to the original
              *
-             * @param tab
+             * @param {Object} tab
              */
             var expandTabname = function(tab) {
 
@@ -208,8 +208,8 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             /**
              * When a single section is shown under a tab use the section name as tab name
              *
-             * @param tab
-             * @param target
+             * @param {Object} tab
+             * @param {Object} target
              */
             var changeTab = function(tab, target) {
                 // X console.log('single section in tab: using section name as tab name');
@@ -246,7 +246,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             /**
              * Restore the tab name
              *
-             * @param tab
+             * @param {Object} tab
              */
             var restoreTab = function(tab) {
                 // Restore the tab name from the backup
@@ -406,7 +406,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             /**
              * Get the hint string and show the hint icon next to the tab name
              *
-             * @param tab
+             * @param {Object} tab
              */
             var showTabHint = function(tab) {
                 var tabid = tab.attr('id');
@@ -432,7 +432,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             /**
              * Hide a tab hint
              *
-             * @param tab
+             * @param {Object} tab
              */
             var hideTabHint = function(tab) {
                 var tabid = tab.attr('id');
@@ -654,8 +654,8 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             /**
              * What to do if a tab has been dropped onto another
              *
-             * @param event
-             * @param ui
+             * @param {Object} event
+             * @param {Object} ui
              */
             var handleTabDropEvent = function(event, ui) {
                 var courseFormatName = $(document).find('.course_format_name').html();

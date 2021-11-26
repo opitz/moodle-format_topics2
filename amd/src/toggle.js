@@ -2,7 +2,10 @@ define(['jquery', 'jqueryui'], function($) {
     /*eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
     return {
         init: function() {
-// ---------------------------------------------------------------------------------------------------------------------
+
+            /**
+             * Update the toggles settings per user
+             */
             var updateToggleSeq = function() {
                 var toggleSeq = {};
                 $("li.section").each(function() {
@@ -26,8 +29,9 @@ define(['jquery', 'jqueryui'], function($) {
 
             };
 
-// ---------------------------------------------------------------------------------------------------------------------
-            // toggle a section content
+            /**
+             * Toggle a section content
+             */
             var toggleSection = function() {
                 $(".toggler").on('click', function(event) {
                     if (event.altKey) {
@@ -58,8 +62,9 @@ define(['jquery', 'jqueryui'], function($) {
                 });
             };
 
-// ---------------------------------------------------------------------------------------------------------------------
-            // toggle a section content
+            /**
+             * Toggle a section content open
+             */
             var toggleSectionsOpen = function() {
                 $("#btn_toggle_all_open").on('click', function() {
                     $('.toggler_closed').click();
@@ -67,8 +72,9 @@ define(['jquery', 'jqueryui'], function($) {
                 });
             };
 
-// ---------------------------------------------------------------------------------------------------------------------
-            // toggle a section content
+            /**
+             * Toggle a section content close
+             */
             var toggleSectionsClose = function() {
                 $("#btn_toggle_all_close").on('click', function() {
                     $('.toggler_open').click();
@@ -76,7 +82,9 @@ define(['jquery', 'jqueryui'], function($) {
                 });
             };
 
-// ---------------------------------------------------------------------------------------------------------------------
+            /**
+             * Toggle all sections
+             */
             var toggleAll = function() {
                 $('#btn_open_all').on('click', function() {
                     $('.toggler_open').show();
@@ -94,16 +102,20 @@ define(['jquery', 'jqueryui'], function($) {
                 });
             };
 
-// ---------------------------------------------------------------------------------------------------------------------
+            /**
+             * Initialize all functions
+             */
             var initFunctions = function() {
-                // Load all required functions above
                 toggleSection();
                 toggleSectionsOpen();
                 toggleSectionsClose();
                 toggleAll();
             };
 
-// ---------------------------------------------------------------------------------------------------------------------
+
+            /**
+             * The document is ready
+             */
             $(document).ready(function() {
                 console.log('=================< topics2/toggle.js >=================');
                 initFunctions();
