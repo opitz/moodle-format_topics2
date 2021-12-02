@@ -27,9 +27,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['7.3', '7.4', '8.0']
-        moodle-branch: ['MOODLE_311_STABLE']
-        database: [pgsql, mariadb]
+        php: ['7.2', '7.4', '8.0']
+        moodle-branch: ['MOODLE_39_STABLE']
+        database: [mariadb]
 
     steps:
       - name: Check out repository code
