@@ -53,10 +53,9 @@ function update_toggle_status($courseid, $toggleseq) {
 require_sesskey();
 
 $courseid = required_param('courseid', PARAM_INT);
-$toggleseq = required_param('courseid', PARAM_INT);
+$toggleseq = required_param('toggle_seq', PARAM_RAW);
 
 if (!isset($toggleseq) || count(str_split($toggleseq)) === 0) {
-    print_r($toggleseq);
     exit;
 }
 

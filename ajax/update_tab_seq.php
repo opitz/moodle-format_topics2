@@ -54,7 +54,7 @@ function update_tab_seq($courseid, $tabseq) {
 require_sesskey();
 
 $courseid = required_param('courseid', PARAM_INT);
-$tabseq = required_param('tab_seq', PARAM_ALPHANUM);
+$tabseq = required_param('tab_seq', PARAM_RAW);
 
 if (!isset($tabseq) || count($tabseq) === 0) {
     exit;
