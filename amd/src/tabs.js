@@ -699,7 +699,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                         'course_format_name': courseFormatName,
                         'sesskey': M.cfg.sesskey
                     },
-                    success: function() {
+                    success: function(result) {
                         console.log('the new tab sequence: ' + result);
                     }});
             };
