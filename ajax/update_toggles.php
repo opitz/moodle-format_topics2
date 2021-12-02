@@ -50,9 +50,14 @@ function update_toggle_status($courseid, $toggleseq) {
     return $toggleseq;
 }
 
-if (!isset($_POST['toggle_seq']) || count(str_split($_POST['toggle_seq'])) === 0) {
+require_sesskey();
+
+$courseid = required_param('courseid', PARAM_INT);
+$toggleseq = required_param('courseid', PARAM_INT);
+
+if (!isset($toggleseq) || count(str_split($toggleseq)) === 0) {
+    print_r($toggleseq);
     exit;
 }
 
-require_sesskey();
-echo update_toggle_status($_POST['courseid'], $_POST['toggle_seq']);
+echo update_toggle_status($courseid, $toggleseq);
