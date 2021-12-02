@@ -59,4 +59,9 @@ function update_tab_settings($courseid, $tabid, $sections, $sectionnums) {
 }
 
 require_sesskey();
-echo update_tab_settings($_POST['courseid'], $_POST['tabid'], $_POST['sections'], $_POST['sectionnums']);
+$courseid = required_param('courseid', PARAM_INT);
+$tabid = required_param('tabid', PARAM_INT);
+$sections = required_param('sections', PARAM_RAW);
+$sectionnums = required_param('sectionnums', PARAM_RAW);
+
+echo update_tab_settings($courseid, $tabid, $sections, $sectionnums);
