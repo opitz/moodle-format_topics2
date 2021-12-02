@@ -54,4 +54,5 @@ if (!isset($_POST['toggle_seq']) || count(str_split($_POST['toggle_seq'])) === 0
     exit;
 }
 
+require_sesskey();
 echo update_toggle_status($_POST['courseid'], $_POST['toggle_seq']);
