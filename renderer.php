@@ -571,7 +571,7 @@ class format_topics2_renderer extends format_topics_renderer {
         }
 
         // The sectionbody.
-        $o .= $this->section_body($section,$course);
+        $o .= $this->section_body($section, $course);
 
         return $o;
     }

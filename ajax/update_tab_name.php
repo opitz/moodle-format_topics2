@@ -57,5 +57,4 @@ $courseid = required_param('courseid', PARAM_INT);
 $tabid = required_param('tabid', PARAM_INT);
 $tabname = required_param('tab_name', PARAM_RAW);
 
-// echo update_tab_name($_POST['courseid'], $_POST['tabid'], $_POST['tab_name']);
 echo update_tab_name($courseid, $tabid, $tabname);

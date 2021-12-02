@@ -90,7 +90,7 @@ $string['tooltip_goto_top'] = 'Go to the top of the page';
 
 $string['coursedisplay_nocollapse'] = 'Show noncollapsible sections on one page';
 
-// Toggle related
+// Toggle related.
 $string['defaultcollapse'] = 'Default collapse status';
 $string['defaultcollapsed'] = 'All topics are collapsed';
 $string['defaultexpanded'] = 'All topics are expanded';
