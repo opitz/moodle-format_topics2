@@ -18,7 +18,7 @@
  * Updating the course format options with a new sequence in which the tabs are displayed
  *
  * @package    format_topics2
- * @copyright  2020 Matthias Opitz
+ * @copyright  2020-21 Matthias Opitz
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('../../../../config.php');
@@ -51,9 +51,13 @@ function update_tab_seq($courseid, $tabseq) {
     return $tabseq;
 }
 
-if (!isset($_POST['tab_seq']) || count($_POST['tab_seq']) === 0) {
+require_sesskey();
+
+$courseid = required_param('courseid', PARAM_INT);
+$tabseq = required_param('tab_seq', PARAM_RAW);
+
+if (!isset($tabseq) || count($tabseq) === 0) {
     exit;
 }
 
-require_sesskey();
-echo update_tab_seq($_POST['courseid'], $_POST['tab_seq']);
+echo update_tab_seq($courseid, $tabseq);
