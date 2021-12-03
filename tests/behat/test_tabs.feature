@@ -36,6 +36,7 @@ Feature: Tabs can be used in topics2 format
     And section "3" should be hidden
     And section "5" should be hidden
     And I reload the page
+    And I uncollapse section "4"
     And I move section "4" to tab "0"
     Then I should not see "Tab 3"
     And section "1" should be visible
@@ -63,4 +64,5 @@ Feature: Tabs can be used in topics2 format
     And I move section "5" to tab "2"
     And I swap tab "1" with tab "2"
     And I click on element ".tabitem:nth-child(2)"
+    And I uncollapse section "5"
     Then I should see "Test choice name"
