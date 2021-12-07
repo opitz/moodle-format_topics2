@@ -32,7 +32,7 @@ require_login();
  * @return mixed
  * @throws dml_exception
  */
-function update_tab_seq($courseid, $tabseq) {
+function update_tab_seq($courseid, $tabseq, $formatname) {
     global $DB;
 
     if ($DB->record_exists('course_format_options', array('courseid' => $courseid, 'name' => 'tab_seq'))) {
@@ -42,7 +42,7 @@ function update_tab_seq($courseid, $tabseq) {
     } else {
         $tabseqrecord = new \stdClass();
         $tabseqrecord->courseid = $courseid;
-        $tabseqrecord->format = $_POST['course_format_name'];
+        $tabseqrecord->format = $formatname;
         $tabseqrecord->sectionid = 0;
         $tabseqrecord->name = 'tab_seq';
         $tabseqrecord->value = $tabseq;
@@ -55,9 +55,10 @@ require_sesskey();
 
 $courseid = required_param('courseid', PARAM_INT);
 $tabseq = required_param('tab_seq', PARAM_RAW);
+$formatname = required_param('course_format_name', PARAM_RAW);
 
 if (!isset($tabseq) || count($tabseq) === 0) {
     exit;
 }
 
-echo update_tab_seq($courseid, $tabseq);
+echo update_tab_seq($courseid, $tabseq, $formatname);
