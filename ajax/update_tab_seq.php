@@ -27,9 +27,9 @@ require_login();
 /**
  * Save the order of the tabs in a course to the database
  *
- * @param $courseid
- * @param $tabseq
- * @param $formatname
+ * @param int $courseid
+ * @param string $tabseq
+ * @param string $formatname
  * @return mixed
  */
 function update_tab_seq($courseid, $tabseq, $formatname) {
