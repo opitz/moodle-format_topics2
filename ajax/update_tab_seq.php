@@ -27,10 +27,10 @@ require_login();
 /**
  * Save the order of the tabs in a course to the database
  *
- * @param int $courseid
- * @param string $tabseq
+ * @param $courseid
+ * @param $tabseq
+ * @param $formatname
  * @return mixed
- * @throws dml_exception
  */
 function update_tab_seq($courseid, $tabseq, $formatname) {
     global $DB;
