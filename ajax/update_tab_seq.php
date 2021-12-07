@@ -29,8 +29,8 @@ require_login();
  *
  * @param int $courseid
  * @param string $tabseq
+ * @param string $formatname
  * @return mixed
- * @throws dml_exception
  */
 function update_tab_seq($courseid, $tabseq, $formatname) {
     global $DB;
