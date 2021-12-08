@@ -79,6 +79,9 @@ class format_topics2_renderer extends format_topics_renderer {
         $numsections = course_get_format($course)->get_last_section_number();
         $sections = $modinfo->get_section_info_all();
 
+        // An invisible tag with the name of the course format to be used in jQuery.
+        echo html_writer::div($course->format, 'course_format_name', array('style' => 'display:none;'));
+
         // Add an invisible div that carries the course ID to be used by JS.
         // Add class 'single_section_tabs' when option is set so JS can play accordingly.
         $class = (isset($formatoptions['single_section_tabs']) &&
