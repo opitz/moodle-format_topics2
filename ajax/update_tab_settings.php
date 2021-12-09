@@ -61,7 +61,7 @@ function update_tab_settings($courseid, $tabid, $sections, $sectionnums) {
 require_sesskey();
 
 $courseid = required_param('courseid', PARAM_INT);
-$tabid = required_param('tabid', PARAM_INT);
+$tabid = required_param('tabid', PARAM_RAW);
 $sections = required_param('sections', PARAM_RAW);
 $sectionnums = required_param('sectionnums', PARAM_RAW);
 
