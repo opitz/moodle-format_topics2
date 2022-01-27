@@ -22,6 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace format_topics2;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;

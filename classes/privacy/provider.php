@@ -21,7 +21,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace format_topics2\privacy;
-defined('MOODLE_INTERNAL') || die();
 /**
  * Privacy Subsystem for format_topics2 implementing null_provider.
  *
