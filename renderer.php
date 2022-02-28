@@ -319,12 +319,13 @@ class format_topics2_renderer extends format_topics_renderer {
             $itemid = false;
         }
 
-        $tabindex = ((int) substr($tab->id, 3, 1) + 1) * 100;
+//        $tabindex = ((int) substr($tab->id, 3, 1) + 1) * 100;
+        $tabindex = 0;
         if ($tab->id == 'tab0') {
             $o .= '<span
                 data-toggle="tab" id="'.$tab->id.'"
                 sections="'.$tab->sections.'"
-                section_nums="'.$tab->section_nums.'"
+                section_nums="'.$tab->section_nums.'"((int) substr($tab->id, 3, 1) + 1) * 100
                 class="tablink nav-link "
                 tab_title="'.$tab->title.'",
                 generic_title = "'.$tab->generic_title.'"
