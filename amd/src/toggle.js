@@ -112,7 +112,6 @@ define(['jquery', 'jqueryui'], function($) {
                 toggleAll();
             };
 
-
             /**
              * The document is ready
              */

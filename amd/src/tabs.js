@@ -238,11 +238,13 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
             /**
              * A section name is updated...
              */
-            $(".section").on('updated', function() {
-                var newSectionname = $(this).find('.inplaceeditable').attr('data-value');
-                $(this).attr('aria-label', newSectionname);
-                $('.tablink.active').click();
-            });
+            var updateSectionName = function() {
+                $(".section").on('updated', function() {
+                    var newSectionname = $(this).find('.inplaceeditable').attr('data-value');
+                    $(this).attr('aria-label', newSectionname);
+                    $('.tablink.active').click();
+                });
+            };
 
             /**
              * Restore the tab name
@@ -651,6 +653,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                 tabnav();
                 toggleAvailiability();
                 followTabUrl();
+                updateSectionName();
             };
 
             /**
