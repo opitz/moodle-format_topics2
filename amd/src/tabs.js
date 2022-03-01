@@ -700,7 +700,7 @@ define(['jquery', 'jqueryui', 'core/str'], function($) {
                         'sesskey': M.cfg.sesskey
                     },
                     success: function(result) {
-                        console.log('the new tab sequence: ' + result);
+                        console.log('updated tab sequence: ' + result);
                     }});
             };
 

@@ -22,7 +22,7 @@ define(['jquery', 'jqueryui'], function($) {
                     data: {'courseid': courseid, 'toggle_seq': JSON.stringify(toggleSeq), 'sesskey': M.cfg.sesskey},
                     success: function(result) {
                         if (result !== '') {
-                            console.log('New toggle sequence: ' + result);
+                            console.log('Updated toggle sequence: ' + result);
                         }
                     }
                 });
