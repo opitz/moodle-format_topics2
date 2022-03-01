@@ -325,7 +325,7 @@ class format_topics2_renderer extends format_topics_renderer {
             $o .= '<span
                 data-toggle="tab" id="'.$tab->id.'"
                 sections="'.$tab->sections.'"
-                section_nums="'.$tab->section_nums.'"((int) substr($tab->id, 3, 1) + 1) * 100
+                section_nums="'.$tab->section_nums.'"
                 class="tablink nav-link "
                 tab_title="'.$tab->title.'",
                 generic_title = "'.$tab->generic_title.'"
