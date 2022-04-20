@@ -33,10 +33,10 @@ define(['jquery', 'jqueryui'], function($) {
              * Toggle a section content
              */
             var toggleSection = function() {
-                $(".toggler").on('click', function(event) {
+                $(".sectionname").on('click', function(event) {
                     if (event.altKey) {
                         console.log('ALT pressed...!');
-                        if ($(this).hasClass('toggler_closed')) {
+                        if ($(this).find('.toggler:visible').hasClass('toggler_closed')) {
                             $('.toggler_open').show();
                             $('.toggler_closed').hide();
                             $('.toggle_area').removeClass('hidden').show();
@@ -48,14 +48,14 @@ define(['jquery', 'jqueryui'], function($) {
                             $('#section-0').find('.sectionbody').removeClass('hidden').show();
                         }
                     } else {
-                        if ($(this).hasClass('toggler_closed')) {
-                            $(this).parent().find('.toggler_open').show();
-                            $(this).hide();
-                            $(this).parent().parent().parent().find('.toggle_area').removeClass('hidden').show();
+                        if ($(this).find('.toggler:visible').hasClass('toggler_closed')) {
+                            $(this).find('.toggler:visible').hide();
+                            $(this).find('.toggler_open').show();
+                            $(this).parent().parent().find('.toggle_area').removeClass('hidden').show();
                         } else {
-                            $(this).parent().find('.toggler_closed').show();
-                            $(this).hide();
-                            $(this).parent().parent().parent().find('.toggle_area').addClass('hidden').hide();
+                            $(this).find('.toggler:visible').hide();
+                            $(this).find('.toggler_closed').show();
+                            $(this).parent().parent().find('.toggle_area').addClass('hidden').hide();
                         }
                     }
                     updateToggleSeq();
