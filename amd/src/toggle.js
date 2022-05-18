@@ -1,4 +1,4 @@
-define(['jquery', 'jqueryui'], function($) {
+define(['jquery'], function($) {
     /* eslint no-console: ["error", { allow: ["log", "warn", "error"] }] */
     return {
         init: function() {
