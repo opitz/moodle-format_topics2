@@ -48,7 +48,7 @@ $string['addsections'] = 'Add Topics';
 
 // Tab related strings.
 $string['modulecontent'] = 'Module Content';
-$string['tab0_generic_name'] = 'Module Content';
+$string['tab0_generic_name'] = 'Course Content';
 
 $string['toggle'] = 'Enable collapsing sections';
 $string['toggle_label'] = 'Enable collapsing sections';
@@ -75,7 +75,7 @@ $string['single_section_tabs_label'] = 'Use topic name as tab name for single to
 $string['single_section_tabs_help'] = 'When checked tabs with a single topic will use the topic name as tab name.';
 
 $string['tabname'] = 'Tab';
-$string['tabzero_title'] = 'Module Content';
+$string['tabzero_title'] = 'Course Content';
 $string['tabtitle_edithint'] = 'Edit tab name';
 $string['tabtitle_editlabel'] = 'New value for {a}';
 $string['movetotab'] = 'Move to Tab ';

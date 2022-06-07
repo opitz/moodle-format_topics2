@@ -1,7 +1,15 @@
 # moodle-format_topics2
-This course format is based on the standard Moodle Topics format but adds tab-abilties to it!
+This course format is based on the standard Moodle Topics format with added abilities:
+* Topics may be collapsed or expanded. The status will be saved per user.
+* Topics may be arranged in tabs
 
 Initially the page rendering is identical to the standard Topics course format - it is then only in edit mode that you will discover some changes.
+
+Collapsing Topics
+-------------------------
+Topics may be dispayed collaped or expanded. The status is toggled by clicking the topic title. When clicking while the ALT key is pressed 
+all topics of that course will collapse or expand.
+By default all topics are displayed collaped. This may be changed in the course format settings.
 
 Assigining Topics to Tabs
 -------------------------
@@ -13,9 +21,9 @@ Initially tabs are named "Tab 1" to "Tab 5" but may be renamed (see below).
 Only tabs with assigned (visible) topics will be shown.<br>
 When tabs are shown and a page is loaded the left-most visible tab is always made the active one.
 
-The "Module Content" tab
+The "Course Content" tab
 ------------------------
-When the 1st tab for a module is shown another tab - called "Module Content" by default - will show as well. This tab is different from other tabs in two ways: 
+When the 1st tab for a module is shown another tab - called "Course Content" by default - will show as well. This tab is different from other tabs in two ways: 
 - It always contains all those topics that are not assigned to any other tab 
 - and it stays in its place as the first (leftmost) tab (but may be hidden or invisible - see below!)
 
@@ -24,7 +32,7 @@ Renaming and swapping tabs
 Tabs may be renamed. To do so click on a tab name in edit mode, edit the name and press ENTER to save the changes or ESC to discard.
 
 Tabs may swap places. To do so in edit mode drag one tab onto the tab you want to swap it with.<br>
-Remember: You cannot swap places with the "Module Content" tab - but you may rename it.
+Remember: You cannot swap places with the "Course Content" tab - but you may rename it.
   
 Hidden Tabs
 -----------
@@ -51,10 +59,9 @@ Almost all of the tab-ability is done by hiding, showing and moving page element
 This means that all other functionality of a course page remains intact: topics may be moved, renamed and edited as usual.
 #####How does it work?
 Tabs will have assigned the IDs of topics to them. When a tab is clicked ALL topics are first hidden and then all topics assigned to a tab will be shown.
-For the "Module Content" tab the behavior is complementary: first all topics are shown and then all those assigned to any of the other tabs will be hidden again.
+For the "Course Content" tab the behavior is complementary: first all topics are shown and then all those assigned to any of the other tabs will be hidden again.
 
-By default the format supports up to 5 tabs plus the "Module Content" tab (see above).
-By setting $CFG->max_tabs in the config.php file this value may be changed up to a maximum of 10 tabs.
+By default the format supports up to 5 tabs plus the "Course Content" tab (see above). The number of tabs may be changed in the course format settings.
 
 ----
-Version: topics-based v.20181210
+Version: _20220607_
