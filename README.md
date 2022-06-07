@@ -3,17 +3,15 @@ This course format is based on the standard Moodle Topics format with added abil
 * Topics may be collapsed or expanded. The status will be saved per user.
 * Topics may be arranged in tabs
 
-Initially the page rendering is identical to the standard Topics course format - it is then only in edit mode that you will discover some changes.
-
 Collapsing Topics
 -------------------------
-Topics may be dispayed collaped or expanded. The status is toggled by clicking the topic title. When clicking while the ALT key is pressed 
-all topics of that course will collapse or expand.
+Topics may be dispayed collaped or expanded. The status is toggled by clicking the topic title. <br>
+When clicking while the ALT key is pressed all topics of that course will collapse or expand.<br>
 By default all topics are displayed collaped. This may be changed in the course format settings.
 
 Assigining Topics to Tabs
 -------------------------
-To assign a topic to a tab you need to be in edit mode. Then from the topic edit menu chose one of the options named "To Tab ...". The topic then will immediately move there.
+To assign a topic to a tab you need to be in edit mode. Then from the topic edit menu choose one of the options named "To Tab ...". The topic then will immediately move there.
 If this is the 1st topic assigned to a tab the tab will appear automatically (while removing the last topic from a tab will have it removed again). Clicking on it will show the assigned topic(s) and hide all others.
 
 Initially tabs are named "Tab 1" to "Tab 5" but may be renamed (see below).
@@ -64,4 +62,4 @@ For the "Course Content" tab the behavior is complementary: first all topics are
 By default the format supports up to 5 tabs plus the "Course Content" tab (see above). The number of tabs may be changed in the course format settings.
 
 ----
-Version: _20220607_
+Version: _2022060701_
