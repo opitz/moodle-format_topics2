@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 defined('COURSE_DISPLAY_COLLAPSE') || define('COURSE_DISPLAY_COLLAPSE', 2); // Legacy support - no longer used.
 defined('COURSE_DISPLAY_NOCOLLAPSE') || define('COURSE_DISPLAY_NOCOLLAPSE', 3);
-require_once($CFG->dirroot. '/course/format/topics/lib.php');
+//require_once($CFG->dirroot. '/course/format/topics/lib.php');
 
 /**
  * Main class for the topics2 course format with added tab-ability
@@ -34,7 +34,7 @@ require_once($CFG->dirroot. '/course/format/topics/lib.php');
  * @copyright  2018 Matthias Opitz
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class format_topics2 extends format_topics {
+class format_topics2 extends core_courseformat\base {
 
     /**
      * Add some options
