@@ -41,11 +41,11 @@ class format_topics2 extends core_courseformat\base {
      *
      * @return bool
      */
-    public function uses_sections() {
+    public function uses_sections(): bool {
         return true;
     }
 
-    public function uses_course_index() {
+    public function uses_course_index(): bool {
         return true;
     }
 
@@ -72,9 +72,9 @@ class format_topics2 extends core_courseformat\base {
     }
 
     /**
-     * Returns the default section name for the topics course format.
+     * Returns the default section name for the topics2 course format.
      *
-     * If the section number is 0, it will use the string with key = section0name from the course format's lang file.
+     * If the section number is 0, it will show no section title .
      * If the section number is not 0, the base implementation of course_format::get_default_section_name which uses
      * the string with the key = 'sectionname' from the course format's lang file + the section number will be used.
      *
@@ -83,8 +83,9 @@ class format_topics2 extends core_courseformat\base {
      */
     public function get_default_section_name($section) {
         if ($section->section == 0) {
-            // Return the general section.
-            return get_string('section0name', 'format_topics');
+            // Return the general section with no title.
+//            return get_string('section0name', 'format_topics');
+            return "";
         } else {
             // Use course_format::get_default_section_name implementation which
             // will display the section name in "Topic n" format.
@@ -262,6 +263,21 @@ class format_topics2 extends core_courseformat\base {
         }
         if ($foreditform && !isset($courseformatoptions['coursedisplay']['label'])) {
             $courseformatoptionsedit = [
+                'maxtabs' => array(
+                    'label' => get_string('maxtabs_label', 'format_topics2'),
+                    'help' => 'maxtabs',
+                    'help_component' => 'format_topics2',
+                    'default' => (isset($CFG->max_tabs) ? $CFG->max_tabs : 5),
+                    'type' => PARAM_INT,
+                ),
+                'limittabname' => array(
+                    'label' => get_string('limittabname_label', 'format_topics2'),
+                    'help' => 'limittabname',
+                    'help_component' => 'format_topics2',
+                    'default' => 0,
+                    'type' => PARAM_INT,
+                ),
+
                 'hiddensections' => [
                     'label' => new lang_string('hiddensections'),
                     'help' => 'hiddensections',
@@ -286,6 +302,20 @@ class format_topics2 extends core_courseformat\base {
                     'help' => 'coursedisplay',
                     'help_component' => 'moodle',
                 ],
+                'section0_ontop' => array(
+                    'label' => get_string('section0_label', 'format_topics2'),
+                    'element_type' => 'advcheckbox',
+                    'default' => 0,
+                    'help' => 'section0',
+                    'help_component' => 'format_topics2',
+                    'element_type' => 'hidden',
+                ),
+                'single_section_tabs' => array(
+                    'label' => get_string('single_section_tabs_label', 'format_topics2'),
+                    'element_type' => 'advcheckbox',
+                    'help' => 'single_section_tabs',
+                    'help_component' => 'format_topics2',
+                ),
             ];
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
         }
@@ -860,6 +890,8 @@ class format_topics2xxx extends core_courseformat\base {
 
 /**
  * Implements callback inplace_editable() allowing to edit values in-place
+ *
+ * This method is required for inplace section name editor.
  *
  * @param string $itemtype
  * @param int $itemid

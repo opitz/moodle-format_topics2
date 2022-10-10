@@ -1,0 +1,17 @@
+<ul>
+    {{#tabs}}
+        <li
+            data-action="topictab"
+            id="{{id}}"
+            sections="{{sections}}"
+            class="tablink topictab nav-link "
+            title="{{title}}"
+            generic_title="{{title}}"
+            style="display: inline; '.($this->page->user_is_editing() ? 'cursor: move;' : '').'"
+        >
+            {{title}}
+        </li>
+    {{/tabs}}
+</ul>
+
+<hr>

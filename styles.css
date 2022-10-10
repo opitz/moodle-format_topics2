@@ -1,47 +1,4 @@
-.course-content ul.topics2 .tablink_not_yet {
-    margin-right: 5px;
-    padding-top: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    text-align: center;
-    border-width: thin;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    border-color: lightgrey;
-    border-style: solid;
-    cursor: pointer;
-}
 
-.course-content ul.topics2 .tablink.active {
+.tablink.selected {
     background-color: #eee;
-}
-
-.course-content ul.topics2 li.section .sectionname {
-    padding-top: 10px;
-}
-
-.course-content ul.topics2 li.section.ontop {
-    border-bottom: 0;
-}
-
-.course-content ul.topics2 li.section .fa-info {
-    padding-left: 5px;
-}
-
-.course-content ul.topics2 li.section .edit_only {
-    background-color: #fafafa;
-}
-
-.course-content ul.topics2 li.section .tabs {
-    padding-left: 30px;
-}
-
-.course-content ul.topics2 li.section .toggler {
-    color: grey;
-}
-
-.course-content ul.topics2 li.section .dropdown-menu {
-    height: auto;
-    max-height: 500px;
-    overflow-x: hidden;
 }

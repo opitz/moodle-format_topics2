@@ -1,4 +1,4 @@
-// Javascript functions for Topics course format.
+// Javascript functions for Topics2 course format.
 
 M.course = M.course || {};
 

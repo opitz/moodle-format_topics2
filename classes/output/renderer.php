@@ -23,7 +23,7 @@ use moodle_page;
  * Basic renderer for topics2 format with added tab-ability.
  *
  * @package format_topics2
- * @copyright 2018-2020 Matthias Opitz
+ * @copyright 2018-2022 Matthias Opitz
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class renderer extends section_renderer {
@@ -64,4 +64,5 @@ class renderer extends section_renderer {
         return $this->render(course_get_format($course)->inplace_editable_render_section_name($section, false));
     }
 }
+
 

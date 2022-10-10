@@ -51,9 +51,11 @@ course_create_sections_if_missing($course, 0);
 
 $renderer = $PAGE->get_renderer('format_topics2');
 
+// Setup the format base instance.
 if (!empty($displaysection)) {
     $format->set_section_number($displaysection);
 }
+// Output course content.
 $outputclass = $format->get_output_classname('content');
 $widget = new $outputclass($format);
 echo $renderer->render($widget);
