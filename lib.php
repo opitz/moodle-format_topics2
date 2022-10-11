@@ -519,6 +519,31 @@ class format_topics2 extends core_courseformat\base {
     }
 
     /**
+     * Turning numbers into text
+     *
+     * @param string $string
+     * @return mixed
+     */
+    public function words2numbers($string) {
+        $numwords = array(
+            0 => 'zero',
+            1 => 'one',
+            2 => 'two',
+            3 => 'three',
+            4 => 'four',
+            5 => 'five',
+            6 => 'six',
+            7 => 'seven',
+            8 => 'eight',
+            9 => 'nine'
+        );
+        for ($i = 0; $i < 10; $i++) {
+            $string = str_replace($numwords[$i], $i, $string);
+        }
+        return $string;
+    }
+
+    /**
      * Callback used in WS core_course_edit_section when teacher performs an AJAX action on a section (show/hide).
      *
      * Access to the course is already validated in the WS but the callback has to make sure
@@ -534,11 +559,30 @@ class format_topics2 extends core_courseformat\base {
     public function section_action($section, $action, $sr) {
         global $PAGE;
 
+        $tcsettings = $this->get_format_options();
+
         if ($section->section && ($action === 'setmarker' || $action === 'removemarker')) {
             // Format 'topics2' allows to set and remove markers in addition to common section actions.
             require_capability('moodle/course:setcurrentsection', context_course::instance($this->courseid));
             course_set_marker($this->courseid, ($action === 'setmarker') ? $section->section : 0);
             return null;
+        }
+
+        if (strstr($action, 'movetotab')) {
+            $action2 = $this->words2numbers($action);
+            return $this->move2tab((int)str_replace('movetotab', '', $action2), $section, $tcsettings);
+        } else {
+            switch ($action) {
+                case 'removefromtabs':
+                    return $this->removefromtabs($section, $tcsettings);
+                    break;
+                case 'sectionzeroontop':
+                    return $this->sectionzeroswitch($tcsettings, true);
+                    break;
+                case 'sectionzeroinline':
+                    return $this->sectionzeroswitch($tcsettings, false);
+                    break;
+            }
         }
 
         // For show/hide actions call the parent method and return the new content for .section_availability element.
@@ -566,6 +610,199 @@ class format_topics2 extends core_courseformat\base {
         // Return everything (nothing to hide).
         return $this->get_format_options();
     }
+    /**
+     * Move section ID and section number to tab format settings of a given tab.
+     *
+     * @param int $tabnum
+     * @param array|stdClass $section2move
+     * @param array|stdClass $settings
+     * @return mixed
+     */
+    public function move2tab($tabnum, $section2move, $settings) {
+
+        // Remove section number from all tab format settings.
+        $settings = $this->removefromtabs($section2move, $settings);
+
+        // Add section number to new tab format settings if not tab0.
+        if ($tabnum > 0) {
+            $settings['tab'.$tabnum] .= ($settings['tab'.$tabnum] === '' ? '' : ',').$section2move->id;
+            $settings['tab'.$tabnum.'_sectionnums'] .= ($settings['tab'.$tabnum.'_sectionnums'] === '' ? '' : ',').
+                $section2move->section;
+            $this->update_course_format_options($settings);
+        }
+        return $settings;
+    }
+
+    /**
+     * Remove section id from all tab format settings.
+     *
+     * @param array|stdClass $section2remove
+     * @param array|stdClass $settings
+     * @return mixed
+     */
+    public function removefromtabs($section2remove, $settings) {
+        global $CFG;
+
+        $maxtabs = ((isset($settings['maxtabs']) &&
+            $settings['maxtabs'] > 0) ? $settings['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9)
+        );
+
+        for ($i = 0; $i <= $maxtabs; $i++) {
+            if (strstr($settings['tab'.$i], $section2remove->id) > -1) {
+                $sections = explode(',', $settings['tab'.$i]);
+                $newsections = array();
+                foreach ($sections as $section) {
+                    if ($section != $section2remove->id) {
+                        $newsections[] = $section;
+                    }
+                }
+                $settings['tab'.$i] = implode(',', $newsections);
+
+                $sectionnums = explode(',', $settings['tab'.$i.'_sectionnums']);
+                $newsectionnums = array();
+                foreach ($sectionnums as $sectionnum) {
+                    if ($sectionnum != $section2remove->section) {
+                        $newsectionnums[] = $sectionnum;
+                    }
+                }
+                $settings['tab'.$i.'_sectionnums'] = implode(',', $newsectionnums);
+                $this->update_course_format_options($settings);
+            }
+        }
+        return $settings;
+    }
+
+    /**
+     * Switch to show section0 always on top of the tabs.
+     *
+     * @param array|stdClass $settings
+     * @param string $value
+     * @return mixed
+     */
+    public function sectionzeroswitch($settings, $value) {
+        $settings['section0_ontop'] = $value;
+        $this->update_course_format_options($settings);
+
+        return $settings;
+    }
+
+    /**
+     * Delete a section
+     *
+     * @param int|section_info|stdClass $section
+     * @param bool $forceifnotempty
+     * @return bool
+     * @throws dml_exception
+     */
+    public function delete_section($section, $forceifnotempty = false) {
+        global $DB;
+
+        // Before we delete the section record we need it's ID to remove it from tabs after(!) a successful deletion.
+        $srec = $DB->get_record('course_sections', array('course' => $this->courseid, 'section' => $section));
+        $sectionid = $srec->id;
+
+        $whatparentssay = parent::delete_section($section, $forceifnotempty);
+        if (!$whatparentssay) {
+            return false;
+        }
+
+        // Remove sectionid and section(num) from tabs.
+        $this->remove_from_tabs($section, $sectionid);
+        return $whatparentssay;
+    }
+
+    /**
+     * Remove traces of a deleted section from tabs where needed.
+     *
+     * @param bool $section
+     * @param bool $sectionid
+     * @return bool
+     * @throws dml_exception
+     */
+    public function remove_from_tabs($section = false, $sectionid = false) {
+        global $DB;
+        if (!$section || !$sectionid) {
+            return false;
+        }
+        // Loop through the tabs.
+        $records = $DB->get_records('course_format_options', array('courseid' => $this->courseid, 'format' => $this->format));
+        foreach ($records as $option) {
+            switch($option->name) {
+                case 'tab1':
+                case 'tab2':
+                case 'tab3':
+                case 'tab4':
+                case 'tab5':
+                case 'tab6':
+                case 'tab7':
+                case 'tab8':
+                case 'tab9':
+                    if (strstr($option->value, $sectionid)) {
+                        $this->remove_sectionid($option, $sectionid);
+                    }
+                    break;
+                case 'tab1_sectionnums':
+                case 'tab2_sectionnums':
+                case 'tab3_sectionnums':
+                case 'tab4_sectionnums':
+                case 'tab5_sectionnums':
+                case 'tab6_sectionnums':
+                case 'tab7_sectionnums':
+                case 'tab8_sectionnums':
+                case 'tab9_sectionnums':
+                    if (strstr($option->value, $section)) {
+                        $this->remove_sectionnum($option, $section);
+                    }
+                    break;
+            }
+        }
+
+    }
+
+    /**
+     * Remove the section ID from tabs.
+     *
+     * @param array|stdClass $option
+     * @param int $sectionid
+     * @throws dml_exception
+     */
+    public function remove_sectionid($option, $sectionid) {
+        global $DB;
+        $tabsections = explode(',', $option->value);
+        $newtabsections = array();
+        foreach ($tabsections as $tabsectionid) {
+            if ($tabsectionid !== $sectionid) {
+                $newtabsections[] = $tabsectionid;
+            }
+        }
+        if (count(array_diff($tabsections, $newtabsections)) > 0) {
+            $option->value = implode(',', $newtabsections);
+            $DB->update_record('course_format_options', $option);
+        }
+    }
+
+    /**
+     * Remove the section number from tabs.
+     *
+     * @param array|stdClass $option
+     * @param int $sectionnum
+     * @throws dml_exception
+     */
+    public function remove_sectionnum($option, $sectionnum) {
+        global $DB;
+        $tabsectionnums = explode(',', $option->value);
+        $newtabsectionnums = array();
+        foreach ($tabsectionnums as $tabsectionnum) {
+            if ($tabsectionnum !== $sectionnum) {
+                $newtabsectionnums[] = $tabsectionnum;
+            }
+        }
+        if (count(array_diff($tabsectionnums, $newtabsectionnums)) > 0) {
+            $option->value = implode(',', $newtabsectionnums);
+            $DB->update_record('course_format_options', $option);
+        }
+    }
+
 }
 class format_topics2xxx extends core_courseformat\base {
 

@@ -112,6 +112,30 @@ class controlmenu extends controlmenu_base {
     }
 
     /**
+     * Convert all numbers found in a given string into words
+     * @param string $string
+     * @return mixed
+     */
+    public function numbers2words($string) {
+        $numwords = array(
+            0 => 'zero',
+            1 => 'one',
+            2 => 'two',
+            3 => 'three',
+            4 => 'four',
+            5 => 'five',
+            6 => 'six',
+            7 => 'seven',
+            8 => 'eight',
+            9 => 'nine'
+        );
+        for ($i = 0; $i < 10; $i++) {
+            $string = str_replace($i, $numwords[$i], $string);
+        }
+        return $string;
+    }
+
+    /**
      * Generate the edit control items of a section.
      *
      * It is not clear this kind of controls are still available in 4.0 so, for now, this
@@ -197,7 +221,11 @@ class controlmenu extends controlmenu_base {
 
                 // Now add a menu item for every existing tab.
                 if (!$sectionreturn && has_capability('moodle/course:movesections', $coursecontext, $user)) {
+                    $itemtitle = get_string('movetotab', 'format_topics2');
                     for ($i = 0; $i < $maxtabs; $i++) {
+                        $tabname = 'tab'.$i.'_title';
+                        $itemname = get_string('totab', 'format_topics2').(isset($course->$tabname) && $course->$tabname != ''
+                            && $course->$tabname != 'Tab '.$i ? '"'.$course->$tabname.'"' : $i);
                         if ($usecomponents) {
                             // This tool will appear only when the state is ready.
                             $url = clone ($baseurl);
@@ -208,13 +236,14 @@ class controlmenu extends controlmenu_base {
 
                             $controls['move2tab'.$i] = [
                                 'url' => $url,
-                                'icon' => 'i/dragdrop',
-                                'name' => $name,
+                                'icon' => 't/right',
+                                'name' => $itemname,
                                 'pixattr' => ['class' => ''],
                                 'attr' => [
-                                    'class' => 'icon move waitstate',
-                                    'data-action' => 'movetotab',
-                                    'data-id' => $i,
+                                    'class' => 'tab_mover',
+                                    'title' => $itemtitle,
+                                    'data-tabnr' => $i,
+                                    'data-action' => $this->numbers2words("movetotab$i"),
                                 ],
                             ];
                         }

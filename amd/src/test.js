@@ -48,20 +48,28 @@ var tabClick = function() {
                         var otherTabSections = tab.getAttribute('sections');
                         if (otherTabSections) {
                             otherTabSections.split(",").forEach(function(sectionId) {
-                                document.getElementById("section-" + sectionId).style.display = "none";
+                                document.querySelectorAll('[data-id="' + sectionId + '"]').forEach(function(section) {
+                                    section.style.display = "none";
+                                });
                             });
                         }
                     }
                 });
             } else { // Hide all sections, then show all sections under the selected tab.
                 if (tabSections) {
-                    // Hide all sections.
+                    // Make sure the tab is shown.
+                    e.target.style.display = "inline";
+
+                    // 1st hide all sections.
                     document.getElementsByClassName("section").forEach(function(section) {
                         section.style.display = "none";
                     });
                     // Now show all sections found for the clicked topic tab.
                     tabSections.split(",").forEach(function(sectionId) {
-                        document.getElementById("section-" + sectionId).style.display = "block";
+//                        Document.getElementById("section-" + sectionId).style.display = "block";
+                        document.querySelectorAll('[data-id="' + sectionId + '"]').forEach(function(section) {
+                            section.style.display = "block";
+                        });
                     });
                 } else {
                     // Since the tab does not contain any sections hide it.
