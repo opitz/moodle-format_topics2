@@ -239,7 +239,7 @@ class format_topics2 extends core_courseformat\base {
     /**
      * Definitions of the additional options that this course format uses for course.
      *
-     * Topics format uses the following options:
+     * Topics2 format uses the following options:
      * - coursedisplay
      * - hiddensections
      *
@@ -247,6 +247,17 @@ class format_topics2 extends core_courseformat\base {
      * @return array of options
      */
     public function course_format_options($foreditform = false) {
+        global $CFG, $COURSE, $DB;
+        $fo = $DB->get_records('course_format_options', array('courseid' => $COURSE->id));
+        $formatoptions = array();
+        foreach ($fo as $o) {
+            $formatoptions[$o->name] = $o->value;
+        }
+
+        $maxtabs = (
+        (isset($formatoptions['maxtabs']) &&
+            $formatoptions['maxtabs'] > 0) ? $formatoptions['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
+
         static $courseformatoptions = false;
         if ($courseformatoptions === false) {
             $courseconfig = get_config('moodlecourse');
@@ -259,25 +270,35 @@ class format_topics2 extends core_courseformat\base {
                     'default' => $courseconfig->coursedisplay,
                     'type' => PARAM_INT,
                 ],
+                'maxtabs' => [
+                    'type' => PARAM_INT,
+                ],
+                'limittabname' => [
+                    'type' => PARAM_INT,
+                ],
             ];
+            // The topic tabs
+            for ($i = 0; $i < $maxtabs; $i++) {
+                $courseformatoptions['tab'.$i.'_title'] = array(
+                    'type' => PARAM_TEXT,
+                    'label' => '',
+                    'element_type' => 'hidden'
+                );
+                $courseformatoptions['tab'.$i] = array(
+                    'type' => PARAM_TEXT,
+                    'label' => '',
+                    'element_type' => 'hidden'
+                );
+                $courseformatoptions['tab'.$i.'_sectionnums'] = array(
+                    'type' => PARAM_TEXT,
+                    'label' => '',
+                    'element_type' => 'hidden'
+                );
+            }
         }
+
         if ($foreditform && !isset($courseformatoptions['coursedisplay']['label'])) {
             $courseformatoptionsedit = [
-                'maxtabs' => array(
-                    'label' => get_string('maxtabs_label', 'format_topics2'),
-                    'help' => 'maxtabs',
-                    'help_component' => 'format_topics2',
-                    'default' => (isset($CFG->max_tabs) ? $CFG->max_tabs : 5),
-                    'type' => PARAM_INT,
-                ),
-                'limittabname' => array(
-                    'label' => get_string('limittabname_label', 'format_topics2'),
-                    'help' => 'limittabname',
-                    'help_component' => 'format_topics2',
-                    'default' => 0,
-                    'type' => PARAM_INT,
-                ),
-
                 'hiddensections' => [
                     'label' => new lang_string('hiddensections'),
                     'help' => 'hiddensections',
@@ -302,22 +323,83 @@ class format_topics2 extends core_courseformat\base {
                     'help' => 'coursedisplay',
                     'help_component' => 'moodle',
                 ],
-                'section0_ontop' => array(
-                    'label' => get_string('section0_label', 'format_topics2'),
-                    'element_type' => 'advcheckbox',
-                    'default' => 0,
-                    'help' => 'section0',
-                    'help_component' => 'format_topics2',
-                    'element_type' => 'hidden',
-                ),
-                'single_section_tabs' => array(
-                    'label' => get_string('single_section_tabs_label', 'format_topics2'),
-                    'element_type' => 'advcheckbox',
-                    'help' => 'single_section_tabs',
-                    'help_component' => 'format_topics2',
+                // The sequence in which the tabs will be displayed.
+                'tab_seq' => array(
+                    'default' => '',
+                    'type' => PARAM_TEXT,
+                    'label' => '',
+                    'element_type' => 'hidden'
                 ),
             ];
+
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
+
+            $courseformatoptions['maxtabs'] = array(
+                'default' => (isset($CFG->max_tabs) ? $CFG->max_tabs : 5),
+                'type' => PARAM_INT,
+                'label' => get_string('maxtabs_label', 'format_topics2'),
+                'help' => 'maxtabs',
+                'help_component' => 'format_topics2',
+            );
+
+            $courseformatoptions['limittabname'] = array(
+                'default' => 0,
+                'type' => PARAM_INT,
+                'label' => get_string('limittabname_label', 'format_topics2'),
+                'help' => 'limittabname',
+                'help_component' => 'format_topics2',
+                'type' => PARAM_INT,
+            );
+
+            $courseformatoptions['section0_ontop'] = array(
+                'default' => 0,
+                'type' => PARAM_INT,
+                'label' => get_string('section0_label', 'format_topics2'),
+                'help' => 'section0',
+                'help_component' => 'format_topics2',
+                'element_type' => 'hidden',
+            );
+
+            $courseformatoptions['single_section_tabs'] = array(
+                'label' => get_string('single_section_tabs_label', 'format_topics2'),
+                'help' => 'single_section_tabs',
+                'help_component' => 'format_topics2',
+                'element_type' => 'advcheckbox',
+            );
+
+
+            // Now add the tabs but don't show them as we only need the DB records...
+            $courseformatoptions['tab0_title'] = array(
+                'default' => get_string('tabzero_title',
+                    'format_topics2'),
+                'type' => PARAM_TEXT,
+                'label' => '',
+                'element_type' => 'hidden',
+            );
+            $courseformatoptions['tab0'] = array(
+                'type' => PARAM_TEXT,
+                'label' => '',
+                'element_type' => 'hidden'
+            );
+            for ($i = 1; $i <= $maxtabs; $i++) {
+                $courseformatoptions['tab'.$i.'_title'] = array(
+                    'default' => "Tab ".$i,
+                    'type' => PARAM_TEXT,
+                    'label' => '',
+                    'element_type' => 'hidden'
+                );
+                $courseformatoptions['tab'.$i] = array('default' => "",
+                    'type' => PARAM_TEXT,
+                    'label' => '',
+                    'element_type' => 'hidden'
+                );
+                $courseformatoptions['tab'.$i.'_sectionnums'] = array(
+                    'default' => "",
+                    'type' => PARAM_TEXT,
+                    'label' => '',
+                    'element_type' => 'hidden'
+                );
+            }
         }
         return $courseformatoptions;
     }
@@ -356,7 +438,7 @@ class format_topics2 extends core_courseformat\base {
     /**
      * Updates format options for a course.
      *
-     * In case if course format was changed to 'topics', we try to copy options
+     * In case if course format was changed to 'topics2', we try to copy options
      * 'coursedisplay' and 'hiddensections' from the previous format.
      *
      * @param stdClass|array $data return value from {@link moodleform::get_data()} or array with data
@@ -453,7 +535,7 @@ class format_topics2 extends core_courseformat\base {
         global $PAGE;
 
         if ($section->section && ($action === 'setmarker' || $action === 'removemarker')) {
-            // Format 'topics' allows to set and remove markers in addition to common section actions.
+            // Format 'topics2' allows to set and remove markers in addition to common section actions.
             require_capability('moodle/course:setcurrentsection', context_course::instance($this->courseid));
             course_set_marker($this->courseid, ($action === 'setmarker') ? $section->section : 0);
             return null;
@@ -461,7 +543,7 @@ class format_topics2 extends core_courseformat\base {
 
         // For show/hide actions call the parent method and return the new content for .section_availability element.
         $rv = parent::section_action($section, $action, $sr);
-        $renderer = $PAGE->get_renderer('format_topics');
+        $renderer = $PAGE->get_renderer('format_topics2');
 
         if (!($section instanceof section_info)) {
             $modinfo = course_modinfo::instance($this->courseid);
