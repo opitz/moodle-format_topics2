@@ -18,7 +18,7 @@
  * Topics2 course format. Display the whole course as "topics2" made of modules.
  *
  * @package format_topics2
- * @copyright 2018-2020 Matthias Opitz
+ * @copyright 2018-2022 Matthias Opitz
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
