@@ -45,46 +45,7 @@ class content extends content_base {
      * @return stdClass data context for a mustache template
      */
     public function export_for_template(\renderer_base $output) {
-        global $PAGE;
-        $format = $this->format;
-
         $data = parent::export_for_template($output);
-/*
-        // Most formats uses section 0 as a separate section so we remove from the list.
-        $sections = $this->export_sections($output);
-        $initialsection = '';
-        if (!empty($sections)) {
-            $initialsection = array_shift($sections);
-        }
-
-        $data = (object)[
-            'title' => $format->page_title(), // This method should be in the course_format class.
-            'initialsection' => $initialsection,
-            'sections' => $sections,
-            'format' => $format->get_format(),
-            'sectionreturn' => 0,
-        ];
-
-        // The single section format has extra navigation.
-        $singlesection = $this->format->get_section_number();
-        if ($singlesection) {
-            if (!$PAGE->theme->usescourseindex) {
-                $sectionnavigation = new $this->sectionnavigationclass($format, $singlesection);
-                $data->sectionnavigation = $sectionnavigation->export_for_template($output);
-
-                $sectionselector = new $this->sectionselectorclass($format, $sectionnavigation);
-                $data->sectionselector = $sectionselector->export_for_template($output);
-            }
-            $data->hasnavigation = true;
-            $data->singlesection = array_shift($data->sections);
-            $data->sectionreturn = $singlesection;
-        }
-
-        if ($this->hasaddsection) {
-            $addsection = new $this->addsectionclass($format);
-            $data->numsections = $addsection->export_for_template($output);
-        }
-*/
         $data->tabs = $this->get_tabs();
 
         return $data;
@@ -116,11 +77,10 @@ class content extends content_base {
         $format = $this->format;
         $course = $format->get_course();
         $sections = $format->get_sections();
-        //        $foptions = $this->get_format_options();
         $formatoptions = $this->get_formatoptions($course->id);
         $tabs = [];
         $maxtabs = ((isset($formatoptions['maxtabs']) &&
-            $formatoptions['maxtabs'] > 0) ? $formatoptions['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
+            $formatoptions['maxtabs'] > 0) ? $formatoptions['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 5));
 
         // Get the section IDs along with their section numbers.
         $sectionids = array();
@@ -145,7 +105,7 @@ class content extends content_base {
                 } else {
                     $tabsectionnums = '';
                 }
-//                $tabsections = $this->check_tab_section_ids($course->id, $sectionids, $tabsections, $tabsectionnums, $i);
+                $tabsections = $this->check_tab_section_ids($course->id, $sectionids, $tabsections, $tabsectionnums, $i);
             }
 
             $tab = (object) new \stdClass();
@@ -175,4 +135,70 @@ class content extends content_base {
         }
         return $formatoptions;
     }
+
+    /**
+     * Check section IDs used in tabs and repair them if they have changed - most probably because a course was imported.
+     *
+     * @param int $courseid
+     * @param array|stdClass $sectionids
+     * @param array|stdClass $tabsectionids
+     * @param array|stdClass $tabsectionnums
+     * @param int $i
+     * @return array|string
+     * @throws dml_exception
+     */
+    protected function check_tab_section_ids($courseid, $sectionids, $tabsectionids, $tabsectionnums, $i) {
+        global $DB;
+        $idhaschanged = false;
+
+        $newtabsectionids = array();
+        $newtabsectionnums = array();
+        $tabformatrecordids = $DB->get_record('course_format_options', array('courseid' => $courseid, 'name' => 'tab'.$i));
+        $tabformatrecordnums = $DB->get_record('course_format_options',
+            array('courseid' => $courseid, 'name' => 'tab'.$i.'_sectionnums')
+        );
+
+        if ($tabsectionids != "") {
+            $tabsectionids = explode(',', $tabsectionids);
+        } else {
+            $tabsectionids = array();
+        }
+
+        if ($tabsectionnums != "") {
+            $tabsectionnums = explode(',', $tabsectionnums);
+        } else {
+            $tabsectionnums = array();
+        }
+
+        foreach ($tabsectionids as $key => $tabsectionid) {
+            if (!in_array($tabsectionid, $sectionids) && isset($tabsectionnums[$key]) &&
+                isset($sectionids[$tabsectionnums[$key]])) {
+                // The tab_section_id is not among the (new) section ids of that course.
+                // This is most likely because the course has been restored - so use the sectionnums to determine the new id.
+                $newtabsectionids[] = $sectionids[$tabsectionnums[$key]];
+                $idhaschanged = true;
+                // Preserve the backup sequence of sectionnums.
+                $newtabsectionnums[] = $tabsectionnums[$key];
+            } else {
+                // The tab_section_id IS part of the section ids of that course and will be preserved.
+                $newtabsectionids[] = $tabsectionid;
+                // Create a backup sequence of sectionnums from section IDs to use it in the correction scheme above after a backup.
+                $newtabsectionnums[] = array_search($tabsectionid, $sectionids);
+            }
+        }
+
+        $tabsectionids = implode(',', $newtabsectionids);
+        $tabsectionnums = implode(',', $newtabsectionnums);
+        if ($idhaschanged) {
+            $DB->update_record('course_format_options', array('id' => $tabformatrecordids->id, 'value' => $tabsectionids));
+        }
+        if ($tabformatrecordnums && $tabsectionnums != $tabformatrecordnums->value) {
+            // If the tab nums of that tab have changed update them.
+            $DB->update_record('course_format_options', array('id' => $tabformatrecordnums->id, 'value' => $tabsectionnums));
+        }
+
+        return $tabsectionids;
+    }
+
+
 }

@@ -256,7 +256,7 @@ class format_topics2 extends core_courseformat\base {
 
         $maxtabs = (
         (isset($formatoptions['maxtabs']) &&
-            $formatoptions['maxtabs'] > 0) ? $formatoptions['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 9));
+            $formatoptions['maxtabs'] > 0) ? $formatoptions['maxtabs'] : (isset($CFG->max_tabs) ? $CFG->max_tabs : 5));
 
         static $courseformatoptions = false;
         if ($courseformatoptions === false) {
