@@ -23,5 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class format_onetopic_renderer extends core_courseformat\output\section_renderer {
+/**
+ * Deprecated class kept here for legacy reasons.
+ */
+class format_topics2_renderer extends core_courseformat\output\section_renderer {
 }
