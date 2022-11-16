@@ -18,20 +18,19 @@
  * Class format_topics2
  *
  * @package    format_topics2
- * @copyright  2020 Matthias Opitz
+ * @copyright  2018-22 Matthias Opitz
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 defined('COURSE_DISPLAY_COLLAPSE') || define('COURSE_DISPLAY_COLLAPSE', 2); // Legacy support - no longer used.
 defined('COURSE_DISPLAY_NOCOLLAPSE') || define('COURSE_DISPLAY_NOCOLLAPSE', 3);
-//require_once($CFG->dirroot. '/course/format/topics/lib.php');
 
 /**
  * Main class for the topics2 course format with added tab-ability
  *
  * @package    format_topics2
- * @copyright  2018 Matthias Opitz
+ * @copyright  2018-22 Matthias Opitz
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class format_topics2 extends core_courseformat\base {
@@ -45,10 +44,20 @@ class format_topics2 extends core_courseformat\base {
         return true;
     }
 
+    /**
+     * Uses course index
+     *
+     * @return bool
+     */
     public function uses_course_index(): bool {
         return true;
     }
 
+    /**
+     * Uses indentation.
+     *
+     * @return bool
+     */
     public function uses_indentation(): bool {
         return false;
     }
@@ -83,9 +92,8 @@ class format_topics2 extends core_courseformat\base {
      */
     public function get_default_section_name($section) {
         if ($section->section == 0) {
-            // Return the general section with no title.
-//            return get_string('section0name', 'format_topics');
-            return "";
+            // Return the general section.
+            return get_string('section0name', 'format_topics');
         } else {
             // Use course_format::get_default_section_name implementation which
             // will display the section name in "Topic n" format.
@@ -163,6 +171,11 @@ class format_topics2 extends core_courseformat\base {
         return $ajaxsupport;
     }
 
+    /**
+     * Supporting components.
+     *
+     * @return bool
+     */
     public function supports_components() {
         return true;
     }
@@ -277,7 +290,7 @@ class format_topics2 extends core_courseformat\base {
                     'type' => PARAM_INT,
                 ],
             ];
-            // The topic tabs
+            // The topic tabs.
             for ($i = 0; $i < $maxtabs; $i++) {
                 $courseformatoptions['tab'.$i.'_title'] = array(
                     'type' => PARAM_TEXT,
@@ -367,7 +380,6 @@ class format_topics2 extends core_courseformat\base {
                 'element_type' => 'advcheckbox',
             );
 
-
             // Now add the tabs but don't show them as we only need the DB records...
             $courseformatoptions['tab0_title'] = array(
                 'default' => get_string('tabzero_title',
@@ -438,11 +450,11 @@ class format_topics2 extends core_courseformat\base {
     /**
      * Updates format options for a course.
      *
-     * In case if course format was changed to 'topics2', we try to copy options
+     * In case the course format was changed to 'topics2', we try to copy options
      * 'coursedisplay' and 'hiddensections' from the previous format.
      *
-     * @param stdClass|array $data return value from {@link moodleform::get_data()} or array with data
-     * @param stdClass $oldcourse if this function is called from {@link update_course()}
+     * @param stdClass|array $data return value from moodleform::get_data() or array with data
+     * @param stdClass $oldcourse if this function is called from update_course()
      *     this object contains information about the course before update
      * @return bool whether there were any changes to the options values
      */
@@ -465,9 +477,9 @@ class format_topics2 extends core_courseformat\base {
     /**
      * Whether this format allows to delete sections.
      *
-     * Do not call this function directly, instead use {@link course_can_delete_section()}
+     * Do not call this function directly, instead use course_can_delete_section()
      *
-     * @param int|stdClass|section_info $section
+     * @param stdClass $section
      * @return bool
      */
     public function can_delete_section($section) {

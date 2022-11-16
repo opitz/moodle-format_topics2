@@ -27,8 +27,14 @@ namespace format_topics2\output\courseformat;
 use core_courseformat\base as base;
 use core_courseformat\output\local\content as content_base;
 
+/**
+ * The content class.
+ *
+ * @package   format_topics2
+ * @copyright 2022, Matthias Opitz <opitz@gmx.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class content extends content_base {
-
     /**
      * Returns the output class template path.
      *
@@ -51,27 +57,12 @@ class content extends content_base {
         return $data;
     }
 
-    public function get_tabs0() {
-        global $COURSE;
-
-        $format = $this->format;
-//        $foptions = $this->get_format_options();
-        $formatoptions = $this->get_formatoptions($COURSE->id);
-        $tabs = [];
-        $maxtabs = 5;
-
-        for ($i = 0; $i < $maxtabs; $i++) {
-            $tab = new \stdClass();
-            $tab->tabno = $i + 1;
-            $tab->id = 'tab_' . $tab->tabno;
-            $tab->title = 'Tab ' . $tab->tabno;
-            $tab->sections = '';
-
-            $tabs[] = $tab;
-        }
-
-        return $tabs;
-    }
+    /**
+     * Get the tabs.
+     *
+     * @return array
+     * @throws \coding_exception
+     */
     public function get_tabs() {
 
         $format = $this->format;
@@ -117,15 +108,19 @@ class content extends content_base {
                 $formatoptions['tab' . $i . '_title'] != '' ? $formatoptions['tab' . $i . '_title'] : $tab->generic_title);
                 $tab->sections = $tabsections;
                 $tab->section_nums = $tabsectionnums;
-//                $tabs[$tab->id] = $tab;
                 $tabs[] = $tab;
             }
         }
-//        $this->tabs = $tabs;
-
         return $tabs;
     }
 
+    /**
+     * Get the format options for a course.
+     *
+     * @param int $courseid
+     * @return array
+     * @throws \dml_exception
+     */
     public function get_formatoptions($courseid) {
         global $DB;
         $options = $DB->get_records('course_format_options', array('courseid' => $courseid));

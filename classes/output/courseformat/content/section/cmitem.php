@@ -26,12 +26,22 @@ namespace format_topics2\output\courseformat\content\section;
 
 use core_courseformat\output\local\content\section\cmitem as cmitem_base;
 
+/**
+ * The content module item class.
+ *
+ * @package   format_topics2
+ * @copyright 2022, Matthias Opitz <opitz@gmx.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class cmitem extends cmitem_base {
 
     /**
      * Returns the output class template path.
      *
      * This method redirects the default template when the section activity item is rendered.
+     *
+     * @param \renderer_base $renderer
+     * @return string
      */
     public function get_template_name(\renderer_base $renderer): string {
         return 'format_topics2/local/content/section/cmitem';

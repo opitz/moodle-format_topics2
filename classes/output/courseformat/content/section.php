@@ -26,12 +26,22 @@ namespace format_topics2\output\courseformat\content;
 
 use core_courseformat\output\local\content\section as section_base;
 
+/**
+ * The section class.
+ *
+ * @package   format_topics2
+ * @copyright 2022, Matthias Opitz <opitz@gmx.de>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class section extends section_base {
 
     /**
      * Returns the output class template path.
      *
      * This method redirects the default template when the course section is rendered.
+     *
+     * @param \renderer_base $renderer
+     * @return string
      */
     public function get_template_name(\renderer_base $renderer): string {
         return 'format_topics2/local/content/section';

@@ -97,6 +97,10 @@ jobs:
         if: ${{ always() }}
         run: moodle-plugin-ci grunt --max-lint-warnings 6
 
+      - name: PHPUnit tests
+        if: ${{ always() }}
+        run: moodle-plugin-ci phpunit --fail-on-warning
+
       - name: Behat features
         if: ${{ always() }}
         run: moodle-plugin-ci behat --profile chrome
