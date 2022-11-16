@@ -22,3 +22,6 @@
  * @copyright  2022 Matthias Opitz <opitz@gmx.de>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+class format_onetopic_renderer extends core_courseformat\output\section_renderer {
+}
